@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Facet: a faceted solid seen corner-on, one facet picked out in amber. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6b6be0"/>
+      <stop offset="1" stop-color="#4c4cc4"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="url(#bg)"/>
+  <path d="M128 46L198 86L128 126L58 86Z" fill="#ffffff"/>
+  <path d="M58 86L128 126V210L58 170Z" fill="#c7c7f2"/>
+  <path d="M198 86V170L128 210V126Z" fill="#f5a524"/>
+</svg>

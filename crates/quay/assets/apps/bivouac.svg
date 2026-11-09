@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f6fff"/>
+      <stop offset="1" stop-color="#0a2a9c"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="url(#bg)"/>
+  <!-- flag on the ridge pole: capture the flag -->
+  <path d="M128 46 V92" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+  <path d="M132 48 H176 L164 62 L176 76 H132 Z" fill="#e0262f"/>
+  <!-- the tent -->
+  <path d="M128 88 L200 196 H56 Z" fill="#ffffff"/>
+  <path d="M128 132 L152 196 H104 Z" fill="#0a2a9c"/>
+  <path d="M40 200 H216" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+</svg>

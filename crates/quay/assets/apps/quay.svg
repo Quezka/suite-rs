@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Quay: a pier with a mooring post, where the suite's apps dock. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f8fb0"/>
+      <stop offset="1" stop-color="#1d6a8a"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="url(#bg)"/>
+  <rect x="44" y="150" width="168" height="26" rx="8" fill="#ffffff"/>
+  <rect x="64" y="176" width="14" height="40" rx="4" fill="#d5eaf2"/>
+  <rect x="178" y="176" width="14" height="40" rx="4" fill="#d5eaf2"/>
+  <rect x="116" y="78" width="24" height="72" rx="8" fill="#ffffff"/>
+  <circle cx="128" cy="76" r="22" fill="#f5a524" stroke="#1d6a8a" stroke-width="6"/>
+</svg>

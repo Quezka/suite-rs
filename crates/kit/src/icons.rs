@@ -51,6 +51,45 @@ pub fn icon(painter: &Painter, rect: Rect, name: &'static str, filled: bool, col
     }
 }
 
+type PictureKey = (&'static str, u32);
+
+fn picture_cache() -> &'static Mutex<HashMap<PictureKey, Option<TextureHandle>>> {
+    static CACHE: OnceLock<Mutex<HashMap<PictureKey, Option<TextureHandle>>>> = OnceLock::new();
+    CACHE.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
+/// A full-colour SVG (an app's own icon, say) as pixels `px` wide, keeping its aspect ratio inside a square.
+pub fn render_svg(svg: &[u8], px: u32) -> Option<egui::ColorImage> {
+    let tree = resvg::usvg::Tree::from_data(svg, &resvg::usvg::Options::default()).ok()?;
+    let mut pixmap = resvg::tiny_skia::Pixmap::new(px, px)?;
+    let size = tree.size();
+    let scale = px as f32 / size.width().max(size.height());
+    let (dx, dy) = ((px as f32 - size.width() * scale) / 2.0, (px as f32 - size.height() * scale) / 2.0);
+    resvg::render(&tree, resvg::tiny_skia::Transform::from_scale(scale, scale).post_translate(dx, dy), &mut pixmap.as_mut());
+    Some(egui::ColorImage::from_rgba_premultiplied([px as usize, px as usize], pixmap.data()))
+}
+
+/// Draws a full-colour SVG in `rect`, crisp at the screen's scale; `key` names it in the texture cache. Returns
+/// false if the SVG couldn't be read (draw something else then).
+pub fn picture(painter: &Painter, rect: Rect, key: &'static str, svg: &'static [u8]) -> bool {
+    let ctx = painter.ctx();
+    let px = (rect.width().max(rect.height()) * ctx.pixels_per_point()).ceil().max(1.0) as u32;
+    let Ok(mut cache) = picture_cache().lock() else {
+        return false;
+    };
+    let texture = cache
+        .entry((key, px))
+        .or_insert_with(|| render_svg(svg, px).map(|image| ctx.load_texture(format!("picture-{key}-{px}"), image, TextureOptions::LINEAR)));
+    match texture {
+        Some(texture) => {
+            let uv = Rect::from_min_max(egui::pos2(0.0, 0.0), egui::pos2(1.0, 1.0));
+            painter.image(texture.id(), rect, uv, Color32::WHITE);
+            true
+        }
+        None => false,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

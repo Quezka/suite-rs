@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Gantry: staggered bars of a Gantt chart, linked by an arrow, with an amber milestone. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f6fff"/>
+      <stop offset="1" stop-color="#0a2a9c"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="url(#bg)"/>
+  <rect x="44" y="56" width="92" height="26" rx="13" fill="#ffffff"/>
+  <rect x="84" y="102" width="88" height="26" rx="13" fill="#ffffff"/>
+  <rect x="124" y="148" width="88" height="26" rx="13" fill="#ffffff"/>
+  <path d="M90 82 V92 Q90 102 100 102" fill="none" stroke="#b7cdfa" stroke-width="7"
+        stroke-linecap="round"/>
+  <path d="M130 128 V138 Q130 148 140 148" fill="none" stroke="#b7cdfa" stroke-width="7"
+        stroke-linecap="round"/>
+  <path d="M196 188 L214 206 L196 224 L178 206 Z" fill="#f5a524" stroke="#0a2a9c"
+        stroke-width="6" stroke-linejoin="round"/>
+</svg>

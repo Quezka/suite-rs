@@ -44,3 +44,8 @@ the quire-server protocol must stay compatible with the Python and Kotlin apps t
   `round()` is `round_ties_even` (ints) or `model::round2` (2 places, via formatting); payroll's round2 adds 1e-9.
   Next: repositories, application services, cloud backends (Firebase, quire-server), then the screens.
 
+- Quay (`crates/quay`, 2026-11-09): the suite launcher, rewritten from Python. Same layers (tests/architecture.rs),
+  `curl` for HTTP (no TLS stack), `dpkg-query`/`pkexec apt-get` on Linux, `reg` + the Inno setup on Windows, real app
+  icons bundled from each repo (`tools/quay_icons.sh`, drawn with `quezka_kit::icons::picture`). `quay --demo`,
+  `--screenshot x.png [--dark]`, `--write-icon x.png|x.ico` (packaging), `QUAY_LANG=it|ru`. Released from the
+  Quezka/quay repo, whose CI builds this crate at the commit in its `suite-rs.ref`.

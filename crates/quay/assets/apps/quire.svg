@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Quire: a gathering of pages stitched at the spine, with a bookmark ribbon. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6b6be0"/>
+      <stop offset="1" stop-color="#4c4cc4"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="url(#bg)"/>
+  <g transform="translate(-9 0)">
+    <g transform="rotate(12 70 206)">
+      <rect x="70" y="50" width="124" height="156" rx="12" fill="#a9a9ee"/>
+    </g>
+    <g transform="rotate(6 70 206)">
+      <rect x="70" y="50" width="124" height="156" rx="12" fill="#d4d4f7"/>
+    </g>
+    <rect x="70" y="50" width="124" height="156" rx="12" fill="#ffffff"/>
+    <path d="M88 70 V186" stroke="#5b5bd6" stroke-width="7" stroke-linecap="round"
+          stroke-dasharray="12 14"/>
+    <rect x="106" y="100" width="34" height="9" rx="4.5" fill="#c7c7f2"/>
+    <rect x="106" y="124" width="62" height="9" rx="4.5" fill="#c7c7f2"/>
+    <rect x="106" y="148" width="50" height="9" rx="4.5" fill="#c7c7f2"/>
+    <path d="M150 42 H174 V112 L162 101 L150 112 Z" fill="#f5a524"/>
+  </g>
+</svg>
