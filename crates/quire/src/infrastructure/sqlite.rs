@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 
 use rusqlite::Connection;
 
-pub const SCHEMA_VERSION: i32 = 18;
+pub const SCHEMA_VERSION: i32 = 19;
 
 pub const SCHEMA: &str = r#"
 CREATE TABLE IF NOT EXISTS courses (
@@ -226,6 +226,10 @@ const ADDED_COLUMNS: &[(&str, &str, &str)] = &[
     ("jobs", "addizionali", "REAL NOT NULL DEFAULT 0"),
     ("jobs", "fixed_term", "INTEGER NOT NULL DEFAULT 1"),
     ("jobs", "cuneo", "INTEGER NOT NULL DEFAULT 0"),
+    // v19: payday (the pay added to Money by itself), as in the Python app.
+    ("jobs", "payday", "INTEGER"),
+    ("jobs", "pays_previous_month", "INTEGER NOT NULL DEFAULT 1"),
+    ("jobs", "payday_since", "TEXT"),
 ];
 
 /// Owns the connection.

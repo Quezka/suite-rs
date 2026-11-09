@@ -2,8 +2,8 @@
  "outgoing": [
   {
    "kind": "course",
-   "uid": "41908172e035f0dc474d9b4fb0f07d88",
-   "modified": "2026-11-09T03:26:39.852Z",
+   "uid": "df2636300aef5df51606ad364f986d92",
+   "modified": "2026-11-09T04:16:13.742Z",
    "deleted": false,
    "data": {
     "name": "Mathematics",
@@ -35,8 +35,8 @@
   },
   {
    "kind": "course",
-   "uid": "e00955291c188b31ce731c033f55bb55",
-   "modified": "2026-11-09T03:26:42.628Z",
+   "uid": "f9df183034ad65af148abd7eee377d73",
+   "modified": "2026-11-09T04:16:20.820Z",
    "deleted": false,
    "data": {
     "name": "Biology",
@@ -62,8 +62,8 @@
   },
   {
    "kind": "course",
-   "uid": "91ce433a354a130e257a24d4cbf79eb9",
-   "modified": "2026-11-09T03:26:39.997Z",
+   "uid": "1b31d131ead13115c4144afe7bcf7576",
+   "modified": "2026-11-09T04:16:13.887Z",
    "deleted": false,
    "data": {
     "name": "English Literature",
@@ -95,8 +95,8 @@
   },
   {
    "kind": "course",
-   "uid": "325d28a1302d31804cb97d6c9aa8d8cd",
-   "modified": "2026-11-09T03:26:40.069Z",
+   "uid": "9b4240f24802d13b5acde99e52e9926a",
+   "modified": "2026-11-09T04:16:13.959Z",
    "deleted": false,
    "data": {
     "name": "History",
@@ -122,8 +122,8 @@
   },
   {
    "kind": "course",
-   "uid": "3ab22a4df5303da5fd9fab5cdb63ec5a",
-   "modified": "2026-11-09T03:26:40.141Z",
+   "uid": "9a179bcbe580d16334ab6a9b00249560",
+   "modified": "2026-11-09T04:16:14.034Z",
    "deleted": false,
    "data": {
     "name": "Chemistry",
@@ -149,8 +149,8 @@
   },
   {
    "kind": "course",
-   "uid": "e94c36fb34520d2ccbf0e95576ba496a",
-   "modified": "2026-11-09T03:26:40.213Z",
+   "uid": "8b287c3711410315d9aa5c54b6e643a5",
+   "modified": "2026-11-09T04:16:14.111Z",
    "deleted": false,
    "data": {
     "name": "PE",
@@ -171,7 +171,7 @@
   {
    "kind": "course",
    "uid": "ext:classeviva:subject:1",
-   "modified": "2026-11-09T03:26:42.544Z",
+   "modified": "2026-11-09T04:16:20.737Z",
    "deleted": false,
    "data": {
     "name": "Matematica",
@@ -185,7 +185,7 @@
   {
    "kind": "course",
    "uid": "ext:classeviva:subject:3",
-   "modified": "2026-11-09T03:26:42.711Z",
+   "modified": "2026-11-09T04:16:20.904Z",
    "deleted": false,
    "data": {
     "name": "Storia",
@@ -199,7 +199,7 @@
   {
    "kind": "course",
    "uid": "ext:classeviva:subject:4",
-   "modified": "2026-11-09T03:26:42.796Z",
+   "modified": "2026-11-09T04:16:20.984Z",
    "deleted": false,
    "data": {
     "name": "Lingua straniera inglese",
@@ -212,8 +212,8 @@
   },
   {
    "kind": "job",
-   "uid": "5875a12891ca31a47243cc9152b2c6b2",
-   "modified": "2026-11-09T03:26:41.816Z",
+   "uid": "7bbf4eea0d86dbb0ab445e76ffb96c40",
+   "modified": "2026-11-09T04:16:20.000Z",
    "deleted": false,
    "data": {
     "name": "Pizzeria Da Mario",
@@ -230,6 +230,9 @@
     "addizionali": 0.0,
     "fixed_term": true,
     "cuneo": false,
+    "payday": null,
+    "pays_previous_month": true,
+    "payday_since": null,
     "patterns": [
      [
       1,
@@ -253,8 +256,8 @@
   },
   {
    "kind": "job",
-   "uid": "500e88ed454be3d838292f02a3a031f9",
-   "modified": "2026-11-09T03:26:41.900Z",
+   "uid": "d548a8a4e6cecaa4ad9467fe641afba9",
+   "modified": "2026-11-09T04:16:20.079Z",
    "deleted": false,
    "data": {
     "name": "Maths tutoring",
@@ -271,14 +274,17 @@
     "addizionali": 0.0,
     "fixed_term": true,
     "cuneo": false,
+    "payday": null,
+    "pays_previous_month": true,
+    "payday_since": null,
     "patterns": [],
     "skips": []
    }
   },
   {
    "kind": "event",
-   "uid": "6b505ce7108d60edc9b013cf53981ee6",
-   "modified": "2026-11-09T03:26:40.285Z",
+   "uid": "99b53d7a7f8bf071ecab9cee9bed8c97",
+   "modified": "2026-11-09T04:16:14.187Z",
    "deleted": false,
    "data": {
     "day": "2026-11-09",
@@ -291,8 +297,8 @@
   },
   {
    "kind": "event",
-   "uid": "fb8050c68927cdd6dc8383fbe7c6d3a8",
-   "modified": "2026-11-09T03:26:40.357Z",
+   "uid": "4a046b2ce0c0687b4821b8060702c917",
+   "modified": "2026-11-09T04:16:14.259Z",
    "deleted": false,
    "data": {
     "day": "2026-11-09",
@@ -305,8 +311,8 @@
   },
   {
    "kind": "event",
-   "uid": "52d78f1f904ff272bb5a327c46c9837f",
-   "modified": "2026-11-09T03:26:40.430Z",
+   "uid": "cc0344636464d0a5bbd3a2a2494b94dc",
+   "modified": "2026-11-09T04:16:14.335Z",
    "deleted": false,
    "data": {
     "day": "2026-11-13",
@@ -319,13 +325,13 @@
   },
   {
    "kind": "task",
-   "uid": "27ae95e93505ca7ed52532f7eb070ce3",
-   "modified": "2026-11-09T03:26:40.502Z",
+   "uid": "af71004192171c071307beb21845563c",
+   "modified": "2026-11-09T04:16:14.415Z",
    "deleted": false,
    "data": {
     "title": "Problem set 3 (q1–12)",
     "kind": "homework",
-    "course": "41908172e035f0dc474d9b4fb0f07d88",
+    "course": "df2636300aef5df51606ad364f986d92",
     "due": "2026-11-10",
     "done": false,
     "details": "",
@@ -334,13 +340,13 @@
   },
   {
    "kind": "task",
-   "uid": "a91c9de9e3e52be1447b3680f3cacac1",
-   "modified": "2026-11-09T03:26:40.574Z",
+   "uid": "b9a8e9eed7298b0182a7bb5e54c6cbc9",
+   "modified": "2026-11-09T04:16:14.495Z",
    "deleted": false,
    "data": {
     "title": "Read chapters 5–6 of Frankenstein",
     "kind": "reading",
-    "course": "91ce433a354a130e257a24d4cbf79eb9",
+    "course": "1b31d131ead13115c4144afe7bcf7576",
     "due": "2026-11-12",
     "done": false,
     "details": "",
@@ -349,13 +355,13 @@
   },
   {
    "kind": "task",
-   "uid": "726788c0f2f66ab7e9042b6034c42925",
-   "modified": "2026-11-09T03:26:40.646Z",
+   "uid": "839a8df675502a387a3c641c9ed951cc",
+   "modified": "2026-11-09T04:16:14.575Z",
    "deleted": false,
    "data": {
     "title": "Cell respiration lab report",
     "kind": "assignment",
-    "course": "e00955291c188b31ce731c033f55bb55",
+    "course": "f9df183034ad65af148abd7eee377d73",
     "due": "2026-11-15",
     "done": false,
     "details": "",
@@ -364,13 +370,13 @@
   },
   {
    "kind": "task",
-   "uid": "795973d7449b0d374b0ab5ad4f6a5ff6",
-   "modified": "2026-11-09T03:26:40.718Z",
+   "uid": "cf6cf2fca26318eb3e9df9ca62bc792d",
+   "modified": "2026-11-09T04:16:14.655Z",
    "deleted": false,
    "data": {
     "title": "Unit test: Industrial Revolution",
     "kind": "exam",
-    "course": "325d28a1302d31804cb97d6c9aa8d8cd",
+    "course": "9b4240f24802d13b5acde99e52e9926a",
     "due": "2026-11-18",
     "done": false,
     "details": "",
@@ -379,13 +385,13 @@
   },
   {
    "kind": "task",
-   "uid": "9e3e3a25309d76ed7f49deeb967b6d07",
-   "modified": "2026-11-09T03:26:40.790Z",
+   "uid": "9862139f72bfd5515a45270e6b04b26d",
+   "modified": "2026-11-09T04:16:14.735Z",
    "deleted": false,
    "data": {
     "title": "Titration pre-lab questions",
     "kind": "homework",
-    "course": "3ab22a4df5303da5fd9fab5cdb63ec5a",
+    "course": "9a179bcbe580d16334ab6a9b00249560",
     "due": "2026-11-08",
     "done": false,
     "details": "",
@@ -394,8 +400,8 @@
   },
   {
    "kind": "task",
-   "uid": "ac189876cae6a8eb1124de55391e4aa6",
-   "modified": "2026-11-09T03:26:40.863Z",
+   "uid": "1e4c1a1a5efaa9f606f3dd967063e909",
+   "modified": "2026-11-09T04:16:15.044Z",
    "deleted": false,
    "data": {
     "title": "Buy a new graphing calculator",
@@ -409,8 +415,8 @@
   },
   {
    "kind": "task",
-   "uid": "43de676f97ed1c13f65396ead412ffd0",
-   "modified": "2026-11-09T03:26:40.947Z",
+   "uid": "a3557fd7bad44bccf33697dde80878f2",
+   "modified": "2026-11-09T04:16:15.535Z",
    "deleted": false,
    "data": {
     "title": "Return library books",
@@ -424,13 +430,13 @@
   },
   {
    "kind": "task",
-   "uid": "27af8810da7a452b61a635ee854c7f94",
-   "modified": "2026-11-09T03:26:41.024Z",
+   "uid": "1fcb25b590d9e3200e83b36b82788a34",
+   "modified": "2026-11-09T04:16:17.352Z",
    "deleted": false,
    "data": {
     "title": "Vocabulary list 4",
     "kind": "homework",
-    "course": "91ce433a354a130e257a24d4cbf79eb9",
+    "course": "1b31d131ead13115c4144afe7bcf7576",
     "due": "2026-11-07",
     "done": true,
     "details": "",
@@ -440,7 +446,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:agenda:a1",
-   "modified": "2026-11-09T03:26:42.879Z",
+   "modified": "2026-11-09T04:16:21.290Z",
    "deleted": false,
    "data": {
     "title": "Pag. 112 es. 4-9",
@@ -455,7 +461,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:agenda:a2",
-   "modified": "2026-11-09T03:26:42.964Z",
+   "modified": "2026-11-09T04:16:21.358Z",
    "deleted": false,
    "data": {
     "title": "Verifica: Rivoluzione francese",
@@ -470,7 +476,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:homework:h1",
-   "modified": "2026-11-09T03:26:43.047Z",
+   "modified": "2026-11-09T04:16:21.423Z",
    "deleted": false,
    "data": {
     "title": "Workbook p. 18, exercises 1-4",
@@ -485,7 +491,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:homework:h2",
-   "modified": "2026-11-09T03:26:43.336Z",
+   "modified": "2026-11-09T04:16:21.487Z",
    "deleted": false,
    "data": {
     "title": "Riassunto del capitolo 2",
@@ -499,8 +505,8 @@
   },
   {
    "kind": "notebook",
-   "uid": "da43295f0f04849321d8df9c03c01ccf",
-   "modified": "2026-11-09T03:26:41.576Z",
+   "uid": "b6f9580c1779ef0cdb460c7ef3c8a945",
+   "modified": "2026-11-09T04:16:19.751Z",
    "deleted": false,
    "data": {
     "name": "Trips",
@@ -509,98 +515,98 @@
   },
   {
    "kind": "note",
-   "uid": "fe768161155e579525b0c033f452e14f",
-   "modified": "2026-11-09T03:26:41.100Z",
+   "uid": "5c48c6730a3b7872792c05a4aaaf3e72",
+   "modified": "2026-11-09T04:16:19.226Z",
    "deleted": false,
    "data": {
     "title": "Biology: cellular respiration",
     "body": "# Biology: cellular respiration\n\n**Equation:** C6H12O6 + 6 O2 → 6 CO2 + 6 H2O + energy (ATP)\n\n## Stages\n1. Glycolysis: cytoplasm, 2 ATP\n2. Krebs cycle: mitochondrial matrix\n3. Electron transport chain: inner membrane, ~34 ATP\n\n- [x] Review diagram on p. 112\n- [ ] Ask about anaerobic pathways\n",
-    "course": "e00955291c188b31ce731c033f55bb55",
+    "course": "f9df183034ad65af148abd7eee377d73",
     "pinned": false,
-    "updated": "2026-11-09T04:26:41",
+    "updated": "2026-11-09T05:16:19",
     "topic": "Cell biology",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "f8cff98a80a848e6b1e6b4ecc020004b",
-   "modified": "2026-11-09T03:26:41.176Z",
+   "uid": "61c4b959631972a32eb95f5d339697e3",
+   "modified": "2026-11-09T04:16:19.370Z",
    "deleted": false,
    "data": {
     "title": "Mitochondria",
     "body": "# Mitochondria\n\nThe powerhouse of the cell: inner membrane folds (cristae) increase surface area for the electron transport chain.\n",
-    "course": "e00955291c188b31ce731c033f55bb55",
+    "course": "f9df183034ad65af148abd7eee377d73",
     "pinned": false,
-    "updated": "2026-11-09T04:26:41",
+    "updated": "2026-11-09T05:16:19",
     "topic": "Cell biology",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "0b77441efab7106c62df7775963e80b9",
-   "modified": "2026-11-09T03:26:41.256Z",
+   "uid": "8b126199fc202697d2372a15260cba70",
+   "modified": "2026-11-09T04:16:19.442Z",
    "deleted": false,
    "data": {
     "title": "Mendel's laws",
     "body": "# Mendel's laws\n\n1. Segregation\n2. Independent assortment\n",
-    "course": "e00955291c188b31ce731c033f55bb55",
+    "course": "f9df183034ad65af148abd7eee377d73",
     "pinned": false,
-    "updated": "2026-11-09T04:26:41",
+    "updated": "2026-11-09T05:16:19",
     "topic": "Genetics",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "1362765a7d5f5810c24024202f24c300",
-   "modified": "2026-11-09T03:26:41.336Z",
+   "uid": "1eff3ba2a367efecb752c013d6da9f81",
+   "modified": "2026-11-09T04:16:19.523Z",
    "deleted": false,
    "data": {
     "title": "Frankenstein: themes",
     "body": "# Frankenstein: themes\n\n- Ambition and its costs\n- Isolation\n- *Nature vs. nurture*\n\n> \"Beware; for I am fearless, and therefore powerful.\"\n",
-    "course": "91ce433a354a130e257a24d4cbf79eb9",
+    "course": "1b31d131ead13115c4144afe7bcf7576",
     "pinned": false,
-    "updated": "2026-11-09T04:26:41",
+    "updated": "2026-11-09T05:16:19",
     "topic": "Frankenstein",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "b6263d730e92960c5555ee1fc19f55c5",
-   "modified": "2026-11-09T03:26:41.496Z",
+   "uid": "6a3b41c3a57caf4ef1ff2a95a1cd5595",
+   "modified": "2026-11-09T04:16:19.671Z",
    "deleted": false,
    "data": {
     "title": "Ideas",
     "body": "# Ideas\n\nThings I want to try this term:\n\n- Pomodoro for maths homework\n- Join the robotics club\n",
     "course": null,
     "pinned": true,
-    "updated": "2026-11-09T04:26:41",
+    "updated": "2026-11-09T05:16:19",
     "topic": "",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "c82ed6ca9251f103b7a6261c09fe8749",
-   "modified": "2026-11-09T03:26:41.656Z",
+   "uid": "5280f2781d172bc3d17b18eb06eaeb24",
+   "modified": "2026-11-09T04:16:19.831Z",
    "deleted": false,
    "data": {
     "title": "Museum trip",
     "body": "# Museum trip\n\n- Bring the permission slip\n- Meet at 8:15 at the gate\n",
     "course": null,
     "pinned": false,
-    "updated": "2026-11-09T04:26:41",
+    "updated": "2026-11-09T05:16:19",
     "topic": "School",
-    "notebook": "da43295f0f04849321d8df9c03c01ccf"
+    "notebook": "b6f9580c1779ef0cdb460c7ef3c8a945"
    }
   },
   {
    "kind": "journal",
    "uid": "day:2026-11-09",
-   "modified": "2026-11-09T03:26:41.736Z",
+   "modified": "2026-11-09T04:16:19.911Z",
    "deleted": false,
    "data": {
     "day": "2026-11-09",
@@ -609,11 +615,11 @@
   },
   {
    "kind": "shift",
-   "uid": "b18ebc7b7ab7d19454d478a243d6d947",
-   "modified": "2026-11-09T03:26:41.984Z",
+   "uid": "f6c8194486c0364f1e6e2f7bf3f98884",
+   "modified": "2026-11-09T04:16:20.160Z",
    "deleted": false,
    "data": {
-    "job": "500e88ed454be3d838292f02a3a031f9",
+    "job": "d548a8a4e6cecaa4ad9467fe641afba9",
     "day": "2026-11-12",
     "start": 960,
     "duration": 90,
@@ -623,11 +629,11 @@
   },
   {
    "kind": "shift",
-   "uid": "661b54fd3d0e9594afbbf789c688364a",
-   "modified": "2026-11-09T03:26:42.064Z",
+   "uid": "bfbbb08723bd82d493464f1e6118c7dc",
+   "modified": "2026-11-09T04:16:20.248Z",
    "deleted": false,
    "data": {
-    "job": "500e88ed454be3d838292f02a3a031f9",
+    "job": "d548a8a4e6cecaa4ad9467fe641afba9",
     "day": "2026-11-19",
     "start": 960,
     "duration": 90,
@@ -637,11 +643,11 @@
   },
   {
    "kind": "shift",
-   "uid": "f9a0af80e68102d9e684f64bcbfbe72c",
-   "modified": "2026-11-09T03:26:42.144Z",
+   "uid": "4cf69ff390121e89186ac96ba1f5d19f",
+   "modified": "2026-11-09T04:16:20.328Z",
    "deleted": false,
    "data": {
-    "job": "500e88ed454be3d838292f02a3a031f9",
+    "job": "d548a8a4e6cecaa4ad9467fe641afba9",
     "day": "2026-11-26",
     "start": 960,
     "duration": 90,
@@ -651,11 +657,11 @@
   },
   {
    "kind": "shift",
-   "uid": "005cd94b4d681476d8c3f00a28d93ae5",
-   "modified": "2026-11-09T03:26:42.224Z",
+   "uid": "f617bdc44ac0b4f5edaffb9b93019b69",
+   "modified": "2026-11-09T04:16:20.408Z",
    "deleted": false,
    "data": {
-    "job": "500e88ed454be3d838292f02a3a031f9",
+    "job": "d548a8a4e6cecaa4ad9467fe641afba9",
     "day": "2026-12-03",
     "start": 960,
     "duration": 90,
@@ -678,7 +684,7 @@
   "CREATE TABLE events (\n    id        INTEGER PRIMARY KEY,\n    day       TEXT NOT NULL,\n    start_min INTEGER NOT NULL,\n    end_min   INTEGER NOT NULL,\n    title     TEXT NOT NULL,\n    details   TEXT NOT NULL DEFAULT '',\n    color     TEXT NOT NULL DEFAULT '#8a8f98'\n, uid TEXT, modified TEXT, dirty INTEGER NOT NULL DEFAULT 0)",
   "CREATE TABLE focus_sessions (\n    id       INTEGER PRIMARY KEY,\n    started  TEXT NOT NULL,\n    minutes  INTEGER NOT NULL,\n    task_id  INTEGER REFERENCES tasks(id) ON DELETE SET NULL,\n    label    TEXT NOT NULL DEFAULT '',\n    complete INTEGER NOT NULL DEFAULT 1\n, uid TEXT, modified TEXT, dirty INTEGER NOT NULL DEFAULT 0)",
   "CREATE TABLE grades (\n    external_id TEXT PRIMARY KEY,\n    subject     TEXT NOT NULL,\n    day         TEXT NOT NULL,\n    display     TEXT NOT NULL,\n    value       REAL,\n    component   TEXT NOT NULL DEFAULT '',\n    period      TEXT NOT NULL DEFAULT '',\n    notes       TEXT NOT NULL DEFAULT '',\n    cancelled   INTEGER NOT NULL DEFAULT 0,\n    course_id   INTEGER REFERENCES courses(id) ON DELETE SET NULL\n)",
-  "CREATE TABLE jobs (\n    id          INTEGER PRIMARY KEY,\n    name        TEXT NOT NULL,\n    color       TEXT NOT NULL DEFAULT '#0090ff',\n    hourly_rate REAL,\n    deductions  REAL NOT NULL DEFAULT 0\n, pay_mode TEXT NOT NULL DEFAULT 'hourly', monthly_pay REAL, mensilities INTEGER NOT NULL DEFAULT 13, contract_start TEXT, contract_end TEXT, tax_model TEXT NOT NULL DEFAULT 'flat', inps REAL NOT NULL DEFAULT 9.19, addizionali REAL NOT NULL DEFAULT 0, fixed_term INTEGER NOT NULL DEFAULT 1, cuneo INTEGER NOT NULL DEFAULT 0, uid TEXT, modified TEXT, dirty INTEGER NOT NULL DEFAULT 0)",
+  "CREATE TABLE jobs (\n    id          INTEGER PRIMARY KEY,\n    name        TEXT NOT NULL,\n    color       TEXT NOT NULL DEFAULT '#0090ff',\n    hourly_rate REAL,\n    deductions  REAL NOT NULL DEFAULT 0\n, pay_mode TEXT NOT NULL DEFAULT 'hourly', monthly_pay REAL, mensilities INTEGER NOT NULL DEFAULT 13, contract_start TEXT, contract_end TEXT, tax_model TEXT NOT NULL DEFAULT 'flat', inps REAL NOT NULL DEFAULT 9.19, addizionali REAL NOT NULL DEFAULT 0, fixed_term INTEGER NOT NULL DEFAULT 1, cuneo INTEGER NOT NULL DEFAULT 0, payday INTEGER, pays_previous_month INTEGER NOT NULL DEFAULT 1, payday_since TEXT, uid TEXT, modified TEXT, dirty INTEGER NOT NULL DEFAULT 0)",
   "CREATE TABLE journal (\n    day  TEXT PRIMARY KEY,\n    body TEXT NOT NULL DEFAULT ''\n, uid TEXT, modified TEXT, dirty INTEGER NOT NULL DEFAULT 0)",
   "CREATE TABLE lessons (\n    external_id TEXT PRIMARY KEY,\n    day         TEXT NOT NULL,\n    subject     TEXT NOT NULL,\n    topic       TEXT NOT NULL DEFAULT '',\n    teacher     TEXT NOT NULL DEFAULT '',\n    hour        INTEGER NOT NULL DEFAULT 0,\n    course_id   INTEGER REFERENCES courses(id) ON DELETE SET NULL\n)",
   "CREATE TABLE medicine_doses (\n    id          INTEGER PRIMARY KEY,\n    medicine_id INTEGER NOT NULL REFERENCES medicines(id) ON DELETE CASCADE,\n    day         TEXT NOT NULL,\n    planned     INTEGER NOT NULL,\n    taken       INTEGER NOT NULL DEFAULT 1,\n    at_min      INTEGER NOT NULL DEFAULT 0\n, uid TEXT, modified TEXT, dirty INTEGER NOT NULL DEFAULT 0)",
@@ -862,6 +868,9 @@
     0.0,
     1,
     0,
+    null,
+    1,
+    null,
     "59d372536f86fa5489fd9c757bcb4fab",
     "2026-09-28T05:36:24.047Z",
     0
@@ -882,6 +891,9 @@
     0.0,
     1,
     0,
+    null,
+    1,
+    null,
     "17aceddf0f581ebaadd4106a00fa0160",
     "2026-09-28T05:36:24.047Z",
     0
@@ -902,6 +914,9 @@
     0.0,
     1,
     0,
+    null,
+    1,
+    null,
     "c3f1a5b8d2e94f70a6b1e8d4c9f02a17",
     "2026-09-28T05:36:24.047Z",
     0

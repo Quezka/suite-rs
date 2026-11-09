@@ -43,7 +43,7 @@ fn opens_a_python_database_without_changing_its_layout() {
     let want: Vec<String> = fixtures()["schema"].as_array().unwrap().iter().map(|s| s.as_str().unwrap().to_string()).collect();
     assert_eq!(schema, want);
     let version: i32 = db.conn.query_row("PRAGMA user_version", [], |r| r.get(0)).unwrap();
-    assert_eq!(version, 18);
+    assert_eq!(version, quire::infrastructure::sqlite::SCHEMA_VERSION);
 }
 
 #[test]
