@@ -1,0 +1,525 @@
+{
+ "light": {
+  "bg": {
+   "value": "#f4f4f2",
+   "type": "color",
+   "description": "Window and page background, behind cards and glass. Plain: never a gradient or colour blobs."
+  },
+  "surface": {
+   "value": "#ffffff",
+   "type": "color",
+   "description": "Cards, sheets, dialogs and the tint of glass panes. Solid: content never sits on see-through ground."
+  },
+  "raised": {
+   "value": "#ebebe8",
+   "type": "color",
+   "description": "Inputs, the off track of a switch, tiles inside a card."
+  },
+  "sidebar": {
+   "value": "#eeeeeb",
+   "type": "color",
+   "description": "The floating sidebar and the Settings list."
+  },
+  "border": {
+   "value": "#b4b4ae",
+   "type": "color",
+   "description": "Control outlines, hairlines between rows (in high contrast: every surface's outline)."
+  },
+  "hover": {
+   "value": "#e2e2de",
+   "type": "color",
+   "description": "Hover and pressed fill of quiet buttons and list rows."
+  },
+  "text": {
+   "value": "#111111",
+   "type": "color",
+   "description": "Body copy and titles on bg, surface, raised, sidebar and glass."
+  },
+  "muted": {
+   "value": "#3c3c39",
+   "type": "color",
+   "description": "Secondary words: hints under a setting, details under a title. On bg, surface and raised."
+  },
+  "faint": {
+   "value": "#52524e",
+   "type": "color",
+   "description": "Least important words that still must be read: captions, section labels. On bg and surface."
+  },
+  "accent": {
+   "value": "#4f46e5",
+   "type": "color",
+   "description": "The one action that matters, the chosen item, links, switches turned on, focus rings."
+  },
+  "accent-hover": {
+   "value": "#4338ca",
+   "type": "color",
+   "description": "accent while hovered or pressed."
+  },
+  "accent-soft": {
+   "value": "#e3e2fb",
+   "type": "color",
+   "description": "Tonal fills: the chosen tab or sidebar item, secondary buttons, the chosen segment."
+  },
+  "on-accent": {
+   "value": "#ffffff",
+   "type": "color",
+   "description": "Words and icons on accent."
+  },
+  "on-accent-soft": {
+   "value": "#1e1a78",
+   "type": "color",
+   "description": "Words and icons on accent-soft."
+  },
+  "danger": {
+   "value": "#d0262d",
+   "type": "color",
+   "description": "Deleting, errors, overdue. Always with a word or icon, never colour alone."
+  },
+  "success": {
+   "value": "#127a46",
+   "type": "color",
+   "description": "Done, saved, connected. Always with a word or icon."
+  },
+  "warning": {
+   "value": "#b45309",
+   "type": "color",
+   "description": "Needs attention soon: low battery, due today."
+  }
+ },
+ "dark": {
+  "bg": {
+   "value": "#111112",
+   "type": "color",
+   "description": "Window and page background, behind cards and glass. Plain: never a gradient or colour blobs."
+  },
+  "surface": {
+   "value": "#1c1c1e",
+   "type": "color",
+   "description": "Cards, sheets, dialogs and the tint of glass panes. Solid: content never sits on see-through ground."
+  },
+  "raised": {
+   "value": "#2a2a2d",
+   "type": "color",
+   "description": "Inputs, the off track of a switch, tiles inside a card."
+  },
+  "sidebar": {
+   "value": "#161618",
+   "type": "color",
+   "description": "The floating sidebar and the Settings list."
+  },
+  "border": {
+   "value": "#4b4b50",
+   "type": "color",
+   "description": "Control outlines, hairlines between rows (in high contrast: every surface's outline)."
+  },
+  "hover": {
+   "value": "#303034",
+   "type": "color",
+   "description": "Hover and pressed fill of quiet buttons and list rows."
+  },
+  "text": {
+   "value": "#f5f5f4",
+   "type": "color",
+   "description": "Body copy and titles on bg, surface, raised, sidebar and glass."
+  },
+  "muted": {
+   "value": "#d0d0cc",
+   "type": "color",
+   "description": "Secondary words: hints under a setting, details under a title. On bg, surface and raised."
+  },
+  "faint": {
+   "value": "#a9a9a5",
+   "type": "color",
+   "description": "Least important words that still must be read: captions, section labels. On bg and surface."
+  },
+  "accent": {
+   "value": "#a9a6ff",
+   "type": "color",
+   "description": "The one action that matters, the chosen item, links, switches turned on, focus rings."
+  },
+  "accent-hover": {
+   "value": "#c3c0ff",
+   "type": "color",
+   "description": "accent while hovered or pressed."
+  },
+  "accent-soft": {
+   "value": "#37356e",
+   "type": "color",
+   "description": "Tonal fills: the chosen tab or sidebar item, secondary buttons, the chosen segment."
+  },
+  "on-accent": {
+   "value": "#0b0b14",
+   "type": "color",
+   "description": "Words and icons on accent."
+  },
+  "on-accent-soft": {
+   "value": "#e4e3ff",
+   "type": "color",
+   "description": "Words and icons on accent-soft."
+  },
+  "danger": {
+   "value": "#ff7b80",
+   "type": "color",
+   "description": "Deleting, errors, overdue. Always with a word or icon, never colour alone."
+  },
+  "success": {
+   "value": "#4ade80",
+   "type": "color",
+   "description": "Done, saved, connected. Always with a word or icon."
+  },
+  "warning": {
+   "value": "#fbbf24",
+   "type": "color",
+   "description": "Needs attention soon: low battery, due today."
+  }
+ },
+ "high-light": {
+  "bg": {
+   "value": "#ffffff",
+   "type": "color",
+   "description": "Window and page background, behind cards and glass. Plain: never a gradient or colour blobs."
+  },
+  "surface": {
+   "value": "#ffffff",
+   "type": "color",
+   "description": "Cards, sheets, dialogs and the tint of glass panes. Solid: content never sits on see-through ground."
+  },
+  "raised": {
+   "value": "#f0f0f0",
+   "type": "color",
+   "description": "Inputs, the off track of a switch, tiles inside a card."
+  },
+  "sidebar": {
+   "value": "#f0f0f0",
+   "type": "color",
+   "description": "The floating sidebar and the Settings list."
+  },
+  "border": {
+   "value": "#000000",
+   "type": "color",
+   "description": "Control outlines, hairlines between rows (in high contrast: every surface's outline)."
+  },
+  "hover": {
+   "value": "#dcdcdc",
+   "type": "color",
+   "description": "Hover and pressed fill of quiet buttons and list rows."
+  },
+  "text": {
+   "value": "#000000",
+   "type": "color",
+   "description": "Body copy and titles on bg, surface, raised, sidebar and glass."
+  },
+  "muted": {
+   "value": "#1a1a1a",
+   "type": "color",
+   "description": "Secondary words: hints under a setting, details under a title. On bg, surface and raised."
+  },
+  "faint": {
+   "value": "#333333",
+   "type": "color",
+   "description": "Least important words that still must be read: captions, section labels. On bg and surface."
+  },
+  "accent": {
+   "value": "#1f1fa8",
+   "type": "color",
+   "description": "The one action that matters, the chosen item, links, switches turned on, focus rings."
+  },
+  "accent-hover": {
+   "value": "#14147a",
+   "type": "color",
+   "description": "accent while hovered or pressed."
+  },
+  "accent-soft": {
+   "value": "#cfcff7",
+   "type": "color",
+   "description": "Tonal fills: the chosen tab or sidebar item, secondary buttons, the chosen segment."
+  },
+  "on-accent": {
+   "value": "#ffffff",
+   "type": "color",
+   "description": "Words and icons on accent."
+  },
+  "on-accent-soft": {
+   "value": "#000000",
+   "type": "color",
+   "description": "Words and icons on accent-soft."
+  },
+  "danger": {
+   "value": "#a30000",
+   "type": "color",
+   "description": "Deleting, errors, overdue. Always with a word or icon, never colour alone."
+  },
+  "success": {
+   "value": "#005a2b",
+   "type": "color",
+   "description": "Done, saved, connected. Always with a word or icon."
+  },
+  "warning": {
+   "value": "#7a4100",
+   "type": "color",
+   "description": "Needs attention soon: low battery, due today."
+  }
+ },
+ "high-dark": {
+  "bg": {
+   "value": "#000000",
+   "type": "color",
+   "description": "Window and page background, behind cards and glass. Plain: never a gradient or colour blobs."
+  },
+  "surface": {
+   "value": "#000000",
+   "type": "color",
+   "description": "Cards, sheets, dialogs and the tint of glass panes. Solid: content never sits on see-through ground."
+  },
+  "raised": {
+   "value": "#1a1a1a",
+   "type": "color",
+   "description": "Inputs, the off track of a switch, tiles inside a card."
+  },
+  "sidebar": {
+   "value": "#0a0a0a",
+   "type": "color",
+   "description": "The floating sidebar and the Settings list."
+  },
+  "border": {
+   "value": "#ffffff",
+   "type": "color",
+   "description": "Control outlines, hairlines between rows (in high contrast: every surface's outline)."
+  },
+  "hover": {
+   "value": "#2e2e2e",
+   "type": "color",
+   "description": "Hover and pressed fill of quiet buttons and list rows."
+  },
+  "text": {
+   "value": "#ffffff",
+   "type": "color",
+   "description": "Body copy and titles on bg, surface, raised, sidebar and glass."
+  },
+  "muted": {
+   "value": "#e6e6e6",
+   "type": "color",
+   "description": "Secondary words: hints under a setting, details under a title. On bg, surface and raised."
+  },
+  "faint": {
+   "value": "#cccccc",
+   "type": "color",
+   "description": "Least important words that still must be read: captions, section labels. On bg and surface."
+  },
+  "accent": {
+   "value": "#ffd400",
+   "type": "color",
+   "description": "The one action that matters, the chosen item, links, switches turned on, focus rings."
+  },
+  "accent-hover": {
+   "value": "#ffe55c",
+   "type": "color",
+   "description": "accent while hovered or pressed."
+  },
+  "accent-soft": {
+   "value": "#3a3300",
+   "type": "color",
+   "description": "Tonal fills: the chosen tab or sidebar item, secondary buttons, the chosen segment."
+  },
+  "on-accent": {
+   "value": "#000000",
+   "type": "color",
+   "description": "Words and icons on accent."
+  },
+  "on-accent-soft": {
+   "value": "#ffffff",
+   "type": "color",
+   "description": "Words and icons on accent-soft."
+  },
+  "danger": {
+   "value": "#ff8a8a",
+   "type": "color",
+   "description": "Deleting, errors, overdue. Always with a word or icon, never colour alone."
+  },
+  "success": {
+   "value": "#6dffb0",
+   "type": "color",
+   "description": "Done, saved, connected. Always with a word or icon."
+  },
+  "warning": {
+   "value": "#ffd400",
+   "type": "color",
+   "description": "Needs attention soon: low battery, due today."
+  }
+ },
+ "global": {
+  "radius": {
+   "radius-xs": {
+    "value": "6px",
+    "type": "borderRadius"
+   },
+   "radius-sm": {
+    "value": "8px",
+    "type": "borderRadius"
+   },
+   "radius-md": {
+    "value": "12px",
+    "type": "borderRadius"
+   },
+   "radius-popup": {
+    "value": "14px",
+    "type": "borderRadius"
+   },
+   "radius-lg": {
+    "value": "20px",
+    "type": "borderRadius"
+   },
+   "radius-xl": {
+    "value": "30px",
+    "type": "borderRadius"
+   },
+   "radius-pill": {
+    "value": "999px",
+    "type": "borderRadius"
+   }
+  },
+  "spacing": {
+   "space-1": {
+    "value": "4px",
+    "type": "spacing"
+   },
+   "space-2": {
+    "value": "8px",
+    "type": "spacing"
+   },
+   "gap": {
+    "value": "10px",
+    "type": "spacing"
+   },
+   "space-3": {
+    "value": "12px",
+    "type": "spacing"
+   },
+   "space-4": {
+    "value": "16px",
+    "type": "spacing"
+   },
+   "space-5": {
+    "value": "24px",
+    "type": "spacing"
+   },
+   "space-6": {
+    "value": "32px",
+    "type": "spacing"
+   }
+  },
+  "typography": {
+   "display": {
+    "type": "typography",
+    "value": {
+     "fontFamily": "Manrope",
+     "fontSize": "32px",
+     "lineHeight": "38px",
+     "fontWeight": "800"
+    }
+   },
+   "headline": {
+    "type": "typography",
+    "value": {
+     "fontFamily": "Manrope",
+     "fontSize": "26px",
+     "lineHeight": "32px",
+     "fontWeight": "700"
+    }
+   },
+   "title-lg": {
+    "type": "typography",
+    "value": {
+     "fontFamily": "Manrope",
+     "fontSize": "22px",
+     "lineHeight": "28px",
+     "fontWeight": "700"
+    }
+   },
+   "title": {
+    "type": "typography",
+    "value": {
+     "fontFamily": "Manrope",
+     "fontSize": "18px",
+     "lineHeight": "24px",
+     "fontWeight": "600"
+    }
+   },
+   "body-lg": {
+    "type": "typography",
+    "value": {
+     "fontFamily": "Manrope",
+     "fontSize": "17px",
+     "lineHeight": "24px",
+     "fontWeight": "400"
+    }
+   },
+   "body": {
+    "type": "typography",
+    "value": {
+     "fontFamily": "Manrope",
+     "fontSize": "16px",
+     "lineHeight": "22px",
+     "fontWeight": "400"
+    }
+   },
+   "label": {
+    "type": "typography",
+    "value": {
+     "fontFamily": "Manrope",
+     "fontSize": "15px",
+     "lineHeight": "20px",
+     "fontWeight": "600"
+    }
+   },
+   "caption": {
+    "type": "typography",
+    "value": {
+     "fontFamily": "Manrope",
+     "fontSize": "13px",
+     "lineHeight": "18px",
+     "fontWeight": "500"
+    }
+   }
+  }
+ },
+ "$themes": [
+  {
+   "name": "light",
+   "selectedTokenSets": {
+    "global": "source",
+    "light": "enabled"
+   }
+  },
+  {
+   "name": "dark",
+   "selectedTokenSets": {
+    "global": "source",
+    "dark": "enabled"
+   }
+  },
+  {
+   "name": "high-light",
+   "selectedTokenSets": {
+    "global": "source",
+    "high-light": "enabled"
+   }
+  },
+  {
+   "name": "high-dark",
+   "selectedTokenSets": {
+    "global": "source",
+    "high-dark": "enabled"
+   }
+  }
+ ],
+ "$metadata": {
+  "tokenSetOrder": [
+   "global",
+   "light",
+   "dark",
+   "high-light",
+   "high-dark"
+  ]
+ }
+}
