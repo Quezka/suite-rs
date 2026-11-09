@@ -13,7 +13,10 @@ mod symbols;
 pub mod runner;
 pub mod style;
 pub mod theme;
+pub mod typing;
 pub mod widgets;
+#[cfg(target_os = "android")]
+pub mod android;
 
 #[cfg(not(target_os = "android"))]
 pub use runner::run;
@@ -39,3 +42,9 @@ pub fn log(line: &str) {
     eprintln!("{line}");
 }
 pub use theme::Tokens;
+
+/// The part of the screen free of system bars, notches and the keyboard (all zero on the desktop). Glass may run
+/// under the bars; words and buttons stay inside this.
+pub fn safe_area(ctx: &egui::Context) -> egui::Margin {
+    ctx.data(|d| d.get_temp(egui::Id::NULL.with("quezka-safe-area"))).unwrap_or_default()
+}

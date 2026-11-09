@@ -156,6 +156,11 @@ struct Runner<A: App> {
     ctx: egui::Context,
     state: Option<egui_winit::State>,
     stats: FrameStats,
+    #[cfg(target_os = "android")]
+    android: Option<(winit::platform::android::activity::AndroidApp, crate::android::Typing)>,
+    /// Events to add to the next frame's input (typing from a phone keyboard).
+    pending: Vec<egui::Event>,
+    frame_count: u64,
 }
 
 impl<A: App> Runner<A> {
@@ -163,7 +168,19 @@ impl<A: App> Runner<A> {
         let started = std::time::Instant::now();
         let (Some(window), Some(gpu), Some(state)) = (&self.window, &mut self.gpu, &mut self.state) else { return };
         let Some(surface) = &gpu.surface else { return };
-        let raw = state.take_egui_input(window);
+        let mut raw = state.take_egui_input(window);
+        raw.events.append(&mut self.pending);
+        self.frame_count += 1;
+        #[cfg(target_os = "android")]
+        if let Some((app, _)) = &self.android {
+            // Where the bars and the keyboard are: checked every few frames (it costs a few calls into Java).
+            if self.frame_count % 8 == 1 {
+                if let Some(px) = crate::android::insets(app) {
+                    let margins = crate::android::margins(px, window.scale_factor() as f32);
+                    self.ctx.data_mut(|d| d.insert_temp(egui::Id::NULL.with("quezka-safe-area"), margins));
+                }
+            }
+        }
         let (output, th) = frame(&self.ctx, &mut self.app, raw);
         state.handle_platform_output(window, output.platform_output);
         let prims = self.ctx.tessellate(output.shapes, output.pixels_per_point);
@@ -179,6 +196,18 @@ impl<A: App> Runner<A> {
             _ => surface.configure(&gpu.device, &gpu.config),
         }
         let repaint = output.viewport_output.get(&egui::ViewportId::ROOT).map(|v| v.repaint_delay);
+        #[cfg(target_os = "android")]
+        if let Some((app, typing)) = &mut self.android {
+            let typed = typing.update(app, self.ctx.egui_wants_keyboard_input());
+            if !typed.is_empty() {
+                self.pending.extend(typed);
+                window.request_redraw();
+            }
+            if self.ctx.egui_wants_keyboard_input() {
+                // Keep looking at the keyboard's text while it's up.
+                self.ctx.request_repaint_after(std::time::Duration::from_millis(50));
+            }
+        }
         let animating = repaint.is_some_and(|d| d.is_zero());
         if animating {
             window.request_redraw();
@@ -276,7 +305,12 @@ impl<A: App> ApplicationHandler for Runner<A> {
     }
 }
 
-fn run_loop<A: App + 'static>(event_loop: EventLoop<()>, title: &str, app: A) -> Result<(), String> {
+fn run_loop<A: App + 'static>(
+    event_loop: EventLoop<()>,
+    title: &str,
+    app: A,
+    #[cfg(target_os = "android")] android: winit::platform::android::activity::AndroidApp,
+) -> Result<(), String> {
     let mut runner = Runner {
         app,
         title: title.to_string(),
@@ -285,7 +319,15 @@ fn run_loop<A: App + 'static>(event_loop: EventLoop<()>, title: &str, app: A) ->
         ctx: egui::Context::default(),
         state: None,
         stats: FrameStats::new(),
+        #[cfg(target_os = "android")]
+        android: None,
+        pending: Vec::new(),
+        frame_count: 0,
     };
+    #[cfg(target_os = "android")]
+    {
+        runner.android = Some((android, crate::android::Typing::default()));
+    }
     event_loop.run_app(&mut runner).map_err(|e| e.to_string())
 }
 
@@ -299,6 +341,6 @@ pub fn run<A: App + 'static>(title: &str, app: A) -> Result<(), String> {
 #[cfg(target_os = "android")]
 pub fn run_android<A: App + 'static>(android: winit::platform::android::activity::AndroidApp, title: &str, app: A) -> Result<(), String> {
     use winit::platform::android::EventLoopBuilderExtAndroid;
-    let event_loop = EventLoop::builder().with_android_app(android).build().map_err(|e| e.to_string())?;
-    run_loop(event_loop, title, app)
+    let event_loop = EventLoop::builder().with_android_app(android.clone()).build().map_err(|e| e.to_string())?;
+    run_loop(event_loop, title, app, android)
 }

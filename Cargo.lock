@@ -68,6 +68,7 @@ dependencies = [
  "ndk-context",
  "ndk-sys",
  "num_enum",
+ "simd_cesu8",
  "thiserror 2.0.21",
 ]
 
@@ -1990,6 +1991,7 @@ dependencies = [
  "egui-wgpu",
  "egui-winit",
  "image",
+ "jni",
  "pollster",
  "resvg",
  "wgpu",

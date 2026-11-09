@@ -24,7 +24,12 @@ the quire-server protocol must stay compatible with the Python and Kotlin apps t
   (`InstanceDescriptor::new_*_display_handle`, `queue.present`).
 - Commit as quezka <arsdom15@gmail.com>, never the Claude account's email. Remotes: `origin` github.com/Quezka/suite-rs
   (public, GPL-3.0-only), `lan` git.lan backup. Push both.
-- Android: `crates/kit-demo-android` (NativeActivity, `android_main` → `quezka_kit::run_android`); build with
+- Android: GameActivity (winit `android-game-activity`), because NativeActivity can't carry the keyboard's text.
+  The shell is a small Gradle project (`crates/kit-demo-android/android/gradle-shell`: games-activity 4.4.0,
+  edge-to-edge theme, the Rust `.so` + `libc++_shared.so` in jniLibs). `kit::android` reads the system bars,
+  cutout and keyboard insets over JNI (jni 0.22, `jni_str!`/`jni_sig!`) → `quezka_kit::safe_area(ctx)`; typing
+  mirrors GameActivity's text state and `typing::diff` turns changes into egui Backspace/Text events.
+  `crates/kit-demo-android` (`android_main` → `quezka_kit::run_android`); build with
   `bash crates/kit-demo-android/android/build.sh` (arm64, throwaway key in ~/.local/share/quezka-kitdemo). It
   scrolls by itself and logs frame times: `adb logcat -s quezka`. On the user's Redmi Note 11 Pro+ (Mali-G68,
   Vulkan, 60 Hz) it holds ~61 fps with two glass panes (2026-11-09). MIUI blocks `adb install` unless "Install via

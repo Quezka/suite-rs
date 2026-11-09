@@ -21,4 +21,6 @@ winit.workspace = true
 
 [target.'cfg(target_os = "android")'.dependencies]
 egui-winit.workspace = true
-winit = { workspace = true, features = ["android-native-activity"] }
+# GameActivity, not NativeActivity: it carries the keyboard's text (and autocorrect, swipe typing) to the app.
+winit = { workspace = true, features = ["android-game-activity"] }
+jni = "0.22"

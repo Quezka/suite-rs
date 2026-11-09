@@ -31,6 +31,7 @@ fn hex(rgb: u32) -> Color32 {
 pub struct Demo {
     touched: bool,
     tab: usize,
+    note: String,
 }
 
 impl App for Demo {
@@ -41,7 +42,9 @@ impl App for Demo {
         if ctx.input(|i| i.pointer.any_down()) {
             self.touched = true;
         }
-        let top = 40.0; // the status bar
+        let safe = quezka_kit::safe_area(&ctx);
+        let top = f32::from(safe.top);
+        let bottom = f32::from(safe.bottom);
         egui::CentralPanel::default().frame(egui::Frame::new().fill(th.bg)).show(root, |ui| {
             let mut scroll = egui::ScrollArea::vertical();
             if !self.touched {
@@ -52,6 +55,19 @@ impl App for Demo {
             }
             scroll.show(ui, |ui| {
                 ui.add_space(top + 64.0 + 2.0 * GAP);
+                // Somewhere to try the keyboard: Russian, Italian, autocorrect, swipe typing.
+                ui.horizontal(|ui| {
+                    ui.add_space(GAP);
+                    let field = egui::TextEdit::multiline(&mut self.note)
+                        .hint_text("Type something…")
+                        .desired_width(ui.available_width() - GAP)
+                        .desired_rows(2)
+                        .font(Weight::Medium.font(17.0));
+                    if ui.add(field).has_focus() {
+                        self.touched = true;
+                    }
+                });
+                ui.add_space(GAP);
                 for round in 0..2 {
                     for (title, detail, colour) in EVENTS {
                         let (rect, _) = ui.allocate_exact_size(Vec2::new(ui.available_width(), 96.0), Sense::hover());
@@ -75,7 +91,7 @@ impl App for Demo {
             glass::pane(p, bar, OUTER_RADIUS, th, Glass::Regular, true);
             p.text(bar.left_center() + Vec2::new(18.0, 0.0), Align2::LEFT_CENTER, "Monday, 9 November", Weight::Bold.font(22.0), th.text);
 
-            let tabs = Rect::from_min_max(Pos2::new(screen.min.x + GAP, screen.max.y - 92.0), Pos2::new(screen.max.x - GAP, screen.max.y - 24.0));
+            let tabs = Rect::from_min_max(Pos2::new(screen.min.x + GAP, screen.max.y - bottom - GAP - 64.0), Pos2::new(screen.max.x - GAP, screen.max.y - bottom - GAP));
             glass::pane(p, tabs, tabs.height() / 2.0, th, Glass::Regular, true);
             let names = ["Today", "Week", "Tasks", "Notes"];
             let width = tabs.width() / names.len() as f32;
