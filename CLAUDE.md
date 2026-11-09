@@ -24,3 +24,10 @@ the quire-server protocol must stay compatible with the Python and Kotlin apps t
   (`InstanceDescriptor::new_*_display_handle`, `queue.present`).
 - Commit as quezka <arsdom15@gmail.com>, never the Claude account's email. Remotes: `origin` github.com/Quezka/suite-rs
   (public, GPL-3.0-only), `lan` git.lan backup. Push both.
+- Android: `crates/kit-demo-android` (NativeActivity, `android_main` → `quezka_kit::run_android`); build with
+  `bash crates/kit-demo-android/android/build.sh` (arm64, throwaway key in ~/.local/share/quezka-kitdemo). It
+  scrolls by itself and logs frame times: `adb logcat -s quezka`. On the user's Redmi Note 11 Pro+ (Mali-G68,
+  Vulkan, 60 Hz) it holds ~61 fps with two glass panes (2026-11-09). MIUI blocks `adb install` unless "Install via
+  USB" is on: push the APK to /sdcard/Download and let the user install it. On the real phone never send gestures
+  into the user's own apps (a swipe once deleted notes).
+

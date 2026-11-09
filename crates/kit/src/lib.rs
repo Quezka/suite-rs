@@ -15,5 +15,27 @@ pub mod style;
 pub mod theme;
 pub mod widgets;
 
-pub use runner::{run, screenshot, App};
+#[cfg(not(target_os = "android"))]
+pub use runner::run;
+#[cfg(target_os = "android")]
+pub use runner::run_android;
+pub use runner::{screenshot, App};
+
+/// A line for the developer: logcat (tag "quezka") on Android, stderr elsewhere.
+pub fn log(line: &str) {
+    #[cfg(target_os = "android")]
+    {
+        #[link(name = "log")]
+        extern "C" {
+            fn __android_log_write(priority: i32, tag: *const std::ffi::c_char, text: *const std::ffi::c_char) -> i32;
+        }
+        let tag = c"quezka";
+        if let Ok(text) = std::ffi::CString::new(line) {
+            // SAFETY: both strings are valid, NUL-terminated and live for the call.
+            unsafe { __android_log_write(4, tag.as_ptr(), text.as_ptr()) };
+        }
+    }
+    #[cfg(not(target_os = "android"))]
+    eprintln!("{line}");
+}
 pub use theme::Tokens;

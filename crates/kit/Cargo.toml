@@ -9,10 +9,16 @@ authors.workspace = true
 [dependencies]
 egui.workspace = true
 egui-wgpu.workspace = true
-egui-winit.workspace = true
 wgpu.workspace = true
-winit.workspace = true
 pollster.workspace = true
 bytemuck.workspace = true
 image.workspace = true
 resvg = { version = "0.47", default-features = false }
+
+[target.'cfg(not(target_os = "android"))'.dependencies]
+egui-winit = { workspace = true, features = ["wayland", "x11", "links", "clipboard"] }
+winit.workspace = true
+
+[target.'cfg(target_os = "android")'.dependencies]
+egui-winit.workspace = true
+winit = { workspace = true, features = ["android-native-activity"] }

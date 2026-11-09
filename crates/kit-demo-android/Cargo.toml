@@ -1,0 +1,16 @@
+[package]
+name = "kit-demo-android"
+version = "0.1.0"
+description = "The kit's glass on a phone, with an automatic scroll that logs frame times (logcat tag \"quezka\")."
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[lib]
+name = "kitdemo"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+quezka-kit = { path = "../kit" }
+egui.workspace = true
+winit.workspace = true

@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/kit"]
+members = ["crates/kit", "crates/kit-demo-android"]
 
 [workspace.package]
 edition = "2021"
@@ -10,7 +10,7 @@ authors = ["quezka"]
 [workspace.dependencies]
 egui = { version = "0.37", features = ["default_fonts"] }
 egui-wgpu = { version = "0.37", default-features = false }
-egui-winit = { version = "0.37", default-features = false, features = ["wayland", "x11", "links", "clipboard"] }
+egui-winit = { version = "0.37", default-features = false }
 wgpu = "30"
 winit = "0.30"
 pollster = "0.4"
