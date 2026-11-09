@@ -198,7 +198,7 @@ impl<A: App> Runner<A> {
         let repaint = output.viewport_output.get(&egui::ViewportId::ROOT).map(|v| v.repaint_delay);
         #[cfg(target_os = "android")]
         if let Some((app, typing)) = &mut self.android {
-            let typed = typing.update(app, self.ctx.egui_wants_keyboard_input());
+            let typed = typing.update(app, &self.ctx);
             if !typed.is_empty() {
                 self.pending.extend(typed);
                 window.request_redraw();

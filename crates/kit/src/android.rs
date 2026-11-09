@@ -44,34 +44,59 @@ pub fn margins(pixels: [i32; 4], pixels_per_point: f32) -> Margin {
     Margin { left: p(pixels[0]), top: p(pixels[1]), right: p(pixels[2]), bottom: p(pixels[3]) }
 }
 
-/// Mirrors the keyboard's text for the field being typed in. The keyboard edits its own copy (with autocorrect and
-/// composing); each change becomes backspaces for what it took away and text for what it added, as egui expects.
+/// Keeps the phone keyboard and the focused field in step. The keyboard starts from the field's real text and cursor;
+/// what it changes becomes egui events (`typing::diff`); a cursor it moves (sliding on the space bar) moves the
+/// field's cursor; a cursor moved on the field (by touch) is told to the keyboard.
 #[derive(Default)]
 pub struct Typing {
-    active: bool,
-    last: String,
+    field: Option<egui::Id>,
+    last_text: String,
+    last_cursor: (usize, usize),
+}
+
+fn span(cursor: (usize, usize)) -> TextSpan {
+    TextSpan { start: cursor.0, end: cursor.1 }
 }
 
 impl Typing {
-    /// Call once a frame with whether egui wants typing; returns the events to feed egui on the next frame.
-    pub fn update(&mut self, app: &AndroidApp, wants_keyboard: bool) -> Vec<egui::Event> {
-        if wants_keyboard && !self.active {
-            self.active = true;
-            self.last.clear();
-            app.set_text_input_state(TextInputState { text: String::new(), selection: TextSpan { start: 0, end: 0 }, compose_region: None });
-            app.show_soft_input(true);
-            return Vec::new();
-        }
-        if !wants_keyboard {
-            if self.active {
-                self.active = false;
+    /// Call once a frame, after it's drawn; returns the events to feed egui on the next frame.
+    pub fn update(&mut self, app: &AndroidApp, ctx: &egui::Context) -> Vec<egui::Event> {
+        let Some(field) = crate::typing::focused(ctx) else {
+            if self.field.take().is_some() {
                 app.hide_soft_input(true);
             }
             return Vec::new();
+        };
+        if self.field != Some(field.id) {
+            self.field = Some(field.id);
+            self.tell_keyboard(app, &field.text, field.cursor);
+            app.show_soft_input(true);
+            return Vec::new();
         }
-        let now = app.text_input_state().text;
-        let events = crate::typing::diff(&self.last, &now);
-        self.last = now;
-        events
+        let keyboard = app.text_input_state();
+        let keyboard_cursor = (keyboard.selection.start.min(keyboard.selection.end), keyboard.selection.start.max(keyboard.selection.end));
+        if keyboard.text != self.last_text {
+            let events = crate::typing::diff(&self.last_text, &keyboard.text);
+            self.last_text = keyboard.text;
+            self.last_cursor = keyboard_cursor;
+            return events;
+        }
+        if keyboard_cursor != self.last_cursor {
+            // The keyboard moved the cursor (the space-bar slide).
+            self.last_cursor = keyboard_cursor;
+            crate::typing::move_cursor(ctx, field.id, keyboard_cursor.0, keyboard_cursor.1);
+            return Vec::new();
+        }
+        if field.text != self.last_text || field.cursor != self.last_cursor {
+            // Changed on the field itself (a touch moved the cursor, a key on a hardware keyboard).
+            self.tell_keyboard(app, &field.text, field.cursor);
+        }
+        Vec::new()
+    }
+
+    fn tell_keyboard(&mut self, app: &AndroidApp, text: &str, cursor: (usize, usize)) {
+        self.last_text = text.to_string();
+        self.last_cursor = cursor;
+        app.set_text_input_state(TextInputState { text: text.to_string(), selection: span(cursor), compose_region: None });
     }
 }

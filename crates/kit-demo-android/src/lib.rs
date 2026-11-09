@@ -58,14 +58,12 @@ impl App for Demo {
                 // Somewhere to try the keyboard: Russian, Italian, autocorrect, swipe typing.
                 ui.horizontal(|ui| {
                     ui.add_space(GAP);
-                    let field = egui::TextEdit::multiline(&mut self.note)
-                        .hint_text("Type something…")
-                        .desired_width(ui.available_width() - GAP)
-                        .desired_rows(2)
-                        .font(Weight::Medium.font(17.0));
-                    if ui.add(field).has_focus() {
-                        self.touched = true;
-                    }
+                    let width = ui.available_width() - GAP;
+                    ui.allocate_ui(Vec2::new(width, 0.0), |ui| {
+                        if quezka_kit::typing::text_area(ui, &mut self.note, "Type something…", 2, Weight::Medium.font(17.0)).has_focus() {
+                            self.touched = true;
+                        }
+                    });
                 });
                 ui.add_space(GAP);
                 for round in 0..2 {
