@@ -16,5 +16,5 @@ the quire-server protocol must stay compatible with the Python and Kotlin apps t
 - Run: `cargo run --example glass_demo`. Check without a window: `--screenshot x.png [--dark] [--scroll 140]`
   (offscreen through the same compositor). egui is 0.37 (`run_ui`, panels take `&mut Ui`), wgpu 30
   (`InstanceDescriptor::new_*_display_handle`, `queue.present`).
-- Commit as quezka <arsdom15@gmail.com>, never the Claude account's email. No remote yet: ask the user before creating
-  a GitHub repo.
+- Commit as quezka <arsdom15@gmail.com>, never the Claude account's email. Remotes: `origin` github.com/Quezka/suite-rs
+  (public, GPL-3.0-only), `lan` git.lan backup. Push both.
