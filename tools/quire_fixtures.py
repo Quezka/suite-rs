@@ -80,7 +80,45 @@ def rules_cases():
     return out
 
 
+def storage_fixtures():
+    """A demo database made by the Python app, what it sends, and the tables after applying the phone's records."""
+    import os
+    import sqlite3
+    from quire.bootstrap import build_services
+    from quire.demo import seed, seed_school
+    from quire.infrastructure.sqlite import SqliteDatabase
+    from quire.infrastructure.sync_store import SqliteSyncStore, SYNCED
+    from quire.application.ports import SyncRecord
+    db_path = OUT / "python.db"
+    for extra in ("", "-wal", "-shm"):
+        if os.path.exists(str(db_path) + extra):
+            os.remove(str(db_path) + extra)
+    from quire.infrastructure.demo_register import DemoRegister
+    from quire.infrastructure.credentials import MemoryCredentialStore
+    services, db = build_services(str(db_path), register=DemoRegister(date(2026, 11, 9)),
+                                  credentials=MemoryCredentialStore())
+    seed(services)
+    seed_school(services)
+    store = SqliteSyncStore(db)
+    out = [{"kind": r.kind, "uid": r.uid, "modified": r.modified, "deleted": r.deleted, "data": r.data} for r in store.outgoing()]
+    schema = sorted(row[0] for row in db.conn.execute("SELECT sql FROM sqlite_master WHERE sql IS NOT NULL"))
+    db.conn.commit()
+    db.close()
+    records = json.loads((HERE.parent / "quire/android/app/src/test/resources/desktop_records.json").read_text())
+    fresh = SqliteDatabase(":memory:")
+    SqliteSyncStore(fresh).apply([SyncRecord(r["kind"], r["uid"], r["modified"], r["deleted"], r["data"]) for r in records])
+    tables = {}
+    for s in SYNCED:
+        rows = fresh.conn.execute(f"SELECT * FROM {s.table} ORDER BY rowid").fetchall()
+        tables[s.table] = [[(x.hex() if isinstance(x, bytes) else x) for x in tuple(r)] for r in rows]
+    for child in ("class_slots", "shift_patterns", "shift_skips"):
+        tables[child] = [list(r) for r in fresh.conn.execute(f"SELECT * FROM {child} ORDER BY rowid")]
+    tables["sync_inbox"] = [list(r) for r in fresh.conn.execute("SELECT kind, uid FROM sync_inbox ORDER BY kind, uid")]
+    return {"outgoing": out, "schema": schema, "applied": tables, "records": records}
+
+
 OUT.mkdir(parents=True, exist_ok=True)
+(OUT / "storage.json").write_text(json.dumps(storage_fixtures(), indent=1, ensure_ascii=False))
 (OUT / "rules.json").write_text(json.dumps(rules_cases(), indent=1, ensure_ascii=False))
 (OUT / "payroll.json").write_text(json.dumps(payroll_cases(), indent=1))
 print("wrote", OUT)

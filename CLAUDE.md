@@ -35,4 +35,12 @@ the quire-server protocol must stay compatible with the Python and Kotlin apps t
   Vulkan, 60 Hz) it holds ~61 fps with two glass panes (2026-11-09). MIUI blocks `adb install` unless "Install via
   USB" is on: push the APK to /sdcard/Download and let the user install it. On the real phone never send gestures
   into the user's own apps (a swipe once deleted notes).
+- Quire (`crates/quire`): Clean Architecture (`domain`, `application`, `infrastructure`; `tests/architecture.rs`).
+  Done: every domain rule (model, payroll, water, finance, medicine, sleep, focus, register, ical); the SQLite
+  schema v18 + migrations, identical to the Python app's (either app can open the same file); the sync store
+  (triggers, outgoing/apply/mark_sent/pending/mark_all_dirty/clear_all), byte-compatible records. Parity:
+  `python3 tools/quire_fixtures.py` (needs ../quire and its venv) writes `crates/quire/tests/fixtures/*`, and
+  `payroll_parity`, `rules_parity`, `storage_parity` check the Rust answers against the Python ones. Python's
+  `round()` is `round_ties_even` (ints) or `model::round2` (2 places, via formatting); payroll's round2 adds 1e-9.
+  Next: repositories, application services, cloud backends (Firebase, quire-server), then the screens.
 
