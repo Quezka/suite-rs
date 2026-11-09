@@ -1,0 +1,17 @@
+[package]
+name = "quezka-kit"
+version = "0.1.0"
+description = "The Quezka suite's shared look in Rust: theme, liquid glass with real backdrop blur, the window loop."
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[dependencies]
+egui.workspace = true
+egui-wgpu.workspace = true
+egui-winit.workspace = true
+wgpu.workspace = true
+winit.workspace = true
+pollster.workspace = true
+bytemuck.workspace = true
+image.workspace = true

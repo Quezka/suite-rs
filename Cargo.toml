@@ -1,0 +1,18 @@
+[workspace]
+resolver = "2"
+members = ["crates/kit"]
+
+[workspace.package]
+edition = "2021"
+license = "GPL-3.0-only"
+authors = ["quezka"]
+
+[workspace.dependencies]
+egui = { version = "0.37", features = ["default_fonts"] }
+egui-wgpu = { version = "0.37", default-features = false }
+egui-winit = { version = "0.37", default-features = false, features = ["wayland", "x11", "links", "clipboard"] }
+wgpu = "30"
+winit = "0.30"
+pollster = "0.4"
+bytemuck = { version = "1", features = ["derive"] }
+image = { version = "0.25", default-features = false, features = ["png"] }
