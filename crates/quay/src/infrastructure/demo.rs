@@ -8,7 +8,7 @@ use crate::application::QuayError;
 use crate::domain::catalog::SuiteApp;
 
 const LATEST: [(&str, &str); 8] = [("quire", "0.46.1"), ("gantry", "0.13.1"), ("ligature", "0.17.1"), ("folio", "0.9.1"),
-    ("bivouac", "0.13.1"), ("facet", "0.7.1"), ("natter", "0.9.2"), ("quay", "0.4.0")]; // missive: none, to show how that looks
+    ("bivouac", "0.13.1"), ("facet", "0.7.1"), ("natter", "0.9.2"), ("quay", "0.4.1")]; // missive: none, to show how that looks
 const INSTALLED: [(&str, &str); 5] = [("quire", "0.45.0"), ("gantry", "0.13.1"), ("ligature", "0.17.0"), ("natter", "0.9.2"), ("quay", "0.3.0")];
 
 #[derive(Default)]
