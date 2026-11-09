@@ -1,0 +1,1796 @@
+[
+ {
+  "terms": {
+   "pay_mode": "monthly",
+   "monthly_pay": 1650.0,
+   "mensilities": 13,
+   "contract_start": "2026-03-16",
+   "contract_end": "2026-10-10",
+   "tax_model": "italy",
+   "deductions": 0.0,
+   "inps": 9.19,
+   "addizionali": 2.03,
+   "fixed_term": true,
+   "cuneo": true
+  },
+  "grosses": [
+   [
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0
+   ],
+   [
+    851.61,
+    0.0
+   ],
+   [
+    1650.0,
+    0.0
+   ],
+   [
+    1650.0,
+    0.0
+   ],
+   [
+    1650.0,
+    0.0
+   ],
+   [
+    1650.0,
+    0.0
+   ],
+   [
+    1650.0,
+    0.0
+   ],
+   [
+    1650.0,
+    0.0
+   ],
+   [
+    532.26,
+    962.5
+   ],
+   [
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0
+   ]
+  ],
+  "worked": [
+   "2026-02-03",
+   "2026-03-03",
+   "2026-04-03",
+   "2026-05-03",
+   "2026-06-03",
+   "2026-07-03",
+   "2026-08-03",
+   "2026-09-03",
+   "2026-10-03",
+   "2026-11-03"
+  ],
+  "slips": [
+   {
+    "year": 2026,
+    "month": 1,
+    "gross": 0.0,
+    "regular": 0.0,
+    "contributions": 0.0,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 0.0,
+    "net": 0.0,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 2,
+    "gross": 0.0,
+    "regular": 0.0,
+    "contributions": 0.0,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 0.0,
+    "net": 0.0,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 3,
+    "gross": 851.61,
+    "regular": 851.61,
+    "contributions": 78.26,
+    "irpef": 100.02,
+    "addizionali": 15.7,
+    "bonus": 40.99,
+    "tfr": 58.82,
+    "net": 698.62,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 4,
+    "gross": 1650.0,
+    "regular": 1650.0,
+    "contributions": 151.64,
+    "irpef": 193.8,
+    "addizionali": 30.42,
+    "bonus": 79.41,
+    "tfr": 113.97,
+    "net": 1353.55,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 5,
+    "gross": 1650.0,
+    "regular": 1650.0,
+    "contributions": 151.64,
+    "irpef": 193.8,
+    "addizionali": 30.42,
+    "bonus": 79.41,
+    "tfr": 113.97,
+    "net": 1353.55,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 6,
+    "gross": 1650.0,
+    "regular": 1650.0,
+    "contributions": 151.64,
+    "irpef": 193.8,
+    "addizionali": 30.42,
+    "bonus": 79.41,
+    "tfr": 113.97,
+    "net": 1353.55,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 7,
+    "gross": 1650.0,
+    "regular": 1650.0,
+    "contributions": 151.64,
+    "irpef": 193.8,
+    "addizionali": 30.42,
+    "bonus": 79.41,
+    "tfr": 113.97,
+    "net": 1353.55,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 8,
+    "gross": 1650.0,
+    "regular": 1650.0,
+    "contributions": 151.64,
+    "irpef": 193.8,
+    "addizionali": 30.42,
+    "bonus": 79.41,
+    "tfr": 113.97,
+    "net": 1353.55,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 9,
+    "gross": 1650.0,
+    "regular": 1650.0,
+    "contributions": 151.64,
+    "irpef": 193.8,
+    "addizionali": 30.42,
+    "bonus": 79.41,
+    "tfr": 113.97,
+    "net": 1353.55,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 10,
+    "gross": 1494.76,
+    "regular": 532.26,
+    "contributions": 137.37,
+    "irpef": 175.55,
+    "addizionali": 27.53,
+    "bonus": 71.96,
+    "tfr": 103.25,
+    "net": 1226.27,
+    "extra": 962.5
+   },
+   {
+    "year": 2026,
+    "month": 11,
+    "gross": 0.0,
+    "regular": 0.0,
+    "contributions": 0.0,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 0.0,
+    "net": 0.0,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 12,
+    "gross": 0.0,
+    "regular": 0.0,
+    "contributions": 0.0,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 0.0,
+    "net": 0.0,
+    "extra": 0.0
+   }
+  ],
+  "shares": [
+   [
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0
+   ],
+   [
+    532.26,
+    436.64
+   ],
+   [
+    880.0,
+    721.89
+   ],
+   [
+    851.61,
+    698.61
+   ],
+   [
+    880.0,
+    721.89
+   ],
+   [
+    851.61,
+    698.61
+   ],
+   [
+    851.61,
+    698.61
+   ],
+   [
+    880.0,
+    721.89
+   ],
+   [
+    1015.73,
+    833.28
+   ],
+   [
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0
+   ]
+  ],
+  "take_home": [
+   112.1,
+   112.1,
+   101.27,
+   101.27,
+   101.27,
+   101.27,
+   101.27,
+   101.27,
+   101.27,
+   101.28,
+   112.1,
+   112.1
+  ]
+ },
+ {
+  "terms": {
+   "pay_mode": "monthly",
+   "monthly_pay": 2400.0,
+   "mensilities": 14,
+   "contract_start": null,
+   "contract_end": null,
+   "tax_model": "italy",
+   "deductions": 0.0,
+   "inps": 9.19,
+   "addizionali": 1.5,
+   "fixed_term": false,
+   "cuneo": false
+  },
+  "grosses": [
+   [
+    2400.0,
+    0.0
+   ],
+   [
+    2400.0,
+    0.0
+   ],
+   [
+    2400.0,
+    0.0
+   ],
+   [
+    2400.0,
+    0.0
+   ],
+   [
+    2400.0,
+    0.0
+   ],
+   [
+    2400.0,
+    2400.0
+   ],
+   [
+    2400.0,
+    0.0
+   ],
+   [
+    2400.0,
+    0.0
+   ],
+   [
+    2400.0,
+    0.0
+   ],
+   [
+    2400.0,
+    0.0
+   ],
+   [
+    2400.0,
+    0.0
+   ],
+   [
+    2400.0,
+    2400.0
+   ]
+  ],
+  "worked": [
+   "2026-02-03",
+   "2026-03-03",
+   "2026-04-03",
+   "2026-05-03",
+   "2026-06-03",
+   "2026-07-03",
+   "2026-08-03",
+   "2026-09-03",
+   "2026-10-03",
+   "2026-11-03"
+  ],
+  "slips": [
+   {
+    "year": 2026,
+    "month": 1,
+    "gross": 2400.0,
+    "regular": 2400.0,
+    "contributions": 220.56,
+    "irpef": 393.72,
+    "addizionali": 32.69,
+    "bonus": 0.0,
+    "tfr": 165.78,
+    "net": 1753.03,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 2,
+    "gross": 2400.0,
+    "regular": 2400.0,
+    "contributions": 220.56,
+    "irpef": 393.72,
+    "addizionali": 32.69,
+    "bonus": 0.0,
+    "tfr": 165.78,
+    "net": 1753.03,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 3,
+    "gross": 2400.0,
+    "regular": 2400.0,
+    "contributions": 220.56,
+    "irpef": 393.72,
+    "addizionali": 32.69,
+    "bonus": 0.0,
+    "tfr": 165.78,
+    "net": 1753.03,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 4,
+    "gross": 2400.0,
+    "regular": 2400.0,
+    "contributions": 220.56,
+    "irpef": 393.72,
+    "addizionali": 32.69,
+    "bonus": 0.0,
+    "tfr": 165.78,
+    "net": 1753.03,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 5,
+    "gross": 2400.0,
+    "regular": 2400.0,
+    "contributions": 220.56,
+    "irpef": 393.72,
+    "addizionali": 32.69,
+    "bonus": 0.0,
+    "tfr": 165.78,
+    "net": 1753.03,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 6,
+    "gross": 4800.0,
+    "regular": 2400.0,
+    "contributions": 441.12,
+    "irpef": 787.44,
+    "addizionali": 65.38,
+    "bonus": 0.0,
+    "tfr": 331.56,
+    "net": 3506.06,
+    "extra": 2400.0
+   },
+   {
+    "year": 2026,
+    "month": 7,
+    "gross": 2400.0,
+    "regular": 2400.0,
+    "contributions": 220.56,
+    "irpef": 393.72,
+    "addizionali": 32.69,
+    "bonus": 0.0,
+    "tfr": 165.78,
+    "net": 1753.03,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 8,
+    "gross": 2400.0,
+    "regular": 2400.0,
+    "contributions": 220.56,
+    "irpef": 393.72,
+    "addizionali": 32.69,
+    "bonus": 0.0,
+    "tfr": 165.78,
+    "net": 1753.03,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 9,
+    "gross": 2400.0,
+    "regular": 2400.0,
+    "contributions": 220.56,
+    "irpef": 393.72,
+    "addizionali": 32.69,
+    "bonus": 0.0,
+    "tfr": 165.78,
+    "net": 1753.03,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 10,
+    "gross": 2400.0,
+    "regular": 2400.0,
+    "contributions": 220.56,
+    "irpef": 393.72,
+    "addizionali": 32.69,
+    "bonus": 0.0,
+    "tfr": 165.78,
+    "net": 1753.03,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 11,
+    "gross": 2400.0,
+    "regular": 2400.0,
+    "contributions": 220.56,
+    "irpef": 393.72,
+    "addizionali": 32.69,
+    "bonus": 0.0,
+    "tfr": 165.78,
+    "net": 1753.03,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 12,
+    "gross": 4800.0,
+    "regular": 2400.0,
+    "contributions": 441.12,
+    "irpef": 787.47,
+    "addizionali": 65.4,
+    "bonus": 0.0,
+    "tfr": 331.56,
+    "net": 3506.01,
+    "extra": 2400.0
+   }
+  ],
+  "shares": [
+   [
+    1238.71,
+    904.79
+   ],
+   [
+    1371.43,
+    1001.73
+   ],
+   [
+    1238.71,
+    904.79
+   ],
+   [
+    1280.0,
+    934.95
+   ],
+   [
+    1238.71,
+    904.79
+   ],
+   [
+    1280.0,
+    934.95
+   ],
+   [
+    1238.71,
+    904.79
+   ],
+   [
+    1238.71,
+    904.79
+   ],
+   [
+    1280.0,
+    934.95
+   ],
+   [
+    1238.71,
+    904.79
+   ],
+   [
+    1280.0,
+    934.95
+   ],
+   [
+    1238.71,
+    904.78
+   ]
+  ],
+  "take_home": [
+   90.17,
+   90.17,
+   90.17,
+   90.17,
+   90.17,
+   90.17,
+   90.17,
+   90.17,
+   90.17,
+   90.17,
+   90.17,
+   90.17
+  ]
+ },
+ {
+  "terms": {
+   "pay_mode": "monthly",
+   "monthly_pay": 900.0,
+   "mensilities": 13,
+   "contract_start": "2025-09-01",
+   "contract_end": null,
+   "tax_model": "italy",
+   "deductions": 0.0,
+   "inps": 9.19,
+   "addizionali": 0.0,
+   "fixed_term": true,
+   "cuneo": true
+  },
+  "grosses": [
+   [
+    900.0,
+    0.0
+   ],
+   [
+    900.0,
+    0.0
+   ],
+   [
+    900.0,
+    0.0
+   ],
+   [
+    900.0,
+    0.0
+   ],
+   [
+    900.0,
+    0.0
+   ],
+   [
+    900.0,
+    0.0
+   ],
+   [
+    900.0,
+    0.0
+   ],
+   [
+    900.0,
+    0.0
+   ],
+   [
+    900.0,
+    0.0
+   ],
+   [
+    900.0,
+    0.0
+   ],
+   [
+    900.0,
+    0.0
+   ],
+   [
+    900.0,
+    900.0
+   ]
+  ],
+  "worked": [
+   "2026-02-03",
+   "2026-03-03",
+   "2026-04-03",
+   "2026-05-03",
+   "2026-06-03",
+   "2026-07-03",
+   "2026-08-03",
+   "2026-09-03",
+   "2026-10-03",
+   "2026-11-03"
+  ],
+  "slips": [
+   {
+    "year": 2026,
+    "month": 1,
+    "gross": 900.0,
+    "regular": 900.0,
+    "contributions": 82.71,
+    "irpef": 37.59,
+    "addizionali": 0.0,
+    "bonus": 43.32,
+    "tfr": 62.17,
+    "net": 823.02,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 2,
+    "gross": 900.0,
+    "regular": 900.0,
+    "contributions": 82.71,
+    "irpef": 37.59,
+    "addizionali": 0.0,
+    "bonus": 43.32,
+    "tfr": 62.17,
+    "net": 823.02,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 3,
+    "gross": 900.0,
+    "regular": 900.0,
+    "contributions": 82.71,
+    "irpef": 37.59,
+    "addizionali": 0.0,
+    "bonus": 43.32,
+    "tfr": 62.17,
+    "net": 823.02,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 4,
+    "gross": 900.0,
+    "regular": 900.0,
+    "contributions": 82.71,
+    "irpef": 37.59,
+    "addizionali": 0.0,
+    "bonus": 43.32,
+    "tfr": 62.17,
+    "net": 823.02,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 5,
+    "gross": 900.0,
+    "regular": 900.0,
+    "contributions": 82.71,
+    "irpef": 37.59,
+    "addizionali": 0.0,
+    "bonus": 43.32,
+    "tfr": 62.17,
+    "net": 823.02,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 6,
+    "gross": 900.0,
+    "regular": 900.0,
+    "contributions": 82.71,
+    "irpef": 37.59,
+    "addizionali": 0.0,
+    "bonus": 43.32,
+    "tfr": 62.17,
+    "net": 823.02,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 7,
+    "gross": 900.0,
+    "regular": 900.0,
+    "contributions": 82.71,
+    "irpef": 37.59,
+    "addizionali": 0.0,
+    "bonus": 43.32,
+    "tfr": 62.17,
+    "net": 823.02,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 8,
+    "gross": 900.0,
+    "regular": 900.0,
+    "contributions": 82.71,
+    "irpef": 37.59,
+    "addizionali": 0.0,
+    "bonus": 43.32,
+    "tfr": 62.17,
+    "net": 823.02,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 9,
+    "gross": 900.0,
+    "regular": 900.0,
+    "contributions": 82.71,
+    "irpef": 37.59,
+    "addizionali": 0.0,
+    "bonus": 43.32,
+    "tfr": 62.17,
+    "net": 823.02,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 10,
+    "gross": 900.0,
+    "regular": 900.0,
+    "contributions": 82.71,
+    "irpef": 37.59,
+    "addizionali": 0.0,
+    "bonus": 43.32,
+    "tfr": 62.17,
+    "net": 823.02,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 11,
+    "gross": 900.0,
+    "regular": 900.0,
+    "contributions": 82.71,
+    "irpef": 37.59,
+    "addizionali": 0.0,
+    "bonus": 43.32,
+    "tfr": 62.17,
+    "net": 823.02,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 12,
+    "gross": 1800.0,
+    "regular": 900.0,
+    "contributions": 165.42,
+    "irpef": 75.21,
+    "addizionali": 0.0,
+    "bonus": 86.59,
+    "tfr": 124.33,
+    "net": 1645.96,
+    "extra": 900.0
+   }
+  ],
+  "shares": [
+   [
+    464.52,
+    424.78
+   ],
+   [
+    514.29,
+    470.3
+   ],
+   [
+    464.52,
+    424.78
+   ],
+   [
+    480.0,
+    438.94
+   ],
+   [
+    464.52,
+    424.78
+   ],
+   [
+    480.0,
+    438.94
+   ],
+   [
+    464.52,
+    424.78
+   ],
+   [
+    464.52,
+    424.78
+   ],
+   [
+    480.0,
+    438.94
+   ],
+   [
+    464.52,
+    424.78
+   ],
+   [
+    480.0,
+    438.94
+   ],
+   [
+    464.52,
+    424.76
+   ]
+  ],
+  "take_home": [
+   112.89,
+   112.89,
+   112.89,
+   112.89,
+   112.89,
+   112.89,
+   112.89,
+   112.89,
+   112.89,
+   112.89,
+   112.89,
+   112.89
+  ]
+ },
+ {
+  "terms": {
+   "pay_mode": "hourly",
+   "monthly_pay": null,
+   "mensilities": 13,
+   "contract_start": null,
+   "contract_end": null,
+   "tax_model": "italy",
+   "deductions": 0.0,
+   "inps": 9.19,
+   "addizionali": 1.23,
+   "fixed_term": true,
+   "cuneo": true
+  },
+  "grosses": [
+   [
+    351.5,
+    0.0
+   ],
+   [
+    703.0,
+    0.0
+   ],
+   [
+    1054.5,
+    0.0
+   ],
+   [
+    351.5,
+    0.0
+   ],
+   [
+    703.0,
+    0.0
+   ],
+   [
+    1054.5,
+    0.0
+   ],
+   [
+    351.5,
+    0.0
+   ],
+   [
+    703.0,
+    0.0
+   ],
+   [
+    1054.5,
+    0.0
+   ],
+   [
+    351.5,
+    0.0
+   ],
+   [
+    703.0,
+    0.0
+   ],
+   [
+    1054.5,
+    0.0
+   ]
+  ],
+  "worked": [
+   "2026-02-03",
+   "2026-03-03",
+   "2026-04-03",
+   "2026-05-03",
+   "2026-06-03",
+   "2026-07-03",
+   "2026-08-03",
+   "2026-09-03",
+   "2026-10-03",
+   "2026-11-03"
+  ],
+  "slips": [
+   {
+    "year": 2026,
+    "month": 1,
+    "gross": 351.5,
+    "regular": 351.5,
+    "contributions": 32.3,
+    "irpef": 12.27,
+    "addizionali": 3.93,
+    "bonus": 22.66,
+    "tfr": 24.28,
+    "net": 325.66,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 2,
+    "gross": 703.0,
+    "regular": 703.0,
+    "contributions": 64.61,
+    "irpef": 24.53,
+    "addizionali": 7.85,
+    "bonus": 45.33,
+    "tfr": 48.56,
+    "net": 651.34,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 3,
+    "gross": 1054.5,
+    "regular": 1054.5,
+    "contributions": 96.91,
+    "irpef": 36.8,
+    "addizionali": 11.78,
+    "bonus": 67.99,
+    "tfr": 72.84,
+    "net": 977.0,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 4,
+    "gross": 351.5,
+    "regular": 351.5,
+    "contributions": 32.3,
+    "irpef": 12.27,
+    "addizionali": 3.93,
+    "bonus": 22.66,
+    "tfr": 24.28,
+    "net": 325.66,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 5,
+    "gross": 703.0,
+    "regular": 703.0,
+    "contributions": 64.61,
+    "irpef": 24.53,
+    "addizionali": 7.85,
+    "bonus": 45.33,
+    "tfr": 48.56,
+    "net": 651.34,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 6,
+    "gross": 1054.5,
+    "regular": 1054.5,
+    "contributions": 96.91,
+    "irpef": 36.8,
+    "addizionali": 11.78,
+    "bonus": 67.99,
+    "tfr": 72.84,
+    "net": 977.0,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 7,
+    "gross": 351.5,
+    "regular": 351.5,
+    "contributions": 32.3,
+    "irpef": 12.27,
+    "addizionali": 3.93,
+    "bonus": 22.66,
+    "tfr": 24.28,
+    "net": 325.66,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 8,
+    "gross": 703.0,
+    "regular": 703.0,
+    "contributions": 64.61,
+    "irpef": 24.53,
+    "addizionali": 7.85,
+    "bonus": 45.33,
+    "tfr": 48.56,
+    "net": 651.34,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 9,
+    "gross": 1054.5,
+    "regular": 1054.5,
+    "contributions": 96.91,
+    "irpef": 36.8,
+    "addizionali": 11.78,
+    "bonus": 67.99,
+    "tfr": 72.84,
+    "net": 977.0,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 10,
+    "gross": 351.5,
+    "regular": 351.5,
+    "contributions": 32.3,
+    "irpef": 12.27,
+    "addizionali": 3.93,
+    "bonus": 22.66,
+    "tfr": 24.28,
+    "net": 325.66,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 11,
+    "gross": 703.0,
+    "regular": 703.0,
+    "contributions": 64.61,
+    "irpef": 24.53,
+    "addizionali": 7.85,
+    "bonus": 45.33,
+    "tfr": 48.56,
+    "net": 651.34,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 12,
+    "gross": 1054.5,
+    "regular": 1054.5,
+    "contributions": 96.91,
+    "irpef": 36.78,
+    "addizionali": 11.77,
+    "bonus": 67.98,
+    "tfr": 72.84,
+    "net": 977.02,
+    "extra": 0.0
+   }
+  ],
+  "shares": [
+   [
+    181.42,
+    168.08
+   ],
+   [
+    401.71,
+    372.19
+   ],
+   [
+    544.26,
+    504.26
+   ],
+   [
+    187.47,
+    173.69
+   ],
+   [
+    362.84,
+    336.18
+   ],
+   [
+    562.4,
+    521.07
+   ],
+   [
+    181.42,
+    168.08
+   ],
+   [
+    362.84,
+    336.18
+   ],
+   [
+    562.4,
+    521.07
+   ],
+   [
+    181.42,
+    168.08
+   ],
+   [
+    374.93,
+    347.38
+   ],
+   [
+    544.26,
+    504.27
+   ]
+  ],
+  "take_home": [
+   114.37,
+   114.38,
+   114.38,
+   114.37,
+   114.38,
+   114.38,
+   114.37,
+   114.38,
+   114.38,
+   114.37,
+   114.38,
+   114.38
+  ]
+ },
+ {
+  "terms": {
+   "pay_mode": "hourly",
+   "monthly_pay": null,
+   "mensilities": 13,
+   "contract_start": null,
+   "contract_end": null,
+   "tax_model": "flat",
+   "deductions": 21.5,
+   "inps": 9.19,
+   "addizionali": 0.0,
+   "fixed_term": true,
+   "cuneo": false
+  },
+  "grosses": [
+   [
+    351.5,
+    0.0
+   ],
+   [
+    703.0,
+    0.0
+   ],
+   [
+    1054.5,
+    0.0
+   ],
+   [
+    351.5,
+    0.0
+   ],
+   [
+    703.0,
+    0.0
+   ],
+   [
+    1054.5,
+    0.0
+   ],
+   [
+    351.5,
+    0.0
+   ],
+   [
+    703.0,
+    0.0
+   ],
+   [
+    1054.5,
+    0.0
+   ],
+   [
+    351.5,
+    0.0
+   ],
+   [
+    703.0,
+    0.0
+   ],
+   [
+    1054.5,
+    0.0
+   ]
+  ],
+  "worked": [
+   "2026-02-03",
+   "2026-03-03",
+   "2026-04-03",
+   "2026-05-03",
+   "2026-06-03",
+   "2026-07-03",
+   "2026-08-03",
+   "2026-09-03",
+   "2026-10-03",
+   "2026-11-03"
+  ],
+  "slips": [
+   {
+    "year": 2026,
+    "month": 1,
+    "gross": 351.5,
+    "regular": 351.5,
+    "contributions": 75.57,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 24.28,
+    "net": 275.93,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 2,
+    "gross": 703.0,
+    "regular": 703.0,
+    "contributions": 151.15,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 48.56,
+    "net": 551.85,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 3,
+    "gross": 1054.5,
+    "regular": 1054.5,
+    "contributions": 226.72,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 72.84,
+    "net": 827.78,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 4,
+    "gross": 351.5,
+    "regular": 351.5,
+    "contributions": 75.57,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 24.28,
+    "net": 275.93,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 5,
+    "gross": 703.0,
+    "regular": 703.0,
+    "contributions": 151.15,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 48.56,
+    "net": 551.85,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 6,
+    "gross": 1054.5,
+    "regular": 1054.5,
+    "contributions": 226.72,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 72.84,
+    "net": 827.78,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 7,
+    "gross": 351.5,
+    "regular": 351.5,
+    "contributions": 75.57,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 24.28,
+    "net": 275.93,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 8,
+    "gross": 703.0,
+    "regular": 703.0,
+    "contributions": 151.15,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 48.56,
+    "net": 551.85,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 9,
+    "gross": 1054.5,
+    "regular": 1054.5,
+    "contributions": 226.72,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 72.84,
+    "net": 827.78,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 10,
+    "gross": 351.5,
+    "regular": 351.5,
+    "contributions": 75.57,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 24.28,
+    "net": 275.93,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 11,
+    "gross": 703.0,
+    "regular": 703.0,
+    "contributions": 151.15,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 48.56,
+    "net": 551.85,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 12,
+    "gross": 1054.5,
+    "regular": 1054.5,
+    "contributions": 226.72,
+    "irpef": 0.0,
+    "addizionali": 0.0,
+    "bonus": 0.0,
+    "tfr": 72.84,
+    "net": 827.78,
+    "extra": 0.0
+   }
+  ],
+  "shares": [
+   [
+    181.42,
+    142.42
+   ],
+   [
+    401.71,
+    315.34
+   ],
+   [
+    544.26,
+    427.24
+   ],
+   [
+    187.47,
+    147.16
+   ],
+   [
+    362.84,
+    284.83
+   ],
+   [
+    562.4,
+    441.48
+   ],
+   [
+    181.42,
+    142.42
+   ],
+   [
+    362.84,
+    284.83
+   ],
+   [
+    562.4,
+    441.48
+   ],
+   [
+    181.42,
+    142.42
+   ],
+   [
+    374.93,
+    294.32
+   ],
+   [
+    544.26,
+    427.24
+   ]
+  ],
+  "take_home": [
+   96.91,
+   96.91,
+   96.91,
+   96.91,
+   96.91,
+   96.91,
+   96.91,
+   96.91,
+   96.91,
+   96.91,
+   96.91,
+   96.91
+  ]
+ },
+ {
+  "terms": {
+   "pay_mode": "monthly",
+   "monthly_pay": 3900.0,
+   "mensilities": 12,
+   "contract_start": "2026-01-01",
+   "contract_end": "2026-12-31",
+   "tax_model": "italy",
+   "deductions": 0.0,
+   "inps": 9.19,
+   "addizionali": 3.33,
+   "fixed_term": true,
+   "cuneo": false
+  },
+  "grosses": [
+   [
+    3900.0,
+    0.0
+   ],
+   [
+    3900.0,
+    0.0
+   ],
+   [
+    3900.0,
+    0.0
+   ],
+   [
+    3900.0,
+    0.0
+   ],
+   [
+    3900.0,
+    0.0
+   ],
+   [
+    3900.0,
+    0.0
+   ],
+   [
+    3900.0,
+    0.0
+   ],
+   [
+    3900.0,
+    0.0
+   ],
+   [
+    3900.0,
+    0.0
+   ],
+   [
+    3900.0,
+    0.0
+   ],
+   [
+    3900.0,
+    0.0
+   ],
+   [
+    3900.0,
+    0.0
+   ]
+  ],
+  "worked": [
+   "2026-02-03",
+   "2026-03-03",
+   "2026-04-03",
+   "2026-05-03",
+   "2026-06-03",
+   "2026-07-03",
+   "2026-08-03",
+   "2026-09-03",
+   "2026-10-03",
+   "2026-11-03"
+  ],
+  "slips": [
+   {
+    "year": 2026,
+    "month": 1,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.12,
+    "addizionali": 117.94,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.53,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 2,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.12,
+    "addizionali": 117.94,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.53,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 3,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.12,
+    "addizionali": 117.94,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.53,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 4,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.12,
+    "addizionali": 117.94,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.53,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 5,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.12,
+    "addizionali": 117.94,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.53,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 6,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.12,
+    "addizionali": 117.94,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.53,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 7,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.12,
+    "addizionali": 117.94,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.53,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 8,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.12,
+    "addizionali": 117.94,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.53,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 9,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.12,
+    "addizionali": 117.94,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.53,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 10,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.12,
+    "addizionali": 117.94,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.53,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 11,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.12,
+    "addizionali": 117.94,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.53,
+    "extra": 0.0
+   },
+   {
+    "year": 2026,
+    "month": 12,
+    "gross": 3900.0,
+    "regular": 3900.0,
+    "contributions": 358.41,
+    "irpef": 881.16,
+    "addizionali": 117.88,
+    "bonus": 0.0,
+    "tfr": 269.39,
+    "net": 2542.55,
+    "extra": 0.0
+   }
+  ],
+  "shares": [
+   [
+    2012.9,
+    1312.27
+   ],
+   [
+    2228.57,
+    1452.87
+   ],
+   [
+    2012.9,
+    1312.27
+   ],
+   [
+    2080.0,
+    1356.02
+   ],
+   [
+    2012.9,
+    1312.27
+   ],
+   [
+    2080.0,
+    1356.02
+   ],
+   [
+    2012.9,
+    1312.27
+   ],
+   [
+    2012.9,
+    1312.27
+   ],
+   [
+    2080.0,
+    1356.02
+   ],
+   [
+    2012.9,
+    1312.27
+   ],
+   [
+    2080.0,
+    1356.02
+   ],
+   [
+    2012.9,
+    1312.28
+   ]
+  ],
+  "take_home": [
+   80.48,
+   80.48,
+   80.48,
+   80.48,
+   80.48,
+   80.48,
+   80.48,
+   80.48,
+   80.48,
+   80.48,
+   80.48,
+   80.48
+  ]
+ }
+]
