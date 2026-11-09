@@ -61,6 +61,7 @@ struct Pane {
     screen: vec4<f32>,  // width, height, corner radius (pixels), 1 when dark
     tint: vec4<f32>,    // colour and how much of it
     look: vec4<f32>,    // saturation, rim strength, hairline strength, pixels per point
+    shadow: vec4<f32>,  // drop (pixels), blur (pixels), darkness, 0
 };
 
 @group(0) @binding(0) var blurred: texture_2d<f32>;
@@ -78,8 +79,9 @@ fn vs_pane(@builtin(vertex_index) i: u32) -> PaneOut {
         vec2<f32>(0.0, 0.0), vec2<f32>(1.0, 0.0), vec2<f32>(0.0, 1.0),
         vec2<f32>(1.0, 0.0), vec2<f32>(1.0, 1.0), vec2<f32>(0.0, 1.0),
     );
-    let lo = pane.rect.xy - vec2<f32>(2.0);
-    let hi = pane.rect.zw + vec2<f32>(2.0);
+    let reach = 2.0 + pane.shadow.y + pane.shadow.x;
+    let lo = pane.rect.xy - vec2<f32>(reach);
+    let hi = pane.rect.zw + vec2<f32>(reach);
     let px = mix(lo, hi, corners[i]);
     var o: PaneOut;
     o.pos = vec4<f32>(px.x / pane.screen.x * 2.0 - 1.0, 1.0 - px.y / pane.screen.y * 2.0, 0.0, 1.0);
@@ -96,7 +98,14 @@ fn fs_pane(v: PaneOut) -> @location(0) vec4<f32> {
     let d = length(max(q, vec2<f32>(0.0))) + min(max(q.x, q.y), 0.0) - r;
     let cover = clamp(0.5 - d, 0.0, 1.0);
     if (cover <= 0.0) {
-        discard;
+        // Outside: the pane's soft shadow (drawn here, not before it, so the glass doesn't blur its own shadow).
+        if (pane.shadow.z <= 0.0) {
+            discard;
+        }
+        let qs = abs(v.px - centre - vec2<f32>(0.0, pane.shadow.x)) - half + vec2<f32>(r);
+        let ds = length(max(qs, vec2<f32>(0.0))) + min(max(qs.x, qs.y), 0.0) - r;
+        let a = pane.shadow.z * (1.0 - smoothstep(-pane.shadow.y * 0.5, pane.shadow.y, ds));
+        return vec4<f32>(0.0, 0.0, 0.0, a);
     }
     var col = textureSample(blurred, bsamp, v.px / pane.screen.xy).rgb;
     let luma = dot(col, vec3<f32>(0.299, 0.587, 0.114));

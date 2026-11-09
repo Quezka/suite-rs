@@ -63,7 +63,7 @@ impl App for Demo {
         });
 
         // The chrome: glass over the content.
-        egui::Area::new(egui::Id::NULL.with("chrome")).order(Order::Foreground).fixed_pos(Pos2::ZERO).show(&ctx, |ui| {
+        egui::Area::new(egui::Id::NULL.with("chrome")).order(Order::Foreground).fade_in(false).fixed_pos(Pos2::ZERO).show(&ctx, |ui| {
             let p = ui.painter();
             let bar = Rect::from_min_max(Pos2::new(content.min.x, screen.min.y + GAP), Pos2::new(content.max.x - GAP, screen.min.y + GAP + 64.0));
             glass::pane(p, bar, OUTER_RADIUS, th, Weight::Regular, true);
@@ -96,7 +96,7 @@ fn main() -> Result<(), String> {
         scroll: flag("--scroll").and_then(|i| args.get(i + 1)).and_then(|s| s.parse().ok()).unwrap_or(0.0),
     };
     match flag("--screenshot").and_then(|i| args.get(i + 1)) {
-        Some(path) => quezka_kit::screenshot(&mut demo, [1000.0, 640.0], 1.0, 3, path),
+        Some(path) => quezka_kit::screenshot(&mut demo, [1000.0, 640.0], 1.0, 20, path),
         None => quezka_kit::run("Glass demo", demo),
     }
 }

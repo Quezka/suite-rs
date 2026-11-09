@@ -29,6 +29,8 @@ pub struct GlassPane {
     pub dark: bool,
     /// How much brighter the colours get (1 keeps them, Apple uses about 1.3).
     pub saturation: f32,
+    /// Whether it floats (and casts a soft shadow).
+    pub floating: bool,
 }
 
 /// How see-through a pane is: chrome with words on it needs a little more tint than a button.
@@ -49,15 +51,6 @@ pub fn pane(painter: &Painter, rect: Rect, radius: f32, th: &Tokens, weight: Wei
         painter.rect_stroke(rect, round, egui::Stroke::new(1.5, th.border), egui::StrokeKind::Inside);
         return;
     }
-    if floating {
-        let shadow = egui::epaint::Shadow {
-            offset: [0, 4],
-            blur: 18,
-            spread: 0,
-            color: Color32::from_black_alpha(if th.dark { 110 } else { 40 }),
-        };
-        painter.add(shadow.as_shape(rect, round));
-    }
     let amount = match weight {
         Weight::Light => 0.16,
         Weight::Regular => 0.30,
@@ -66,7 +59,7 @@ pub fn pane(painter: &Painter, rect: Rect, radius: f32, th: &Tokens, weight: Wei
     let tint = Color32::from_rgba_unmultiplied(base.r(), base.g(), base.b(), (amount * 255.0) as u8);
     painter.add(egui::PaintCallback {
         rect,
-        callback: Arc::new(GlassPane { radius, tint, dark: th.dark, saturation: 1.3 }),
+        callback: Arc::new(GlassPane { radius, tint, dark: th.dark, saturation: 1.3, floating }),
     });
 }
 
@@ -85,6 +78,7 @@ struct PaneUniform {
     screen: [f32; 4],
     tint: [f32; 4],
     look: [f32; 4],
+    shadow: [f32; 4],
 }
 
 struct Level {
@@ -300,12 +294,14 @@ impl Compositor {
     fn draw_pane(&self, device: &wgpu::Device, encoder: &mut wgpu::CommandEncoder, pane: &GlassPane, rect: Rect, clip: Rect, ppp: f32) {
         let Some(t) = &self.targets else { return };
         let [w, h] = t.size;
-        let c = pane.tint.to_normalized_gamma_f32();
+        // The tint's own colour (Color32 stores it multiplied by its alpha) and how much of it to mix in.
+        let c = pane.tint.to_srgba_unmultiplied().map(|v| f32::from(v) / 255.0);
         let uniform = PaneUniform {
             rect: [rect.min.x * ppp, rect.min.y * ppp, rect.max.x * ppp, rect.max.y * ppp],
             screen: [w as f32, h as f32, pane.radius * ppp, if pane.dark { 1.0 } else { 0.0 }],
             tint: [c[0], c[1], c[2], c[3]],
             look: [pane.saturation, if pane.dark { 0.28 } else { 0.85 }, if pane.dark { 0.16 } else { 0.10 }, ppp],
+            shadow: if pane.floating { [4.0 * ppp, 18.0 * ppp, if pane.dark { 0.45 } else { 0.16 }, 0.0] } else { [0.0; 4] },
         };
         let group = self.bind(device, &t.levels[0].view, bytemuck::bytes_of(&uniform));
         let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
@@ -318,7 +314,7 @@ impl Compositor {
             })],
             ..Default::default()
         });
-        let clip = clip.intersect(rect.expand(2.0));
+        let clip = clip.intersect(rect.expand(if pane.floating { 26.0 } else { 2.0 }));
         let x = (clip.min.x * ppp).floor().clamp(0.0, w as f32) as u32;
         let y = (clip.min.y * ppp).floor().clamp(0.0, h as f32) as u32;
         let x1 = (clip.max.x * ppp).ceil().clamp(0.0, w as f32) as u32;

@@ -29,25 +29,39 @@ fn tokens_for(ctx: &egui::Context, app: &dyn App) -> Tokens {
 }
 
 fn frame(ctx: &egui::Context, app: &mut dyn App, raw: egui::RawInput) -> (egui::FullOutput, Tokens) {
+    if ctx.data(|d| d.get_temp::<bool>(egui::Id::NULL.with("quezka-fonts")).is_none()) {
+        crate::fonts::install(ctx);
+        ctx.data_mut(|d| d.insert_temp(egui::Id::NULL.with("quezka-fonts"), true));
+    }
     let mut th = theme::LIGHT;
     let output = ctx.run_ui(raw, |ui| {
         th = tokens_for(ui.ctx(), &*app);
-        ui.ctx().set_visuals(if th.dark { egui::Visuals::dark() } else { egui::Visuals::light() });
+        crate::style::apply(ui.ctx(), &th);
         app.ui(ui, &th);
     });
     (output, th)
 }
 
 async fn device_for(instance: &wgpu::Instance, surface: Option<&wgpu::Surface<'_>>) -> Option<(wgpu::Adapter, wgpu::Device, wgpu::Queue)> {
-    let adapter = instance
-        .request_adapter(&wgpu::RequestAdapterOptions {
-            power_preference: wgpu::PowerPreference::LowPower,
+    // The low-power GPU first; then any GPU; then a software one, so screenshots work anywhere.
+    let mut adapter = None;
+    for (power, fallback) in [
+        (wgpu::PowerPreference::LowPower, false),
+        (wgpu::PowerPreference::HighPerformance, false),
+        (wgpu::PowerPreference::None, true),
+    ] {
+        let options = wgpu::RequestAdapterOptions {
+            power_preference: power,
             compatible_surface: surface,
-            force_fallback_adapter: false,
+            force_fallback_adapter: fallback,
             apply_limit_buckets: false,
-        })
-        .await
-        .ok()?;
+        };
+        if let Ok(found) = instance.request_adapter(&options).await {
+            adapter = Some(found);
+            break;
+        }
+    }
+    let adapter = adapter?;
     let (device, queue) = adapter.request_device(&wgpu::DeviceDescriptor::default()).await.ok()?;
     Some((adapter, device, queue))
 }
