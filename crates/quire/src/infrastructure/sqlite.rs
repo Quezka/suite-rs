@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 
 use rusqlite::Connection;
 
-pub const SCHEMA_VERSION: i32 = 19;
+pub const SCHEMA_VERSION: i32 = 20;
 
 pub const SCHEMA: &str = r#"
 CREATE TABLE IF NOT EXISTS courses (
@@ -106,6 +106,12 @@ CREATE TABLE IF NOT EXISTS medicine_doses (
     at_min      INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_dose_day ON medicine_doses(day);
+CREATE TABLE IF NOT EXISTS ideas (
+    id      INTEGER PRIMARY KEY,
+    text    TEXT NOT NULL,
+    created TEXT NOT NULL,
+    done    INTEGER NOT NULL DEFAULT 0
+);
 CREATE TABLE IF NOT EXISTS transactions (
     id       INTEGER PRIMARY KEY,
     day      TEXT NOT NULL,

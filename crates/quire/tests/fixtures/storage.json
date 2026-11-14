@@ -2,8 +2,8 @@
  "outgoing": [
   {
    "kind": "course",
-   "uid": "5953037faf8e678de023829bff40244a",
-   "modified": "2026-11-14T16:58:36.691Z",
+   "uid": "cafbf9875cfa858ee709ab5be5c86372",
+   "modified": "2026-11-14T17:09:31.036Z",
    "deleted": false,
    "data": {
     "name": "Mathematics",
@@ -35,8 +35,8 @@
   },
   {
    "kind": "course",
-   "uid": "bf76376474b410d36fed4c4674ccdd41",
-   "modified": "2026-11-14T16:58:39.532Z",
+   "uid": "6aa83b4c1576aa043ca9d418d25c57de",
+   "modified": "2026-11-14T17:09:33.921Z",
    "deleted": false,
    "data": {
     "name": "Biology",
@@ -62,8 +62,8 @@
   },
   {
    "kind": "course",
-   "uid": "79c00713eddc4b781c6b092404ba6374",
-   "modified": "2026-11-14T16:58:36.819Z",
+   "uid": "28c0b9b58b0b75a39e29682672750cb0",
+   "modified": "2026-11-14T17:09:31.200Z",
    "deleted": false,
    "data": {
     "name": "English Literature",
@@ -95,8 +95,8 @@
   },
   {
    "kind": "course",
-   "uid": "857169cd3b68dfcdbd4f4f1761766e40",
-   "modified": "2026-11-14T16:58:36.884Z",
+   "uid": "bb09a6bd69102b3fd3e5eb82c65cd2d0",
+   "modified": "2026-11-14T17:09:31.480Z",
    "deleted": false,
    "data": {
     "name": "History",
@@ -122,8 +122,8 @@
   },
   {
    "kind": "course",
-   "uid": "bad6b1f5f9be7972ba80a6c40d0ec9f0",
-   "modified": "2026-11-14T16:58:36.948Z",
+   "uid": "7f36bab5239a38f80e61a841f1afb3d1",
+   "modified": "2026-11-14T17:09:31.544Z",
    "deleted": false,
    "data": {
     "name": "Chemistry",
@@ -149,8 +149,8 @@
   },
   {
    "kind": "course",
-   "uid": "d6d41e832aca883850a634492c2ea137",
-   "modified": "2026-11-14T16:58:37.013Z",
+   "uid": "dc06fac00d1c621cc4fff5f1bf45c62d",
+   "modified": "2026-11-14T17:09:31.609Z",
    "deleted": false,
    "data": {
     "name": "PE",
@@ -171,7 +171,7 @@
   {
    "kind": "course",
    "uid": "ext:classeviva:subject:1",
-   "modified": "2026-11-14T16:58:39.452Z",
+   "modified": "2026-11-14T17:09:33.841Z",
    "deleted": false,
    "data": {
     "name": "Matematica",
@@ -185,7 +185,7 @@
   {
    "kind": "course",
    "uid": "ext:classeviva:subject:3",
-   "modified": "2026-11-14T16:58:39.612Z",
+   "modified": "2026-11-14T17:09:34.001Z",
    "deleted": false,
    "data": {
     "name": "Storia",
@@ -199,7 +199,7 @@
   {
    "kind": "course",
    "uid": "ext:classeviva:subject:4",
-   "modified": "2026-11-14T16:58:39.692Z",
+   "modified": "2026-11-14T17:09:34.081Z",
    "deleted": false,
    "data": {
     "name": "Lingua straniera inglese",
@@ -212,8 +212,8 @@
   },
   {
    "kind": "job",
-   "uid": "b8f564d1f5319c8ed7ac6f600492c379",
-   "modified": "2026-11-14T16:58:38.727Z",
+   "uid": "98d151240e3bfacbb793f65ec9f55fb5",
+   "modified": "2026-11-14T17:09:33.129Z",
    "deleted": false,
    "data": {
     "name": "Pizzeria Da Mario",
@@ -256,8 +256,8 @@
   },
   {
    "kind": "job",
-   "uid": "58850b1c1ba7f2c3ea00f9309cd2a192",
-   "modified": "2026-11-14T16:58:38.806Z",
+   "uid": "9922fcc4e8302cf5aecadc7ff41d36d0",
+   "modified": "2026-11-14T17:09:33.204Z",
    "deleted": false,
    "data": {
     "name": "Maths tutoring",
@@ -283,8 +283,8 @@
   },
   {
    "kind": "event",
-   "uid": "605ab376bca7d78ab185f878624e4c2f",
-   "modified": "2026-11-14T16:58:37.077Z",
+   "uid": "d190b744a082b24c7cc5dd09f9d9fdac",
+   "modified": "2026-11-14T17:09:31.674Z",
    "deleted": false,
    "data": {
     "day": "2026-11-14",
@@ -297,8 +297,8 @@
   },
   {
    "kind": "event",
-   "uid": "bb65dfaba7acaa3ce5a1ca6e460efc69",
-   "modified": "2026-11-14T16:58:37.141Z",
+   "uid": "b32bbf781e3e6ad9fad9dc890a640113",
+   "modified": "2026-11-14T17:09:31.738Z",
    "deleted": false,
    "data": {
     "day": "2026-11-14",
@@ -311,8 +311,8 @@
   },
   {
    "kind": "event",
-   "uid": "6f80a11fd3d1217e67f6ff60d3a83f1c",
-   "modified": "2026-11-14T16:58:37.206Z",
+   "uid": "4a4ba425cf86bd06c687d8817591b852",
+   "modified": "2026-11-14T17:09:31.806Z",
    "deleted": false,
    "data": {
     "day": "2026-11-13",
@@ -325,13 +325,13 @@
   },
   {
    "kind": "task",
-   "uid": "00e8fd52fcfd47e2f64ff4879e5a2174",
-   "modified": "2026-11-14T16:58:37.275Z",
+   "uid": "a7f4f9df04b44308dac5b3e257fb3a34",
+   "modified": "2026-11-14T17:09:31.904Z",
    "deleted": false,
    "data": {
     "title": "Problem set 3 (q1–12)",
     "kind": "homework",
-    "course": "5953037faf8e678de023829bff40244a",
+    "course": "cafbf9875cfa858ee709ab5be5c86372",
     "due": "2026-11-15",
     "done": false,
     "details": "",
@@ -340,13 +340,13 @@
   },
   {
    "kind": "task",
-   "uid": "d58159e09e5879cdd949b74c95b3c346",
-   "modified": "2026-11-14T16:58:37.342Z",
+   "uid": "32c02cb31c552bb37671db19989ae60d",
+   "modified": "2026-11-14T17:09:31.969Z",
    "deleted": false,
    "data": {
     "title": "Read chapters 5–6 of Frankenstein",
     "kind": "reading",
-    "course": "79c00713eddc4b781c6b092404ba6374",
+    "course": "28c0b9b58b0b75a39e29682672750cb0",
     "due": "2026-11-17",
     "done": false,
     "details": "",
@@ -355,13 +355,13 @@
   },
   {
    "kind": "task",
-   "uid": "97759f3e3e6d08627d8381f406217cf4",
-   "modified": "2026-11-14T16:58:37.428Z",
+   "uid": "7093adfe33d2e22e1343eb7f2c90fbd7",
+   "modified": "2026-11-14T17:09:32.037Z",
    "deleted": false,
    "data": {
     "title": "Cell respiration lab report",
     "kind": "assignment",
-    "course": "bf76376474b410d36fed4c4674ccdd41",
+    "course": "6aa83b4c1576aa043ca9d418d25c57de",
     "due": "2026-11-20",
     "done": false,
     "details": "",
@@ -370,13 +370,13 @@
   },
   {
    "kind": "task",
-   "uid": "2951a90dfa9e4a7f082e2888be626941",
-   "modified": "2026-11-14T16:58:37.595Z",
+   "uid": "b48590fcaf55125f9a71355b7137bad3",
+   "modified": "2026-11-14T17:09:32.110Z",
    "deleted": false,
    "data": {
     "title": "Unit test: Industrial Revolution",
     "kind": "exam",
-    "course": "857169cd3b68dfcdbd4f4f1761766e40",
+    "course": "bb09a6bd69102b3fd3e5eb82c65cd2d0",
     "due": "2026-11-23",
     "done": false,
     "details": "",
@@ -385,13 +385,13 @@
   },
   {
    "kind": "task",
-   "uid": "9025776a6b32a471befd7e3354c5715b",
-   "modified": "2026-11-14T16:58:37.667Z",
+   "uid": "51045c10d4b8c1e44b46f5b50b450b53",
+   "modified": "2026-11-14T17:09:32.182Z",
    "deleted": false,
    "data": {
     "title": "Titration pre-lab questions",
     "kind": "homework",
-    "course": "bad6b1f5f9be7972ba80a6c40d0ec9f0",
+    "course": "7f36bab5239a38f80e61a841f1afb3d1",
     "due": "2026-11-13",
     "done": false,
     "details": "",
@@ -400,8 +400,8 @@
   },
   {
    "kind": "task",
-   "uid": "90a140dea26ec67cd7e911d330d0dbce",
-   "modified": "2026-11-14T16:58:37.739Z",
+   "uid": "7b6a2804963c6a116d97cd0628a93520",
+   "modified": "2026-11-14T17:09:32.254Z",
    "deleted": false,
    "data": {
     "title": "Buy a new graphing calculator",
@@ -415,8 +415,8 @@
   },
   {
    "kind": "task",
-   "uid": "100c1352fc5e40b177d55025181979cc",
-   "modified": "2026-11-14T16:58:37.811Z",
+   "uid": "fac9f27e45896ef7856e87056fcae20b",
+   "modified": "2026-11-14T17:09:32.326Z",
    "deleted": false,
    "data": {
     "title": "Return library books",
@@ -430,13 +430,13 @@
   },
   {
    "kind": "task",
-   "uid": "b4459d341a74add02e5c6e9488646481",
-   "modified": "2026-11-14T16:58:37.884Z",
+   "uid": "a4b516314627a730e4f55227bcc1c286",
+   "modified": "2026-11-14T17:09:32.398Z",
    "deleted": false,
    "data": {
     "title": "Vocabulary list 4",
     "kind": "homework",
-    "course": "79c00713eddc4b781c6b092404ba6374",
+    "course": "28c0b9b58b0b75a39e29682672750cb0",
     "due": "2026-11-12",
     "done": true,
     "details": "",
@@ -446,7 +446,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:agenda:a1",
-   "modified": "2026-11-14T16:58:39.772Z",
+   "modified": "2026-11-14T17:09:34.161Z",
    "deleted": false,
    "data": {
     "title": "Pag. 112 es. 4-9",
@@ -461,7 +461,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:agenda:a2",
-   "modified": "2026-11-14T16:58:39.856Z",
+   "modified": "2026-11-14T17:09:34.241Z",
    "deleted": false,
    "data": {
     "title": "Verifica: Rivoluzione francese",
@@ -476,7 +476,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:homework:h1",
-   "modified": "2026-11-14T16:58:40.118Z",
+   "modified": "2026-11-14T17:09:34.324Z",
    "deleted": false,
    "data": {
     "title": "Workbook p. 18, exercises 1-4",
@@ -491,7 +491,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:homework:h2",
-   "modified": "2026-11-14T16:58:40.390Z",
+   "modified": "2026-11-14T17:09:34.409Z",
    "deleted": false,
    "data": {
     "title": "Riassunto del capitolo 2",
@@ -505,8 +505,8 @@
   },
   {
    "kind": "notebook",
-   "uid": "56356a77c4bc5a5f7970d35ea822b5be",
-   "modified": "2026-11-14T16:58:38.494Z",
+   "uid": "7852b4064c5aaa98e99fb53c40835680",
+   "modified": "2026-11-14T17:09:32.903Z",
    "deleted": false,
    "data": {
     "name": "Trips",
@@ -515,98 +515,98 @@
   },
   {
    "kind": "note",
-   "uid": "6df8b713bfa843994d7d2c97bc28d565",
-   "modified": "2026-11-14T16:58:37.972Z",
+   "uid": "a10a0349b5448d380cd2213468ef70aa",
+   "modified": "2026-11-14T17:09:32.470Z",
    "deleted": false,
    "data": {
     "title": "Biology: cellular respiration",
     "body": "# Biology: cellular respiration\n\n**Equation:** C6H12O6 + 6 O2 → 6 CO2 + 6 H2O + energy (ATP)\n\n## Stages\n1. Glycolysis: cytoplasm, 2 ATP\n2. Krebs cycle: mitochondrial matrix\n3. Electron transport chain: inner membrane, ~34 ATP\n\n- [x] Review diagram on p. 112\n- [ ] Ask about anaerobic pathways\n",
-    "course": "bf76376474b410d36fed4c4674ccdd41",
+    "course": "6aa83b4c1576aa043ca9d418d25c57de",
     "pinned": false,
-    "updated": "2026-11-14T17:58:37",
+    "updated": "2026-11-14T18:09:32",
     "topic": "Cell biology",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "ae63b682da6258c1f79752c01cc673ab",
-   "modified": "2026-11-14T16:58:38.133Z",
+   "uid": "0c3d0cb6c9e20dcd782e611d6d50a120",
+   "modified": "2026-11-14T17:09:32.543Z",
    "deleted": false,
    "data": {
     "title": "Mitochondria",
     "body": "# Mitochondria\n\nThe powerhouse of the cell: inner membrane folds (cristae) increase surface area for the electron transport chain.\n",
-    "course": "bf76376474b410d36fed4c4674ccdd41",
+    "course": "6aa83b4c1576aa043ca9d418d25c57de",
     "pinned": false,
-    "updated": "2026-11-14T17:58:38",
+    "updated": "2026-11-14T18:09:32",
     "topic": "Cell biology",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "8c6632b6f3147051b0d743d902c8a317",
-   "modified": "2026-11-14T16:58:38.206Z",
+   "uid": "f44330018af9174e289dc2f13872e841",
+   "modified": "2026-11-14T17:09:32.615Z",
    "deleted": false,
    "data": {
     "title": "Mendel's laws",
     "body": "# Mendel's laws\n\n1. Segregation\n2. Independent assortment\n",
-    "course": "bf76376474b410d36fed4c4674ccdd41",
+    "course": "6aa83b4c1576aa043ca9d418d25c57de",
     "pinned": false,
-    "updated": "2026-11-14T17:58:38",
+    "updated": "2026-11-14T18:09:32",
     "topic": "Genetics",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "a2c1af2e410016734ad25a9db2ea0120",
-   "modified": "2026-11-14T16:58:38.278Z",
+   "uid": "85bfbae46715e7f0433d1989075e4c32",
+   "modified": "2026-11-14T17:09:32.687Z",
    "deleted": false,
    "data": {
     "title": "Frankenstein: themes",
     "body": "# Frankenstein: themes\n\n- Ambition and its costs\n- Isolation\n- *Nature vs. nurture*\n\n> \"Beware; for I am fearless, and therefore powerful.\"\n",
-    "course": "79c00713eddc4b781c6b092404ba6374",
+    "course": "28c0b9b58b0b75a39e29682672750cb0",
     "pinned": false,
-    "updated": "2026-11-14T17:58:38",
+    "updated": "2026-11-14T18:09:32",
     "topic": "Frankenstein",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "d01058bc282f520e48a2a4e98aa714c4",
-   "modified": "2026-11-14T16:58:38.422Z",
+   "uid": "f5f4f7dfe7ee31744f87a34204071d11",
+   "modified": "2026-11-14T17:09:32.831Z",
    "deleted": false,
    "data": {
     "title": "Ideas",
     "body": "# Ideas\n\nThings I want to try this term:\n\n- Pomodoro for maths homework\n- Join the robotics club\n",
     "course": null,
     "pinned": true,
-    "updated": "2026-11-14T17:58:38",
+    "updated": "2026-11-14T18:09:32",
     "topic": "",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "d827891a73ae6df63c84d573a2d440f5",
-   "modified": "2026-11-14T16:58:38.566Z",
+   "uid": "55ddd0489ade295284175edf54be0e70",
+   "modified": "2026-11-14T17:09:32.976Z",
    "deleted": false,
    "data": {
     "title": "Museum trip",
     "body": "# Museum trip\n\n- Bring the permission slip\n- Meet at 8:15 at the gate\n",
     "course": null,
     "pinned": false,
-    "updated": "2026-11-14T17:58:38",
+    "updated": "2026-11-14T18:09:32",
     "topic": "School",
-    "notebook": "56356a77c4bc5a5f7970d35ea822b5be"
+    "notebook": "7852b4064c5aaa98e99fb53c40835680"
    }
   },
   {
    "kind": "journal",
    "uid": "day:2026-11-14",
-   "modified": "2026-11-14T16:58:38.647Z",
+   "modified": "2026-11-14T17:09:33.052Z",
    "deleted": false,
    "data": {
     "day": "2026-11-14",
@@ -615,11 +615,11 @@
   },
   {
    "kind": "shift",
-   "uid": "1ca008690c23a5ed06db6082dd80cd80",
-   "modified": "2026-11-14T16:58:38.887Z",
+   "uid": "0cdea0f7f0bd9483515dff140e676e5c",
+   "modified": "2026-11-14T17:09:33.281Z",
    "deleted": false,
    "data": {
-    "job": "58850b1c1ba7f2c3ea00f9309cd2a192",
+    "job": "9922fcc4e8302cf5aecadc7ff41d36d0",
     "day": "2026-11-12",
     "start": 960,
     "duration": 90,
@@ -629,11 +629,11 @@
   },
   {
    "kind": "shift",
-   "uid": "ed4497f40dd4ab63786067b04ac2d8aa",
-   "modified": "2026-11-14T16:58:38.966Z",
+   "uid": "ddf03812634fe977a34321d99c280dd5",
+   "modified": "2026-11-14T17:09:33.361Z",
    "deleted": false,
    "data": {
-    "job": "58850b1c1ba7f2c3ea00f9309cd2a192",
+    "job": "9922fcc4e8302cf5aecadc7ff41d36d0",
     "day": "2026-11-19",
     "start": 960,
     "duration": 90,
@@ -643,11 +643,11 @@
   },
   {
    "kind": "shift",
-   "uid": "77dbd7617ea94da7980709fe21fcf7b5",
-   "modified": "2026-11-14T16:58:39.047Z",
+   "uid": "6f29d78df4a6a61eaa4fa4f060c2a5ac",
+   "modified": "2026-11-14T17:09:33.441Z",
    "deleted": false,
    "data": {
-    "job": "58850b1c1ba7f2c3ea00f9309cd2a192",
+    "job": "9922fcc4e8302cf5aecadc7ff41d36d0",
     "day": "2026-11-26",
     "start": 960,
     "duration": 90,
@@ -657,11 +657,11 @@
   },
   {
    "kind": "shift",
-   "uid": "3e2fe718a2a3d85799f28edafe0df0eb",
-   "modified": "2026-11-14T16:58:39.131Z",
+   "uid": "9b00ec7adaf78cc050ecb0d5b1d5c90e",
+   "modified": "2026-11-14T17:09:33.521Z",
    "deleted": false,
    "data": {
-    "job": "58850b1c1ba7f2c3ea00f9309cd2a192",
+    "job": "9922fcc4e8302cf5aecadc7ff41d36d0",
     "day": "2026-12-03",
     "start": 960,
     "duration": 90,
@@ -684,6 +684,7 @@
   "CREATE TABLE events (\n    id        INTEGER PRIMARY KEY,\n    day       TEXT NOT NULL,\n    start_min INTEGER NOT NULL,\n    end_min   INTEGER NOT NULL,\n    title     TEXT NOT NULL,\n    details   TEXT NOT NULL DEFAULT '',\n    color     TEXT NOT NULL DEFAULT '#8a8f98'\n, uid TEXT, modified TEXT, dirty INTEGER NOT NULL DEFAULT 0)",
   "CREATE TABLE focus_sessions (\n    id       INTEGER PRIMARY KEY,\n    started  TEXT NOT NULL,\n    minutes  INTEGER NOT NULL,\n    task_id  INTEGER REFERENCES tasks(id) ON DELETE SET NULL,\n    label    TEXT NOT NULL DEFAULT '',\n    complete INTEGER NOT NULL DEFAULT 1\n, uid TEXT, modified TEXT, dirty INTEGER NOT NULL DEFAULT 0)",
   "CREATE TABLE grades (\n    external_id TEXT PRIMARY KEY,\n    subject     TEXT NOT NULL,\n    day         TEXT NOT NULL,\n    display     TEXT NOT NULL,\n    value       REAL,\n    component   TEXT NOT NULL DEFAULT '',\n    period      TEXT NOT NULL DEFAULT '',\n    notes       TEXT NOT NULL DEFAULT '',\n    cancelled   INTEGER NOT NULL DEFAULT 0,\n    course_id   INTEGER REFERENCES courses(id) ON DELETE SET NULL\n)",
+  "CREATE TABLE ideas (\n    id      INTEGER PRIMARY KEY,\n    text    TEXT NOT NULL,\n    created TEXT NOT NULL,\n    done    INTEGER NOT NULL DEFAULT 0\n, uid TEXT, modified TEXT, dirty INTEGER NOT NULL DEFAULT 0)",
   "CREATE TABLE jobs (\n    id          INTEGER PRIMARY KEY,\n    name        TEXT NOT NULL,\n    color       TEXT NOT NULL DEFAULT '#0090ff',\n    hourly_rate REAL,\n    deductions  REAL NOT NULL DEFAULT 0\n, pay_mode TEXT NOT NULL DEFAULT 'hourly', monthly_pay REAL, mensilities INTEGER NOT NULL DEFAULT 13, contract_start TEXT, contract_end TEXT, tax_model TEXT NOT NULL DEFAULT 'flat', inps REAL NOT NULL DEFAULT 9.19, addizionali REAL NOT NULL DEFAULT 0, fixed_term INTEGER NOT NULL DEFAULT 1, cuneo INTEGER NOT NULL DEFAULT 0, payday INTEGER, pays_previous_month INTEGER NOT NULL DEFAULT 1, payday_since TEXT, uid TEXT, modified TEXT, dirty INTEGER NOT NULL DEFAULT 0)",
   "CREATE TABLE journal (\n    day  TEXT PRIMARY KEY,\n    body TEXT NOT NULL DEFAULT ''\n, uid TEXT, modified TEXT, dirty INTEGER NOT NULL DEFAULT 0)",
   "CREATE TABLE lessons (\n    external_id TEXT PRIMARY KEY,\n    day         TEXT NOT NULL,\n    subject     TEXT NOT NULL,\n    topic       TEXT NOT NULL DEFAULT '',\n    teacher     TEXT NOT NULL DEFAULT '',\n    hour        INTEGER NOT NULL DEFAULT 0,\n    course_id   INTEGER REFERENCES courses(id) ON DELETE SET NULL\n)",
@@ -719,6 +720,9 @@
   "CREATE TRIGGER sync_focus_sessions_del AFTER DELETE ON focus_sessions\n            WHEN NOT EXISTS (SELECT 1 FROM sync_flags WHERE name = 'applying') AND OLD.uid IS NOT NULL BEGIN\n                INSERT OR REPLACE INTO sync_tombstones (kind, uid, modified, dirty)\n                VALUES ('focus', OLD.uid, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), 1);\n            END",
   "CREATE TRIGGER sync_focus_sessions_ins AFTER INSERT ON focus_sessions\n            WHEN NOT EXISTS (SELECT 1 FROM sync_flags WHERE name = 'applying') BEGIN\n                UPDATE focus_sessions SET uid = COALESCE(NEW.uid, lower(hex(randomblob(16)))), modified = strftime('%Y-%m-%dT%H:%M:%fZ', 'now'),\n                    dirty = 1 WHERE rowid = NEW.rowid;\n                DELETE FROM sync_tombstones WHERE kind = 'focus'\n                    AND uid = (SELECT uid FROM focus_sessions WHERE rowid = NEW.rowid);\n            END",
   "CREATE TRIGGER sync_focus_sessions_upd AFTER UPDATE ON focus_sessions\n            WHEN NOT EXISTS (SELECT 1 FROM sync_flags WHERE name = 'applying') BEGIN\n                UPDATE focus_sessions SET modified = strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), dirty = 1 WHERE rowid = NEW.rowid;\n            END",
+  "CREATE TRIGGER sync_ideas_del AFTER DELETE ON ideas\n            WHEN NOT EXISTS (SELECT 1 FROM sync_flags WHERE name = 'applying') AND OLD.uid IS NOT NULL BEGIN\n                INSERT OR REPLACE INTO sync_tombstones (kind, uid, modified, dirty)\n                VALUES ('idea', OLD.uid, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), 1);\n            END",
+  "CREATE TRIGGER sync_ideas_ins AFTER INSERT ON ideas\n            WHEN NOT EXISTS (SELECT 1 FROM sync_flags WHERE name = 'applying') BEGIN\n                UPDATE ideas SET uid = COALESCE(NEW.uid, lower(hex(randomblob(16)))), modified = strftime('%Y-%m-%dT%H:%M:%fZ', 'now'),\n                    dirty = 1 WHERE rowid = NEW.rowid;\n                DELETE FROM sync_tombstones WHERE kind = 'idea'\n                    AND uid = (SELECT uid FROM ideas WHERE rowid = NEW.rowid);\n            END",
+  "CREATE TRIGGER sync_ideas_upd AFTER UPDATE ON ideas\n            WHEN NOT EXISTS (SELECT 1 FROM sync_flags WHERE name = 'applying') BEGIN\n                UPDATE ideas SET modified = strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), dirty = 1 WHERE rowid = NEW.rowid;\n            END",
   "CREATE TRIGGER sync_jobs_del AFTER DELETE ON jobs\n            WHEN NOT EXISTS (SELECT 1 FROM sync_flags WHERE name = 'applying') AND OLD.uid IS NOT NULL BEGIN\n                INSERT OR REPLACE INTO sync_tombstones (kind, uid, modified, dirty)\n                VALUES ('job', OLD.uid, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), 1);\n            END",
   "CREATE TRIGGER sync_jobs_ins AFTER INSERT ON jobs\n            WHEN NOT EXISTS (SELECT 1 FROM sync_flags WHERE name = 'applying') BEGIN\n                UPDATE jobs SET uid = COALESCE(NEW.uid, lower(hex(randomblob(16)))), modified = strftime('%Y-%m-%dT%H:%M:%fZ', 'now'),\n                    dirty = 1 WHERE rowid = NEW.rowid;\n                DELETE FROM sync_tombstones WHERE kind = 'job'\n                    AND uid = (SELECT uid FROM jobs WHERE rowid = NEW.rowid);\n            END",
   "CREATE TRIGGER sync_jobs_upd AFTER UPDATE ON jobs\n            WHEN NOT EXISTS (SELECT 1 FROM sync_flags WHERE name = 'applying') BEGIN\n                UPDATE jobs SET modified = strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), dirty = 1 WHERE rowid = NEW.rowid;\n            END",
@@ -764,6 +768,7 @@
   "CREATE UNIQUE INDEX idx_courses_uid ON courses(uid)",
   "CREATE UNIQUE INDEX idx_events_uid ON events(uid)",
   "CREATE UNIQUE INDEX idx_focus_sessions_uid ON focus_sessions(uid)",
+  "CREATE UNIQUE INDEX idx_ideas_uid ON ideas(uid)",
   "CREATE UNIQUE INDEX idx_jobs_uid ON jobs(uid)",
   "CREATE UNIQUE INDEX idx_journal_uid ON journal(uid)",
   "CREATE UNIQUE INDEX idx_medicine_doses_uid ON medicine_doses(uid)",
@@ -1259,6 +1264,7 @@
   "focus_sessions": [],
   "medicines": [],
   "medicine_doses": [],
+  "ideas": [],
   "class_slots": [
    [
     1,
