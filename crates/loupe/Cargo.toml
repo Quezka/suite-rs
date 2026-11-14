@@ -1,0 +1,11 @@
+[package]
+name = "loupe"
+version = "0.1.0"
+description = "Use a laptop's camera on another computer, and the laptop as a second screen."
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[dependencies]
+quezka-kit = { path = "../kit" }
+egui.workspace = true

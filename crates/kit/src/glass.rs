@@ -6,7 +6,6 @@
 //! the rest on top. Backgrounds stay plain (the user rejected colour washes); content stays solid; only chrome over
 //! content is glass. High contrast never uses glass.
 
-use std::sync::Arc;
 
 use egui::epaint::{ClippedPrimitive, Primitive};
 use egui::{Color32, CornerRadius, Painter, Rect};
