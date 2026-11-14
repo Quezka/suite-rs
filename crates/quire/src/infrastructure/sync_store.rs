@@ -343,9 +343,6 @@ impl<'a> SyncStore<'a> {
             let mut latest: HashMap<(String, String), SyncRecord> = HashMap::new();
             let mut order: Vec<(String, String)> = Vec::new();
             for record in waiting.iter().chain(records) {
-                if by_kind(&record.kind).is_none() {
-                    continue;
-                }
                 match latest.get(&record.key()) {
                     Some(known) if record.modified <= known.modified => {}
                     Some(_) => {
@@ -360,7 +357,12 @@ impl<'a> SyncStore<'a> {
             let mut sorted: Vec<&SyncRecord> = order.iter().map(|k| &latest[k]).collect();
             sorted.sort_by_key(|r| by_kind(&r.kind).map_or(usize::MAX, |(i, _)| i));
             for record in sorted {
-                let (_, s) = by_kind(&record.kind).expect("checked above");
+                // kind unknown here (newer app elsewhere) -> keep in inbox, apply after update
+                // <- drop + cursor move on => record lost for ever
+                let Some((_, s)) = by_kind(&record.kind) else {
+                    conn.execute("INSERT OR REPLACE INTO sync_inbox VALUES (?, ?, ?)", params![record.kind, record.uid, dump(record)])?;
+                    continue;
+                };
                 if let Some(local) = self.local_modified(s, &record.uid)? {
                     if local >= record.modified {
                         continue; // Ours is as new or newer: it wins (and gets sent if dirty).

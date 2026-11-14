@@ -131,3 +131,15 @@ fn local_changes_are_tracked_and_deletions_leave_tombstones() {
     let count: i64 = db.conn.query_row("SELECT COUNT(*) FROM events", [], |r| r.get(0)).unwrap();
     assert_eq!(count, 1);
 }
+
+#[test]
+fn records_of_a_kind_this_app_does_not_know_wait_in_the_inbox() {
+    let db = Database::in_memory().unwrap();
+    let store = SyncStore::new(&db.conn);
+    let future = SyncRecord { kind: "future".into(), uid: "u1".into(), modified: "2026-11-14T00:00:00.000Z".into(),
+                              deleted: false, data: Some(json!({"x": 1})) };
+    assert!(store.apply(&[future.clone()]).unwrap().is_empty());
+    assert!(store.apply(&[]).unwrap().is_empty()); // still waiting after another sync
+    let kept: String = db.conn.query_row("SELECT kind FROM sync_inbox", [], |r| r.get(0)).unwrap();
+    assert_eq!(kept, "future");
+}
