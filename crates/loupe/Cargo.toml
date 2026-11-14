@@ -9,3 +9,8 @@ authors.workspace = true
 [dependencies]
 quezka-kit = { path = "../kit" }
 egui.workspace = true
+
+# gnome image viewer = `loupe` (/usr/bin/loupe, ubuntu default) -> other binary name
+[[bin]]
+name = "quezka-loupe"
+path = "src/main.rs"
