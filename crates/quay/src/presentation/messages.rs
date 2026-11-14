@@ -33,6 +33,8 @@ pub const MESSAGES: &[(&str, &str, &str)] = &[
     ("Couldn't start the program.", "Impossibile avviare il programma.", "Не удалось запустить программу."),
     ("This computer isn't supported by Quay yet.", "Questo computer non è ancora supportato da Quay.", "Этот компьютер пока не поддерживается Quay."),
     ("Notes, day planner and school timetable", "Appunti, agenda e orario scolastico", "Заметки, ежедневник и школьное расписание"),
+    ("A laptop's camera elsewhere, and the laptop as a second screen", "La fotocamera del portatile altrove, e il portatile come secondo schermo", "Камера ноутбука на другом компьютере и ноутбук как второй экран"),
+    ("Your phone on the computer: notifications, messages, calls, files", "Il telefono sul computer: notifiche, messaggi, chiamate, file", "Телефон на компьютере: уведомления, сообщения, звонки, файлы"),
     ("Gantt charts that open and save GanttProject files", "Diagrammi di Gantt che aprono e salvano file GanttProject", "Диаграммы Ганта, открывающие и сохраняющие файлы GanttProject"),
     ("ER and UML class diagrams, with SQL generation", "Diagrammi ER e UML delle classi, con generazione di SQL", "ER- и UML-диаграммы классов с генерацией SQL"),
     ("ER and UML class diagrams in a comfortable look", "Diagrammi ER e UML delle classi in un aspetto comodo", "ER- и UML-диаграммы классов в удобном виде"),

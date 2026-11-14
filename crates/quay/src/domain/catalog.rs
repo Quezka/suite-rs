@@ -10,14 +10,24 @@ pub struct SuiteApp {
     pub repo: &'static str,
     pub windows_guid: &'static str,
     pub windows_exe: &'static str,
+    /// The .deb package and the command, when they differ from `key` (Loupe: GNOME's image viewer is `loupe`).
+    pub package: &'static str,
+    pub command: &'static str,
+    /// No Windows build (an empty `windows_guid`): Windows doesn't list it.
+    pub linux_only: bool,
 }
 
 const fn app(key: &'static str, name: &'static str, tagline: &'static str, repo: &'static str,
              windows_guid: &'static str, windows_exe: &'static str) -> SuiteApp {
-    SuiteApp { key, name, tagline, repo, windows_guid, windows_exe }
+    SuiteApp { key, name, tagline, repo, windows_guid, windows_exe, package: key, command: key, linux_only: false }
 }
 
-pub const CATALOG: [SuiteApp; 10] = [
+const fn linux(key: &'static str, name: &'static str, tagline: &'static str, repo: &'static str,
+               package: &'static str, command: &'static str) -> SuiteApp {
+    SuiteApp { key, name, tagline, repo, windows_guid: "", windows_exe: "", package, command, linux_only: true }
+}
+
+pub const CATALOG: [SuiteApp; 12] = [
     app("quire", "Quire", "Notes, day planner and school timetable", "Quezka/quire", "A8A67700-9677-45B8-8C82-78A07D4DFD71", "Quire.exe"),
     app("gantry", "Gantry", "Gantt charts that open and save GanttProject files", "Quezka/gantry", "76971ED7-094F-4440-AF21-DE3524CFAEB4", "Gantry.exe"),
     app("ligature", "Ligature", "ER and UML class diagrams, with SQL generation", "Quezka/ligature", "3C1E7B52-6A0D-4F2B-9E4A-8D5F21C7A9B6", "Ligature.exe"),
@@ -27,6 +37,8 @@ pub const CATALOG: [SuiteApp; 10] = [
     app("missive", "Missive", "A calm, private, read-only mail client", "Quezka/missive", "B7C3D9E2-4A15-4E68-9F20-3D8A6C1E5B74", "Missive.exe"),
     app("stagno", "Stagno", "The DuckNet browser", "Quezka/ducknet", "B7D4E2A1-5C93-4E68-A0F7-2D1B9C8E6A43", "Stagno.exe"),
     app("natter", "Natter", "WhatsApp Web in a light window of its own", "Quezka/natter", "8A41B7D0-13ED-40B1-A3DA-A5BCFA0C1DF7", "Natter.exe"),
+    linux("loupe", "Loupe", "A laptop's camera elsewhere, and the laptop as a second screen", "Quezka/loupe", "loupe-quezka", "quezka-loupe"),
+    linux("tether", "Tether", "Your phone on the computer: notifications, messages, calls, files", "Quezka/tether", "quezka-tether", "tether"),
     app("quay", "Quay", "This launcher: installs and updates the suite", "Quezka/quay", "C2F81A6D-93B4-4D07-A5E1-7B3C0D94F2A8", "Quay.exe"),
 ];
 

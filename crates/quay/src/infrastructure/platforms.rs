@@ -24,7 +24,7 @@ pub struct DebPlatform;
 
 impl Platform for DebPlatform {
     fn installed_version(&self, app: &SuiteApp) -> Option<String> {
-        let out = Command::new("dpkg-query").args(["-W", "-f=${Status}|${Version}", app.key]).output().ok()?;
+        let out = Command::new("dpkg-query").args(["-W", "-f=${Status}|${Version}", app.package]).output().ok()?;
         if !out.status.success() {
             return None;
         }
@@ -62,7 +62,7 @@ impl Platform for DebPlatform {
     }
 
     fn launch(&self, app: &SuiteApp) -> Result<(), QuayError> {
-        let command = which(app.key).ok_or_else(|| QuayError::new("Can't find the program to start."))?;
+        let command = which(app.command).ok_or_else(|| QuayError::new("Can't find the program to start."))?;
         Command::new(command)
             .stdin(Stdio::null())
             .stdout(Stdio::null())

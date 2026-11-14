@@ -38,7 +38,7 @@ pub struct SuiteService {
 
 impl SuiteService {
     pub fn new(feed: Arc<dyn ReleaseFeed>, platform: Arc<dyn Platform>, autostart: Option<Arc<dyn Autostart>>) -> Self {
-        Self { feed, platform, autostart, catalog: CATALOG.to_vec(), releases: HashMap::new() }
+        Self { feed, platform, autostart, catalog: CATALOG.iter().filter(|a| !(a.linux_only && cfg!(windows))).copied().collect(), releases: HashMap::new() }
     }
 
     pub fn feed(&self) -> Arc<dyn ReleaseFeed> {
