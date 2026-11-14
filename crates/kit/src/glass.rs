@@ -44,23 +44,19 @@ pub enum Weight {
 
 /// Lays a glass pane over what's been painted so far in `rect`, with a soft shadow under it when it floats. Paint its
 /// contents after this call. In high contrast it's a solid surface with an outline instead.
-pub fn pane(painter: &Painter, rect: Rect, radius: f32, th: &Tokens, weight: Weight, floating: bool) {
+pub fn pane(painter: &Painter, rect: Rect, radius: f32, th: &Tokens, _weight: Weight, floating: bool) {
+    // m3 tonal (2026-11-14): user rm glass -> solid surface; blur path keep @ `GlassPane` for later | rm
     let round = CornerRadius::same(radius.round().clamp(0.0, 255.0) as u8);
     if th.high_contrast {
         painter.rect_filled(rect, round, th.surface);
         painter.rect_stroke(rect, round, egui::Stroke::new(1.5, th.border), egui::StrokeKind::Inside);
         return;
     }
-    let amount = match weight {
-        Weight::Light => 0.16,
-        Weight::Regular => 0.30,
-    } + if th.dark { 0.12 } else { 0.0 };
-    let base = th.surface;
-    let tint = Color32::from_rgba_unmultiplied(base.r(), base.g(), base.b(), (amount * 255.0) as u8);
-    painter.add(egui::PaintCallback {
-        rect,
-        callback: Arc::new(GlassPane { radius, tint, dark: th.dark, saturation: 1.3, floating }),
-    });
+    if floating {
+        let shadow = egui::epaint::Shadow { offset: [0, 2], blur: 10, spread: 0, color: Color32::from_black_alpha(if th.dark { 90 } else { 28 }) };
+        painter.add(shadow.as_shape(rect, round));
+    }
+    painter.rect_filled(rect, round, th.surface);
 }
 
 #[repr(C)]

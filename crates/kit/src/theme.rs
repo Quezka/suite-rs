@@ -56,7 +56,7 @@ mod tests {
 
     #[test]
     fn corners_nest() {
-        assert_eq!(nested(OUTER_RADIUS, CARD_PADDING), 8.0);
+        assert_eq!(nested(OUTER_RADIUS, CARD_PADDING), 16.0); // 28 - 12
         assert_eq!(nested(8.0, 12.0), 0.0);
     }
 

@@ -7,15 +7,15 @@ const fn hex(rgb: u32) -> egui::Color32 {
 }
 
 pub const LIGHT: Tokens = Tokens {
-    bg: hex(0xf4f4f2),
+    bg: hex(0xf7f7fb),
     surface: hex(0xffffff),
-    raised: hex(0xebebe8),
-    sidebar: hex(0xeeeeeb),
-    border: hex(0xb4b4ae),
-    hover: hex(0xe2e2de),
-    text: hex(0x111111),
-    muted: hex(0x3c3c39),
-    faint: hex(0x52524e),
+    raised: hex(0xeaeaf2),
+    sidebar: hex(0xf7f7fb),
+    border: hex(0xb6b6c4),
+    hover: hex(0xe4e4ee),
+    text: hex(0x111116),
+    muted: hex(0x3d3d46),
+    faint: hex(0x5b5b66),
     accent: hex(0x4f46e5),
     accent_hover: hex(0x4338ca),
     accent_soft: hex(0xe3e2fb),
@@ -29,15 +29,15 @@ pub const LIGHT: Tokens = Tokens {
 };
 
 pub const DARK: Tokens = Tokens {
-    bg: hex(0x111112),
-    surface: hex(0x1c1c1e),
-    raised: hex(0x2a2a2d),
-    sidebar: hex(0x161618),
-    border: hex(0x4b4b50),
-    hover: hex(0x303034),
-    text: hex(0xf5f5f4),
-    muted: hex(0xd0d0cc),
-    faint: hex(0xa9a9a5),
+    bg: hex(0x121218),
+    surface: hex(0x1d1d24),
+    raised: hex(0x2a2a33),
+    sidebar: hex(0x121218),
+    border: hex(0x4a4a56),
+    hover: hex(0x30303a),
+    text: hex(0xf8f7fc),
+    muted: hex(0xcfcfd9),
+    faint: hex(0xa8a8b4),
     accent: hex(0xa9a6ff),
     accent_hover: hex(0xc3c0ff),
     accent_soft: hex(0x37356e),
@@ -98,7 +98,7 @@ pub const RADIUS_XS: f32 = 6.0;
 pub const RADIUS_SM: f32 = 8.0;
 pub const RADIUS_MD: f32 = 12.0;
 pub const RADIUS_POPUP: f32 = 14.0;
-pub const RADIUS_LG: f32 = 20.0;
+pub const RADIUS_LG: f32 = 28.0;
 pub const RADIUS_XL: f32 = 30.0;
 pub const RADIUS_PILL: f32 = 999.0;
 pub const SPACE_1: f32 = 4.0;
