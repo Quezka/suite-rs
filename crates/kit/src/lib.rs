@@ -20,10 +20,10 @@ pub mod widgets;
 pub mod android;
 
 #[cfg(not(target_os = "android"))]
-pub use runner::run;
+pub use runner::{run, run_with};
 #[cfg(target_os = "android")]
 pub use runner::run_android;
-pub use runner::{screenshot, App};
+pub use runner::{first_size, screenshot, App, Options};
 
 /// A line for the developer: logcat (tag "quezka") on Android, stderr elsewhere.
 pub fn log(line: &str) {

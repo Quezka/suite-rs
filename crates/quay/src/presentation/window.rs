@@ -302,6 +302,11 @@ impl App for QuayWindow {
         if self.wants_close {
             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
         }
+        if self.wants_show {
+            // started at login without a window: updates found => open it
+            self.wants_show = false;
+            ctx.send_viewport_cmd(egui::ViewportCommand::Visible(true));
+        }
         let screen = ctx.content_rect();
         let header = Rect::from_min_size(screen.min + Vec2::splat(GAP), Vec2::new(screen.width() - 2.0 * GAP, HEADER));
         let mut statuses = self.statuses.clone();

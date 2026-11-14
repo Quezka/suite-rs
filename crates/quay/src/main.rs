@@ -51,7 +51,11 @@ fn main() -> Result<(), String> {
         }
         return quezka_kit::screenshot(&mut shown, [w, h], 1.0, 20, &path);
     }
-    quezka_kit::run("Quay", shown)
+    let icon = quay::infrastructure::icons::icon("quay")
+        .and_then(|svg| quezka_kit::icons::render_svg(svg, 128))
+        .map(|image| (image.pixels.iter().flat_map(|c| c.to_srgba_unmultiplied()).collect::<Vec<u8>>(), 128));
+    let options = quezka_kit::Options { title: "Quay".into(), app_id: "io.github.quezka.Quay".into(), icon, start_hidden: quiet };
+    quezka_kit::run_with(options, shown)
 }
 
 fn write_icon(path: &str) -> Result<(), String> {

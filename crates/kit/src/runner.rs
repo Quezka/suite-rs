@@ -148,9 +148,29 @@ impl FrameStats {
     }
 }
 
+/// How an app's window starts.
+#[derive(Clone, Debug, Default)]
+pub struct Options {
+    pub title: String,
+    /// The desktop file's name without `.desktop` (`io.github.quezka.Quay`): the Wayland app id and the X11 class,
+    /// so the dock puts the window under the app's own icon.
+    pub app_id: String,
+    /// The window icon as RGBA pixels and its side in pixels (X11 and Windows; Wayland takes it from the desktop file).
+    pub icon: Option<(Vec<u8>, u32)>,
+    /// Run without a window until the app asks for one (`ViewportCommand::Visible(true)`) or quits
+    /// (`ViewportCommand::Close`): an app started at login that may have nothing to show.
+    pub start_hidden: bool,
+}
+
 struct Runner<A: App> {
     app: A,
-    title: String,
+    options: Options,
+    /// Still running without a window (see `Options::start_hidden`).
+    hidden: bool,
+    /// The app sent `ViewportCommand::Close`.
+    closing: bool,
+    /// Texture changes from frames run while hidden: uploaded with the first frame drawn.
+    unseen_textures: egui::TexturesDelta,
     window: Option<Arc<Window>>,
     gpu: Option<Gpu>,
     ctx: egui::Context,
@@ -181,7 +201,12 @@ impl<A: App> Runner<A> {
                 }
             }
         }
-        let (output, th) = frame(&self.ctx, &mut self.app, raw);
+        let (mut output, th) = frame(&self.ctx, &mut self.app, raw);
+        if !self.unseen_textures.is_empty() {
+            let mut all = std::mem::take(&mut self.unseen_textures);
+            all.append(std::mem::take(&mut output.textures_delta));
+            output.textures_delta = all;
+        }
         state.handle_platform_output(window, output.platform_output);
         let prims = self.ctx.tessellate(output.shapes, output.pixels_per_point);
         let size = [gpu.config.width, gpu.config.height];
@@ -195,7 +220,16 @@ impl<A: App> Runner<A> {
             }
             _ => surface.configure(&gpu.device, &gpu.config),
         }
-        let repaint = output.viewport_output.get(&egui::ViewportId::ROOT).map(|v| v.repaint_delay);
+        let viewport = output.viewport_output.get(&egui::ViewportId::ROOT);
+        let repaint = viewport.map(|v| v.repaint_delay);
+        for command in viewport.map(|v| v.commands.clone()).unwrap_or_default() {
+            match command {
+                egui::ViewportCommand::Close => self.closing = true,
+                egui::ViewportCommand::Minimized(on) => window.set_minimized(on),
+                egui::ViewportCommand::Focus => window.focus_window(),
+                _ => {}
+            }
+        }
         #[cfg(target_os = "android")]
         if let Some((app, typing)) = &mut self.android {
             let typed = typing.update(app, &self.ctx);
@@ -234,9 +268,84 @@ impl<A: App> ApplicationHandler for Runner<A> {
             self.attach_surface();
             return;
         }
-        let attributes = Window::default_attributes()
-            .with_title(self.title.clone())
-            .with_inner_size(winit::dpi::LogicalSize::new(1100.0, 720.0));
+        if self.hidden {
+            event_loop.set_control_flow(winit::event_loop::ControlFlow::WaitUntil(std::time::Instant::now() + HIDDEN_TICK));
+            return;
+        }
+        self.open_window(event_loop);
+    }
+
+    fn suspended(&mut self, _event_loop: &ActiveEventLoop) {
+        if let Some(gpu) = &mut self.gpu {
+            gpu.surface = None;
+        }
+    }
+
+    fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
+        if self.closing {
+            event_loop.exit();
+            return;
+        }
+        if !self.hidden {
+            return;
+        }
+        // No window yet: run the app's frame now and then, unseen, until it asks to be shown or to quit.
+        let raw = egui::RawInput {
+            screen_rect: Some(egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(WIDTH, HEIGHT))),
+            ..Default::default()
+        };
+        let (mut output, _) = frame(&self.ctx, &mut self.app, raw);
+        self.unseen_textures.append(std::mem::take(&mut output.textures_delta));
+        let commands = output.viewport_output.get(&egui::ViewportId::ROOT).map(|v| v.commands.clone()).unwrap_or_default();
+        if commands.iter().any(|c| matches!(c, egui::ViewportCommand::Close)) {
+            event_loop.exit();
+        } else if commands.iter().any(|c| matches!(c, egui::ViewportCommand::Visible(true) | egui::ViewportCommand::Focus)) {
+            self.hidden = false;
+            self.open_window(event_loop);
+        } else {
+            event_loop.set_control_flow(winit::event_loop::ControlFlow::WaitUntil(std::time::Instant::now() + HIDDEN_TICK));
+        }
+    }
+
+    fn window_event(&mut self, event_loop: &ActiveEventLoop, _id: WindowId, event: WindowEvent) {
+        self.on_window_event(event_loop, event);
+    }
+}
+
+const WIDTH: f32 = 1100.0;
+const HEIGHT: f32 = 720.0;
+const HIDDEN_TICK: std::time::Duration = std::time::Duration::from_millis(250);
+
+/// The window's first size: the app's own, or less on a small screen (never filling it, so the
+/// window manager doesn't take it for a maximised window).
+pub fn first_size(screen: Option<[f32; 2]>) -> [f32; 2] {
+    match screen {
+        Some([w, h]) => [WIDTH.min((w * 0.9).floor()), HEIGHT.min((h * 0.85).floor())],
+        None => [WIDTH, HEIGHT],
+    }
+}
+
+impl<A: App> Runner<A> {
+    fn open_window(&mut self, event_loop: &ActiveEventLoop) {
+        let screen = event_loop.primary_monitor().or_else(|| event_loop.available_monitors().next()).map(|m| {
+            let size = m.size().to_logical::<f32>(m.scale_factor());
+            [size.width, size.height]
+        });
+        let [w, h] = first_size(screen);
+        #[allow(unused_mut)]
+        let mut attributes = Window::default_attributes()
+            .with_title(self.options.title.clone())
+            .with_inner_size(winit::dpi::LogicalSize::new(w, h))
+            .with_min_inner_size(winit::dpi::LogicalSize::new(360.0_f32.min(w), 360.0_f32.min(h)));
+        if let Some((rgba, side)) = &self.options.icon {
+            attributes = attributes.with_window_icon(winit::window::Icon::from_rgba(rgba.clone(), *side, *side).ok());
+        }
+        #[cfg(all(unix, not(target_os = "android"), not(target_os = "macos"), not(target_os = "ios")))]
+        if !self.options.app_id.is_empty() {
+            let id = self.options.app_id.clone();
+            attributes = winit::platform::wayland::WindowAttributesExtWayland::with_name(attributes, id.clone(), id.clone());
+            attributes = winit::platform::x11::WindowAttributesExtX11::with_name(attributes, id.clone(), id);
+        }
         let window = Arc::new(event_loop.create_window(attributes).expect("a window"));
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_with_display_handle(Box::new(event_loop.owned_display_handle())));
         let surface = instance.create_surface(window.clone()).expect("a surface");
@@ -273,13 +382,7 @@ impl<A: App> ApplicationHandler for Runner<A> {
         self.window = Some(window);
     }
 
-    fn suspended(&mut self, _event_loop: &ActiveEventLoop) {
-        if let Some(gpu) = &mut self.gpu {
-            gpu.surface = None;
-        }
-    }
-
-    fn window_event(&mut self, event_loop: &ActiveEventLoop, _id: WindowId, event: WindowEvent) {
+    fn on_window_event(&mut self, event_loop: &ActiveEventLoop, event: WindowEvent) {
         let Some(window) = self.window.clone() else { return };
         if let Some(state) = &mut self.state {
             let response = state.on_window_event(&window, &event);
@@ -307,13 +410,16 @@ impl<A: App> ApplicationHandler for Runner<A> {
 
 fn run_loop<A: App + 'static>(
     event_loop: EventLoop<()>,
-    title: &str,
+    options: Options,
     app: A,
     #[cfg(target_os = "android")] android: winit::platform::android::activity::AndroidApp,
 ) -> Result<(), String> {
     let mut runner = Runner {
         app,
-        title: title.to_string(),
+        hidden: options.start_hidden,
+        closing: false,
+        unseen_textures: Default::default(),
+        options,
         window: None,
         gpu: None,
         ctx: egui::Context::default(),
@@ -334,7 +440,13 @@ fn run_loop<A: App + 'static>(
 /// Opens the app's window and runs it until it's closed.
 #[cfg(not(target_os = "android"))]
 pub fn run<A: App + 'static>(title: &str, app: A) -> Result<(), String> {
-    run_loop(EventLoop::new().map_err(|e| e.to_string())?, title, app)
+    run_with(Options { title: title.to_string(), ..Default::default() }, app)
+}
+
+/// Like `run`, with the window's app id, icon and whether it starts hidden.
+#[cfg(not(target_os = "android"))]
+pub fn run_with<A: App + 'static>(options: Options, app: A) -> Result<(), String> {
+    run_loop(EventLoop::new().map_err(|e| e.to_string())?, options, app)
 }
 
 /// Runs the app as an Android activity (call from the app's `android_main`).
@@ -342,5 +454,18 @@ pub fn run<A: App + 'static>(title: &str, app: A) -> Result<(), String> {
 pub fn run_android<A: App + 'static>(android: winit::platform::android::activity::AndroidApp, title: &str, app: A) -> Result<(), String> {
     use winit::platform::android::EventLoopBuilderExtAndroid;
     let event_loop = EventLoop::builder().with_android_app(android.clone()).build().map_err(|e| e.to_string())?;
-    run_loop(event_loop, title, app, android)
+    run_loop(event_loop, Options { title: title.to_string(), ..Default::default() }, app, android)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::first_size;
+
+    #[test]
+    fn a_small_screen_gets_a_window_that_does_not_fill_it() {
+        assert_eq!(first_size(None), [1100.0, 720.0]);
+        assert_eq!(first_size(Some([1920.0, 1080.0])), [1100.0, 720.0]);
+        let [w, h] = first_size(Some([1093.0, 614.0])); // 1366x768 at 125%
+        assert!(w < 1093.0 && h < 614.0);
+    }
 }
