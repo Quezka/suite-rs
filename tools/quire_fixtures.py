@@ -52,7 +52,7 @@ def payroll_cases():
 
 def rules_cases():
     from datetime import datetime
-    from quire.domain import water, sleep, register, finance, medicine, ical
+    from quire.domain import water, sleep, register, medicine, ical
     from quire.domain.model import note_snippet, derive_note_title
     out = {}
     out["water_goal"] = [[h, w, water.water_goal_ml(h, w)] for h in (150, 162.5, 175, 190, 201) for w in (45, 58.3, 70, 95, 140)]
@@ -69,7 +69,6 @@ def rules_cases():
     pts = [(date(2026, 1, d), v) for d, v in ((3, 6.5), (3, 7.0), (5, 5.25), (9, 8.75), (12, 7.5), (12, 4.0))]
     out["running"] = [[[d.isoformat(), v] for d, v in pts], [[d.isoformat(), v] for d, v in register.running_average(pts)]]
     out["lesson_hours"] = [[m, register.lesson_hours(m)] for m in (0, 30, 50, 89, 90, 91, 110, 150, 151)]
-    out["cents"] = [[t, finance.parse_cents(t)] for t in ("12,50", "12.5", "1.234,56", "1,234.56", "€ 3", "0,05", "1.234", "7", "10.000,5", "£1,2")]
     entries = [ical.CalendarEntry("e1@quire", "Maths; test, chapter 4", date(2026, 3, 10), 510, 600, False, "Bring the calculator\nand a pencil", "Room B1"),
                ical.CalendarEntry("e2@quire", "Gita a Firenze — " + "очень длинное название " * 4, date(2026, 3, 11), all_day=True)]
     out["ics"] = ical.to_ics(entries, "Quire, agenda", datetime(2026, 3, 9, 15, 30))

@@ -1,7 +1,7 @@
 //! The Rust rules give the Python app's answers (fixtures from `tools/quire_fixtures.py`).
 
 use chrono::NaiveDate;
-use quire::domain::{finance, ical, model, register, sleep, water};
+use quire::domain::{ical, model, register, sleep, water};
 use serde_json::Value;
 
 fn fixtures() -> Value {
@@ -79,13 +79,6 @@ fn register() {
     assert_eq!(register::running_average(&points), want);
     for c in all["lesson_hours"].as_array().unwrap() {
         assert_eq!(i64::from(register::lesson_hours(i(&c[0]) as i32)), i(&c[1]), "{c}");
-    }
-}
-
-#[test]
-fn money() {
-    for c in fixtures()["cents"].as_array().unwrap() {
-        assert_eq!(finance::parse_cents(c[0].as_str().unwrap()).unwrap(), i(&c[1]), "{c}");
     }
 }
 

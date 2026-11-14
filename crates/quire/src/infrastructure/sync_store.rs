@@ -51,7 +51,6 @@ pub const SYNCED: &[Synced] = &[
     Synced { kind: "medicine", table: "medicines", uid: RANDOM_UID, children: &[] },
     // After its medicine.
     Synced { kind: "dose", table: "medicine_doses", uid: RANDOM_UID, children: &[] },
-    Synced { kind: "money", table: "transactions", uid: RANDOM_UID, children: &[] },
 ];
 
 pub fn by_kind(kind: &str) -> Option<(usize, &'static Synced)> {
@@ -306,7 +305,6 @@ impl<'a> SyncStore<'a> {
                 "times": number_list(c("times").as_str().unwrap_or("")), "weekdays": number_list(c("weekdays").as_str().unwrap_or(""))}),
             "dose" => json!({"medicine": self.uid("medicines", fk("medicine_id")), "day": c("day"), "planned": c("planned"),
                 "taken": flag(r, "taken"), "at": c("at_min")}),
-            "money" => json!({"day": c("day"), "cents": c("cents"), "income": flag(r, "income"), "category": c("category"), "note": c("note")}),
             "sleep" => json!({"day": c("day"), "asleep": c("asleep"), "woke": c("woke"), "quality": c("quality"), "note": c("note")}),
             "shift" => json!({"job": self.uid("jobs", fk("job_id")), "day": c("day"), "start": c("start_min"), "duration": c("duration_min"),
                 "break": c("break_min"), "notes": c("notes")}),
@@ -427,8 +425,6 @@ impl<'a> SyncStore<'a> {
                 vec![("medicine_id", medicine), ("day", get("day")), ("planned", get("planned")),
                     ("taken", json!(i64::from(d.get("taken").is_none_or(|v| truthy(Some(v)))))), ("at_min", or("at", json!(0)))]
             }
-            "money" => vec![("day", get("day")), ("cents", get("cents")), ("income", json!(i64::from(truthy(d.get("income"))))),
-                ("category", or("category", json!(""))), ("note", or("note", json!("")))],
             "sleep" => vec![("day", get("day")), ("asleep", get("asleep")), ("woke", get("woke")), ("quality", get("quality")),
                 ("note", or("note", json!("")))],
             "shift" => {

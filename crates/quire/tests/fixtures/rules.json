@@ -1374,48 +1374,6 @@
    3
   ]
  ],
- "cents": [
-  [
-   "12,50",
-   1250
-  ],
-  [
-   "12.5",
-   1250
-  ],
-  [
-   "1.234,56",
-   123456
-  ],
-  [
-   "1,234.56",
-   123456
-  ],
-  [
-   "€ 3",
-   300
-  ],
-  [
-   "0,05",
-   5
-  ],
-  [
-   "1.234",
-   123400
-  ],
-  [
-   "7",
-   700
-  ],
-  [
-   "10.000,5",
-   1000050
-  ],
-  [
-   "£1,2",
-   120
-  ]
- ],
  "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Quezka//Quire//EN\r\nCALSCALE:GREGORIAN\r\nX-WR-CALNAME:Quire\\, agenda\r\nBEGIN:VEVENT\r\nUID:e1@quire\r\nDTSTAMP:20260309T000000\r\nSUMMARY:Maths\\; test\\, chapter 4\r\nDTSTART:20260310T083000\r\nDTEND:20260310T100000\r\nDESCRIPTION:Bring the calculator\\nand a pencil\r\nLOCATION:Room B1\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:e2@quire\r\nDTSTAMP:20260309T000000\r\nSUMMARY:Gita a Firenze — очень длинное название оч\r\n ень длинное название очень длинное назв\r\n ание очень длинное название \r\nDTSTART;VALUE=DATE:20260311\r\nDTEND;VALUE=DATE:20260312\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
  "notes": [
   [

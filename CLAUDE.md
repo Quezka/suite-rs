@@ -36,7 +36,7 @@ the quire-server protocol must stay compatible with the Python and Kotlin apps t
   USB" is on: push the APK to /sdcard/Download and let the user install it. On the real phone never send gestures
   into the user's own apps (a swipe once deleted notes).
 - Quire (`crates/quire`): Clean Architecture (`domain`, `application`, `infrastructure`; `tests/architecture.rs`).
-  Done: every domain rule (model, payroll, water, finance, medicine, sleep, focus, register, ical); the SQLite
+  Done: every domain rule (model, payroll, water, medicine, sleep, focus, register, ical; money removed 2026-11-14); the SQLite
   schema v18 + migrations, identical to the Python app's (either app can open the same file); the sync store
   (triggers, outgoing/apply/mark_sent/pending/mark_all_dirty/clear_all), byte-compatible records. Parity:
   `python3 tools/quire_fixtures.py` (needs ../quire and its venv) writes `crates/quire/tests/fixtures/*`, and

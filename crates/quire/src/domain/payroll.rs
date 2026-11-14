@@ -121,38 +121,6 @@ fn date(year: i32, month: u32, day: u32) -> NaiveDate {
     NaiveDate::from_ymd_opt(year, month, day).expect("a real date")
 }
 
-/// Paydays from `since` to `today`, each with the (year, month) it pays, oldest first. A payday past the month's
-/// end falls on its last day. Mirrors the Python app's `due_paydays`.
-pub fn due_paydays(payday: Option<u32>, pays_previous_month: bool, since: Option<NaiveDate>, today: NaiveDate)
-    -> Vec<(NaiveDate, i32, u32)> {
-    let (Some(payday), Some(since)) = (payday, since) else { return Vec::new() };
-    let mut out = Vec::new();
-    let (mut year, mut month) = (since.year(), since.month());
-    while (year, month) <= (today.year(), today.month()) {
-        let day = NaiveDate::from_ymd_opt(year, month, payday.min(month_days(year, month))).expect("a real day");
-        if since <= day && day <= today {
-            let paid = if !pays_previous_month { (year, month) } else if month > 1 { (year, month - 1) } else { (year - 1, 12) };
-            out.push((day, paid.0, paid.1));
-        }
-        (year, month) = if month == 12 { (year + 1, 1) } else { (year, month + 1) };
-    }
-    out
-}
-
-#[cfg(test)]
-mod payday_tests {
-    use super::*;
-    fn d(y: i32, m: u32, day: u32) -> NaiveDate { NaiveDate::from_ymd_opt(y, m, day).unwrap() }
-
-    #[test]
-    fn same_answers_as_python() {
-        assert!(due_paydays(None, true, Some(d(2026, 1, 1)), d(2026, 6, 1)).is_empty());
-        assert_eq!(due_paydays(Some(31), true, Some(d(2026, 1, 5)), d(2026, 3, 30)),
-                   vec![(d(2026, 1, 31), 2025, 12), (d(2026, 2, 28), 2026, 1)]);
-        assert_eq!(due_paydays(Some(10), false, Some(d(2026, 1, 11)), d(2026, 2, 10)), vec![(d(2026, 2, 10), 2026, 2)]);
-    }
-}
-
 pub fn month_days(year: i32, month: u32) -> u32 {
     let (ny, nm) = if month == 12 { (year + 1, 1) } else { (year, month + 1) };
     (date(ny, nm, 1) - date(year, month, 1)).num_days() as u32

@@ -5,7 +5,6 @@ pub mod errors;
 pub mod model;
 pub mod payroll;
 pub mod water;
-pub mod finance;
 pub mod medicine;
 pub mod sleep;
 pub mod focus;
