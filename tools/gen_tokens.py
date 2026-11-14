@@ -78,6 +78,7 @@ def kt(package):
 
 for repo, pkg in (("quire/android/app/src/main/java/io/github/quezka/quire/ui", "io.github.quezka.quire.ui"),
                   ("cadence/app/src/main/java/io/github/quezka/cadence/ui", "io.github.quezka.cadence.ui"),
+                  ("tether/app/src/main/java/io/github/quezka/tether/ui", "io.github.quezka.tether.ui"),
                   ("vesper/app/src/main/java/io/github/quezka/vesper/ui", "io.github.quezka.vesper.ui")):
     outputs[REPOS / repo / "SuiteTokens.kt"] = kt(pkg)
 
