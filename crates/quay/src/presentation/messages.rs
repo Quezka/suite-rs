@@ -60,4 +60,9 @@ pub const MESSAGES: &[(&str, &str, &str)] = &[
     ("Couldn't change starting with the computer.", "Impossibile cambiare l'avvio con il computer.", "Не удалось изменить автозапуск."),
     ("Couldn't find Quay itself.", "Impossibile trovare Quay.", "Не удалось найти сам Quay."),
     ("Check again", "Controlla di nuovo", "Проверить снова"),
+    ("All", "Tutte", "Все"),
+    ("Updates", "Aggiornamenti", "Обновления"),
+    ("Installed", "Installate", "Установленные"),
+    ("Not installed", "Non installate", "Не установленные"),
+    ("Nothing here.", "Niente qui.", "Здесь пусто."),
 ];

@@ -1,10 +1,10 @@
-//! One window: a card per app of the suite with Install, Update or Open, under a glass header.
+//! One window: a card per app of the suite with Install, Update or Open, under a solid header.
+//! adaptive: wide -> 2 card columns; narrow -> buttons under text; filter chips pick what shows
 
 use std::sync::mpsc::{channel, Receiver, Sender};
 
 use egui::{Align, Align2, Layout, Order, Pos2, Rect, Vec2};
 use quezka_kit::fonts::Weight;
-use quezka_kit::glass::{self, Weight as Glass};
 use quezka_kit::theme::{GAP, OUTER_RADIUS};
 use quezka_kit::widgets::{self as w, Kind};
 use quezka_kit::{App, Tokens};
@@ -15,6 +15,27 @@ use crate::application::QuayError;
 
 const ICON: f32 = 52.0;
 const HEADER: f32 = 76.0;
+const TWO_COLUMNS: f32 = 1180.0; // window wider -> cards in 2 columns
+const STACK_BELOW: f32 = 560.0; // card narrower -> buttons under the text
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Filter {
+    All,
+    Updates,
+    Installed,
+    Available,
+}
+
+impl Filter {
+    fn shows(self, s: &AppStatus) -> bool {
+        match self {
+            Filter::All => true,
+            Filter::Updates => s.state == State::Update,
+            Filter::Installed => s.installed.is_some(),
+            Filter::Available => s.installed.is_none(),
+        }
+    }
+}
 
 /// What a background job tells the window.
 enum Event {
@@ -43,6 +64,7 @@ pub struct QuayWindow {
     pub wants_close: bool,
     pub wants_show: bool,
     scroll: f32,
+    filter: Filter,
 }
 
 /// A kit button `width` points wide (they fill whatever width they're given).
@@ -83,6 +105,7 @@ impl QuayWindow {
             wants_close: false,
             wants_show: false,
             scroll: 0.0,
+            filter: Filter::All,
         };
         window.check();
         window
@@ -230,6 +253,7 @@ impl QuayWindow {
 
     fn card(&mut self, ui: &mut egui::Ui, th: &Tokens, s: &AppStatus) {
         w::card(ui, th, |ui| {
+            let stacked = ui.available_width() < STACK_BELOW;
             ui.horizontal(|ui| {
                 let (rect, _) = ui.allocate_exact_size(Vec2::splat(ICON), egui::Sense::hover());
                 let drawn = (self.icon)(s.app.key).is_some_and(|svg| quezka_kit::icons::picture(ui.painter(), rect, s.app.key, svg));
@@ -237,56 +261,89 @@ impl QuayWindow {
                     ui.painter().rect_filled(rect, 14.0, th.accent_soft);
                 }
                 ui.add_space(12.0);
-                let buttons = 330.0_f32.min(ui.available_width() * 0.55);
+                let buttons = if stacked { 0.0 } else { 330.0_f32.min(ui.available_width() * 0.55) };
                 ui.vertical(|ui| {
                     ui.set_width((ui.available_width() - buttons).max(120.0));
-                    ui.label(w::text(s.app.name, 19.0, th.text, Weight::Bold));
-                    ui.label(w::text(t(s.app.tagline), 15.0, th.muted, Weight::Regular));
-                    ui.label(w::text(Self::detail(s), 14.0, th.muted, Weight::Medium));
-                    if s.state == State::Update && !s.page_url.is_empty() {
-                        let link = ui.add(egui::Label::new(w::text(t("What's new"), 14.0, th.accent, Weight::Bold)).sense(egui::Sense::click()));
-                        if link.on_hover_cursor(egui::CursorIcon::PointingHand).clicked() {
-                            ui.ctx().open_url(egui::OpenUrl::new_tab(&s.page_url));
-                        }
-                    }
-                    if let Some((key, fraction)) = self.busy {
-                        if key == s.app.key {
-                            ui.add_space(6.0);
-                            match fraction {
-                                Some(f) => w::progress(ui, th, egui::Id::NULL.with(("quay-progress", key)), f, th.accent, 8.0),
-                                None => w::indeterminate(ui, th),
-                            }
-                        }
-                    }
+                    self.about(ui, th, s);
                 });
-                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                    let idle = self.busy.is_none();
-                    if s.installed.is_some() && sized(ui, th, 150.0, &t("Open"), Some("play"), Kind::Outlined) {
-                        if let Err(e) = self.service.launch(s.app.key) {
-                            self.message = tf("{name}: {error}", &[("name", s.app.name), ("error", &t(&e.0))]);
-                        }
-                    }
-                    match s.state {
-                        State::Update => {
-                            if idle && sized(ui, th, 150.0, &t("Update"), Some("refresh"), Kind::Filled) {
-                                self.install(s.app.key);
-                            }
-                        }
-                        State::NotInstalled => {
-                            if idle && sized(ui, th, 150.0, &t("Install"), Some("download"), Kind::Tonal) {
-                                self.install(s.app.key);
-                            }
-                        }
-                        State::Unavailable if !s.page_url.is_empty() => {
-                            if sized(ui, th, 150.0, &t("Releases page"), None, Kind::Text) {
-                                ui.ctx().open_url(egui::OpenUrl::new_tab(&s.page_url));
-                            }
-                        }
-                        _ => {}
-                    }
-                });
+                if !stacked {
+                    ui.with_layout(Layout::right_to_left(Align::Center), |ui| self.actions(ui, th, s, 150.0));
+                }
             });
+            if stacked {
+                ui.add_space(8.0);
+                let width = ((ui.available_width() - 8.0) / 2.0).min(200.0);
+                let row = Vec2::new(ui.available_width(), 46.0);
+                ui.allocate_ui_with_layout(row, Layout::right_to_left(Align::Center), |ui| self.actions(ui, th, s, width));
+            }
         });
+    }
+
+    /// Name, tagline, version line, what's new, progress.
+    fn about(&mut self, ui: &mut egui::Ui, th: &Tokens, s: &AppStatus) {
+        ui.label(w::text(s.app.name, 19.0, th.text, Weight::Bold));
+        ui.label(w::text(t(s.app.tagline), 15.0, th.muted, Weight::Regular));
+        ui.label(w::text(Self::detail(s), 14.0, th.muted, Weight::Medium));
+        if s.state == State::Update && !s.page_url.is_empty() {
+            let link = ui.add(egui::Label::new(w::text(t("What's new"), 15.0, th.accent, Weight::Bold)).sense(egui::Sense::click()));
+            if link.on_hover_cursor(egui::CursorIcon::PointingHand).clicked() {
+                ui.ctx().open_url(egui::OpenUrl::new_tab(&s.page_url));
+            }
+        }
+        if let Some((key, fraction)) = self.busy {
+            if key == s.app.key {
+                ui.add_space(6.0);
+                match fraction {
+                    Some(f) => w::progress(ui, th, egui::Id::NULL.with(("quay-progress", key)), f, th.accent, 8.0),
+                    None => w::indeterminate(ui, th),
+                }
+            }
+        }
+    }
+
+    /// Open + Update/Install/Releases page, laid out right to left.
+    fn actions(&mut self, ui: &mut egui::Ui, th: &Tokens, s: &AppStatus, width: f32) {
+        let idle = self.busy.is_none();
+        if s.installed.is_some() && sized(ui, th, width, &t("Open"), Some("play"), Kind::Outlined) {
+            if let Err(e) = self.service.launch(s.app.key) {
+                self.message = tf("{name}: {error}", &[("name", s.app.name), ("error", &t(&e.0))]);
+            }
+        }
+        match s.state {
+            State::Update => {
+                if idle && sized(ui, th, width, &t("Update"), Some("refresh"), Kind::Filled) {
+                    self.install(s.app.key);
+                }
+            }
+            State::NotInstalled => {
+                if idle && sized(ui, th, width, &t("Install"), Some("download"), Kind::Tonal) {
+                    self.install(s.app.key);
+                }
+            }
+            State::Unavailable if !s.page_url.is_empty() => {
+                if sized(ui, th, width, &t("Releases page"), None, Kind::Text) {
+                    ui.ctx().open_url(egui::OpenUrl::new_tab(&s.page_url));
+                }
+            }
+            _ => {}
+        }
+    }
+
+    fn chips(&mut self, ui: &mut egui::Ui, th: &Tokens, statuses: &[AppStatus]) {
+        let count = |f: Filter| statuses.iter().filter(|s| f.shows(s)).count();
+        ui.horizontal_wrapped(|ui| {
+            for (f, label) in [(Filter::All, t("All")), (Filter::Updates, t("Updates")), (Filter::Installed, t("Installed")),
+                               (Filter::Available, t("Not installed"))] {
+                let n = count(f);
+                if f != Filter::All && n == 0 && self.filter != f {
+                    continue; // nothing there: no chip
+                }
+                if w::filter_chip(ui, th, &format!("{label} ({n})"), self.filter == f) {
+                    self.filter = f;
+                }
+            }
+        });
+        ui.add_space(GAP);
     }
 }
 
@@ -320,8 +377,23 @@ impl App for QuayWindow {
                     ui.label(w::text(&self.message, 16.0, th.muted, Weight::Medium));
                     ui.add_space(GAP);
                 }
-                for s in &statuses {
-                    self.card(ui, th, s);
+                self.chips(ui, th, &statuses);
+                let shown: Vec<&AppStatus> = statuses.iter().filter(|s| self.filter.shows(s)).collect();
+                if shown.is_empty() {
+                    ui.label(w::text(t("Nothing here."), 16.0, th.muted, Weight::Medium));
+                }
+                if ui.available_width() >= TWO_COLUMNS - 2.0 * GAP {
+                    for pair in shown.chunks(2) {
+                        ui.columns(2, |cols| {
+                            for (col, s) in cols.iter_mut().zip(pair) {
+                                self.card(col, th, s);
+                            }
+                        });
+                    }
+                } else {
+                    for s in shown {
+                        self.card(ui, th, s);
+                    }
                 }
                 if self.service.autostart_supported() {
                     ui.add_space(GAP);
@@ -339,18 +411,21 @@ impl App for QuayWindow {
 
         egui::Area::new(egui::Id::NULL.with("quay-header")).order(Order::Foreground).fade_in(false).fixed_pos(Pos2::ZERO).show(&ctx, |ui| {
             if self.scroll > 0.0 {
-                glass::pane(ui.painter(), header, OUTER_RADIUS, th, Glass::Regular, true);
+                // solid surface once content scrolls under it (material 3, no glass)
+                ui.painter().rect_filled(header, OUTER_RADIUS, th.raised);
             }
             let subtitle = if waiting > 0 { tf("Updates waiting: {n}", &[("n", &waiting.to_string())]) } else { t("Install and update the apps") };
             ui.painter().text(header.left_top() + Vec2::new(18.0, 12.0), Align2::LEFT_TOP, t("The suite"), Weight::Bold.font(26.0), th.text);
             ui.painter().text(header.left_top() + Vec2::new(18.0, 46.0), Align2::LEFT_TOP, subtitle, Weight::Regular.font(15.0), th.muted);
-            let buttons = Rect::from_min_max(Pos2::new(header.min.x + 260.0, header.min.y + 14.0), header.max - Vec2::new(14.0, 14.0));
+            let buttons = Rect::from_min_max(Pos2::new(header.min.x + 190.0, header.min.y + 14.0), header.max - Vec2::new(14.0, 14.0));
+            let button = ((buttons.width() - 8.0) / 2.0).clamp(150.0, 230.0); // narrow window -> smaller buttons
+            let one = buttons.width() < 2.0 * 150.0 + 8.0; // too narrow for both -> only the one that matters now
             let mut row = ui.new_child(egui::UiBuilder::new().max_rect(buttons).layout(Layout::right_to_left(Align::Center)));
             let all = if waiting > 0 { tf("Update all ({n})", &[("n", &waiting.to_string())]) } else { t("Update all") };
-            if waiting > 0 && self.busy.is_none() && sized(&mut row, th, 230.0, &all, Some("download"), Kind::Filled) {
+            if waiting > 0 && self.busy.is_none() && sized(&mut row, th, button, &all, Some("download"), Kind::Filled) {
                 self.install_all();
             }
-            if !self.checking && self.busy.is_none() && sized(&mut row, th, 230.0, &t("Check for updates"), Some("refresh"), Kind::Tonal) {
+            if !(one && waiting > 0) && !self.checking && self.busy.is_none() && sized(&mut row, th, button, &t("Check for updates"), Some("refresh"), Kind::Tonal) {
                 self.check();
             }
         });

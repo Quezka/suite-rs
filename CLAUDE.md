@@ -6,7 +6,7 @@ the quire-server protocol must stay compatible with the Python and Kotlin apps t
 
 - Clean Architecture in every app (domain ← application ← infrastructure/presentation), enforced by a test, as in the
   Python apps. The user doesn't see well: big, high-contrast UI by default; high contrast never uses glass.
-- Look: plain backgrounds, solid content, glass only on chrome over content. Never a gradient wash or colour blobs
+- Look (2026-11-14, user): Material 3 tonal, NO glass (as Python kit 0.13); headers solid `th.raised` once scrolled; `glass.rs` legacy, no new use. Plain backgrounds, solid content. Never a gradient wash or colour blobs
   (the user called that "AI slop"). Corners nest: `theme::OUTER_RADIUS` 20 for outer surfaces, `GAP` 10 between them
   and from the window edge, `theme::nested(outer, padding)` inside.
 - Glass (`crates/kit/src/glass.rs`, `glass.wgsl`): `glass::pane(painter, rect, radius, th, weight, floating)` adds a
@@ -49,3 +49,6 @@ the quire-server protocol must stay compatible with the Python and Kotlin apps t
   icons bundled from each repo (`tools/quay_icons.sh`, drawn with `quezka_kit::icons::picture`). `quay --demo`,
   `--screenshot x.png [--dark]`, `--write-icon x.png|x.ico` (packaging), `QUAY_LANG=it|ru`. Released from the
   Quezka/quay repo, whose CI builds this crate at the commit in its `suite-rs.ref`.
+
+- App icons: `tools/make_app_icons.py` -> `icons/apps/` (svg + android fg/bg); one template, plain colour, white Material Symbol; copy into each repo + Quay bundle.
+- Quay 0.7 (2026-11-15): filter chips, 2 card columns >= 1180 wide, buttons under text in cards < 560, one header button when narrow.
