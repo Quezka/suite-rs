@@ -1,8 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-  <!-- Loupe: a magnifying lens over a screen (a camera seen from afar). Tonal, flat, the suite's indigo. -->
-  <rect x="16" y="16" width="224" height="224" rx="56" fill="#4f46e5"/>
-  <rect x="52" y="64" width="124" height="88" rx="14" fill="#e3e2fb"/>
-  <circle cx="114" cy="108" r="18" fill="#4f46e5"/>
-  <circle cx="160" cy="150" r="40" fill="none" stroke="#ffffff" stroke-width="16"/>
-  <path d="M188 178 L214 204" stroke="#ffffff" stroke-width="20" stroke-linecap="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect x="8" y="8" width="112" height="112" rx="28" fill="#BE123C"/><path fill="#FFFFFF" transform="translate(32 96) scale(0.066667)" d="M162.87-151.87q-37.78 0-64.39-26.61t-26.61-64.39v-474.26q0-37.78 26.61-64.39t64.39-26.61h474.26q37.78 0 64.39 26.61t26.61 64.39V-540l121.22-121.22q11.19-11.19 24.99-5.48 13.79 5.72 13.79 21.4v330.6q0 15.68-13.79 21.4-13.8 5.71-24.99-5.48L728.13-420v177.13q0 37.78-26.61 64.39t-64.39 26.61H162.87Z"/></svg>

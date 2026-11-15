@@ -1,13 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-  <!-- Facet: a faceted solid seen corner-on, one facet picked out in amber. -->
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#6b6be0"/>
-      <stop offset="1" stop-color="#4c4cc4"/>
-    </linearGradient>
-  </defs>
-  <rect x="16" y="16" width="224" height="224" rx="52" fill="url(#bg)"/>
-  <path d="M128 46L198 86L128 126L58 86Z" fill="#ffffff"/>
-  <path d="M58 86L128 126V210L58 170Z" fill="#c7c7f2"/>
-  <path d="M198 86V170L128 210V126Z" fill="#f5a524"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect x="8" y="8" width="112" height="112" rx="28" fill="#C2410C"/><path fill="#FFFFFF" transform="translate(32 96) scale(0.066667)" d="M434.5-84.78 157.37-244.11q-21.39-12.43-33.45-33.06-12.05-20.63-12.05-45.5v-314.66q0-24.87 12.05-45.5 12.06-20.63 33.45-33.06L434.5-875.22q21.39-12.43 45.5-12.43t45.5 12.43l277.13 159.33q21.39 12.43 33.45 33.06 12.05 20.63 12.05 45.5v314.66q0 24.87-12.05 45.5-12.06 20.63-33.45 33.06L525.5-84.78Q504.11-72.35 480-72.35t-45.5-12.43Zm1.2-369.83v265.63l44.3 25.63 44.3-25.63v-265.63l232.83-134.93v-46.79l-47.54-27.63L480-531.02 250.41-663.96l-47.54 27.63v46.79L435.7-454.61Z"/></svg>

@@ -1,8 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-  <!-- Tether: a phone joined to a screen. Tonal, flat, the suite's indigo. -->
-  <rect x="16" y="16" width="224" height="224" rx="56" fill="#4f46e5"/>
-  <rect x="44" y="70" width="112" height="78" rx="12" fill="#e3e2fb"/>
-  <rect x="84" y="154" width="32" height="10" rx="4" fill="#e3e2fb"/>
-  <rect x="168" y="84" width="44" height="88" rx="10" fill="#ffffff"/>
-  <path d="M156 118 H168" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect x="8" y="8" width="112" height="112" rx="28" fill="#0E7490"/><path fill="#FFFFFF" transform="translate(32 96) scale(0.066667)" d="M137.37-151.87q-27.39 0-46.45-19.41-19.05-19.42-19.05-46.81 0-26.91 18.93-45.84 18.94-18.94 45.85-18.94h15.22v-434.26q0-37.78 26.61-64.39t64.39-26.61h559.76q19.15 0 32.33 13.17 13.17 13.18 13.17 32.33t-13.17 32.33q-13.18 13.17-32.33 13.17H242.87v434.26h168.76q27.39 0 46.45 19.05 19.05 19.06 19.05 46.45 0 27.39-19.05 46.45-19.06 19.05-46.45 19.05H137.37Zm465.26 0q-19.15 0-32.33-13.17-13.17-13.18-13.17-32.33v-394.26q0-19.15 13.17-32.33 13.18-13.17 32.33-13.17h240q19.15 0 32.33 13.17 13.17 13.18 13.17 32.33v394.26q0 19.15-13.17 32.33-13.18 13.17-32.33 13.17h-240Z"/></svg>
