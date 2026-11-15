@@ -24,6 +24,9 @@ MAP = {
     # The map and saved places (0.3.0)
     "star": "star", "home": "home", "work": "work", "plus": "add", "minus": "remove", "pin": "location_on",
     "speed": "speed", "map": "map", "delete": "delete", "near": "near_me",
+    # Quay, Tether (2026-11-15)
+    "download": "download", "mail": "chat", "folder": "folder", "send": "send", "upload": "upload",
+    "copy": "content_copy", "add": "add", "chevron-left": "chevron_left",
 }
 
 
@@ -58,7 +61,7 @@ def main():
     ]
     lines += [f'    ("{n}", "{o}", "{f}"),' for n, o, f in rows]
     lines.append("];")
-    Path("src/ui/symbols.rs").write_text("\n".join(lines) + "\n")
+    (Path(__file__).resolve().parent.parent / "crates/kit/src/symbols.rs").write_text("\n".join(lines) + "\n")
     print(len(rows), "symbols")
 
 

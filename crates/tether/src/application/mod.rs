@@ -28,6 +28,9 @@ pub trait Desktop {
     fn notify(&self, title: &str, body: &str);
     fn clipboard_text(&self) -> Option<String>;
     fn pick_file(&self) -> Option<PathBuf>;
+    /// Tether starts (in the background) when the user logs in.
+    fn autostart_enabled(&self) -> bool;
+    fn set_autostart(&self, on: bool) -> Result<(), String>;
 }
 
 #[derive(Clone, Debug, PartialEq)]

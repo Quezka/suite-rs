@@ -280,6 +280,65 @@ impl Desktop for LinuxDesktop {
     fn notify(&self, title: &str, body: &str) { notify(title, body) }
     fn clipboard_text(&self) -> Option<String> { clipboard_text() }
     fn pick_file(&self) -> Option<PathBuf> { pick_file() }
+    fn autostart_enabled(&self) -> bool { autostart_file().exists() }
+    fn set_autostart(&self, on: bool) -> Result<(), String> { set_autostart(on) }
+}
+
+const AUTOSTART: &str = "[Desktop Entry]\nType=Application\nName=Tether\nComment=Your phone on your computer\n\
+Exec=tether --background\nIcon=io.github.quezka.Tether\nTerminal=false\nX-GNOME-Autostart-enabled=true\n";
+
+fn autostart_file() -> PathBuf {
+    let base = std::env::var_os("XDG_CONFIG_HOME").map(PathBuf::from)
+        .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".config")))
+        .unwrap_or_else(|| PathBuf::from(".config"));
+    base.join("autostart").join("io.github.quezka.Tether.desktop")
+}
+
+pub fn set_autostart(on: bool) -> Result<(), String> {
+    let file = autostart_file();
+    let failed = |_| "Couldn't change starting with the computer.".to_string();
+    if on {
+        if let Some(dir) = file.parent() { std::fs::create_dir_all(dir).map_err(failed)?; }
+        std::fs::write(&file, AUTOSTART).map_err(failed)
+    } else {
+        match std::fs::remove_file(&file) {
+            Err(e) if e.kind() != std::io::ErrorKind::NotFound => Err(failed(e)),
+            _ => Ok(()),
+        }
+    }
+}
+
+/// First start ever: switch starting at login on (the link only helps if it's always there). Once.
+pub fn autostart_on_first_run() {
+    let marker = data_dir().join("autostart-chosen");
+    if !marker.exists() {
+        let _ = set_autostart(true);
+        let _ = std::fs::create_dir_all(data_dir());
+        let _ = std::fs::write(marker, "");
+    }
+}
+
+/// One Tether per user. `Ok(requests)`: this is the first; `requests` gets a () each time another one starts.
+/// `Err(())`: one is already running and was asked to show its window.
+pub fn single_instance() -> Result<Receiver<()>, ()> {
+    use std::os::unix::net::{UnixListener, UnixStream};
+    let dir = std::env::var_os("XDG_RUNTIME_DIR").map(PathBuf::from).unwrap_or_else(data_dir);
+    let path = dir.join("tether.sock");
+    if let Ok(mut other) = UnixStream::connect(&path) {
+        let _ = other.write_all(b"show");
+        return Err(());
+    }
+    let _ = std::fs::remove_file(&path); // stale socket from a crash
+    let (tx, rx) = channel();
+    if let Ok(listener) = UnixListener::bind(&path) {
+        std::thread::spawn(move || {
+            for stream in listener.incoming().flatten() {
+                drop(stream);
+                if tx.send(()).is_err() { break; }
+            }
+        });
+    }
+    Ok(rx)
 }
 
 /// A desktop notification (notify-send), with the app shown as Tether.

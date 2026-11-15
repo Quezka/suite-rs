@@ -1522,7 +1522,7 @@ checksum = "5d15f86d12da44cd8d4ec3c73984537eb7f4cadcb9776a575a0a8a05ca11005c"
 
 [[package]]
 name = "loupe"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "egui",
  "quezka-kit",
@@ -2861,7 +2861,7 @@ dependencies = [
 
 [[package]]
 name = "tether"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "aes-gcm",
  "base64",

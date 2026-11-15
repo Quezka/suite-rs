@@ -160,6 +160,9 @@ pub struct Options {
     /// Run without a window until the app asks for one (`ViewportCommand::Visible(true)`) or quits
     /// (`ViewportCommand::Close`): an app started at login that may have nothing to show.
     pub start_hidden: bool,
+    /// The window's close button hides the window and the app keeps running (a background service like Tether's link).
+    /// It quits only when the app sends `ViewportCommand::Close`; `Visible(true)`/`Focus` brings the window back.
+    pub close_hides: bool,
 }
 
 struct Runner<A: App> {
@@ -347,6 +350,21 @@ impl<A: App> Runner<A> {
             attributes = winit::platform::x11::WindowAttributesExtX11::with_name(attributes, id.clone(), id);
         }
         let window = Arc::new(event_loop.create_window(attributes).expect("a window"));
+        if let Some(gpu) = &mut self.gpu {
+            // back from hidden (close_hides): same device + textures, new window + surface
+            let surface = gpu.instance.create_surface(window.clone()).expect("a surface");
+            let size = window.inner_size();
+            gpu.config.width = size.width.max(1);
+            gpu.config.height = size.height.max(1);
+            surface.configure(&gpu.device, &gpu.config);
+            gpu.surface = Some(surface);
+            let max_texture = gpu.device.limits().max_texture_dimension_2d as usize;
+            self.state = Some(egui_winit::State::new(self.ctx.clone(), egui::ViewportId::ROOT, &window,
+                Some(window.scale_factor() as f32), window.theme(), Some(max_texture)));
+            window.request_redraw();
+            self.window = Some(window);
+            return;
+        }
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_with_display_handle(Box::new(event_loop.owned_display_handle())));
         let surface = instance.create_surface(window.clone()).expect("a surface");
         let (adapter, device, queue) = pollster::block_on(device_for(&instance, Some(&surface))).expect("a graphics device");
@@ -391,6 +409,15 @@ impl<A: App> Runner<A> {
             }
         }
         match event {
+            WindowEvent::CloseRequested if self.options.close_hides => {
+                if let Some(gpu) = &mut self.gpu {
+                    gpu.surface = None;
+                }
+                self.state = None;
+                self.window = None; // dropped -> closed; the app runs on unseen (about_to_wait)
+                self.hidden = true;
+                event_loop.set_control_flow(winit::event_loop::ControlFlow::WaitUntil(std::time::Instant::now() + HIDDEN_TICK));
+            }
             WindowEvent::CloseRequested => event_loop.exit(),
             WindowEvent::Resized(size) => {
                 if let Some(gpu) = &mut self.gpu {

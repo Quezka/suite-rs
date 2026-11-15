@@ -40,6 +40,6 @@ fn main() -> Result<(), String> {
         }
         return quezka_kit::screenshot(&mut shown, [720.0, 860.0], 1.0, 20, &path);
     }
-    let options = quezka_kit::Options { title: "Loupe".into(), app_id: "io.github.quezka.Loupe".into(), icon: None, start_hidden: false };
+    let options = quezka_kit::Options { title: "Loupe".into(), app_id: "io.github.quezka.Loupe".into(), icon: None, start_hidden: false, ..Default::default() };
     quezka_kit::run_with(options, shown)
 }

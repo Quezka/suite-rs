@@ -33,6 +33,21 @@ const MESSAGES: &[(&str, &str, &str)] = &[
     ("Saved to {path}", "Salvato in {path}", "Сохранено в {path}"),
     ("Files the phone shares with Tether land in your Downloads folder.", "I file che il telefono condivide con Tether finiscono nella cartella Scaricati.", "Файлы, которыми телефон делится через Tether, попадают в папку «Загрузки»."),
     ("The phone isn't connected.", "Il telefono non è collegato.", "Телефон не подключён."),
+    ("Connected", "Collegato", "Подключено"),
+    ("charging", "in carica", "заряжается"),
+    ("Waiting for the phone…", "In attesa del telefono…", "Ждём телефон…"),
+    ("Your phone", "Il tuo telefono", "Твой телефон"),
+    ("Quit Tether", "Esci da Tether", "Выйти из Tether"),
+    ("Start with the computer", "Avvia con il computer", "Запускать вместе с компьютером"),
+    ("Closing the window keeps Tether running.", "Chiudendo la finestra Tether resta attivo.", "Если закрыть окно, Tether продолжит работать."),
+    ("OK", "OK", "ОК"),
+    ("Sent {name} to the phone", "{name} inviato al telefono", "{name} отправлен на телефон"),
+    ("Pick a conversation.", "Scegli una conversazione.", "Выбери переписку."),
+    ("Write a message… (Enter sends)", "Scrivi un messaggio… (Invio per inviare)", "Напиши сообщение… (Enter — отправить)"),
+    ("All conversations", "Tutte le conversazioni", "Все переписки"),
+    ("Or drop files anywhere on this window.", "Oppure trascina i file in questa finestra.", "Или перетащи файлы в это окно."),
+    ("Clipboard", "Appunti", "Буфер обмена"),
+    ("Couldn't change starting with the computer.", "Impossibile cambiare l'avvio con il computer.", "Не удалось изменить автозапуск."),
 ];
 
 fn language() -> usize {

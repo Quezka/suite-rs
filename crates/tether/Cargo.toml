@@ -1,6 +1,6 @@
 [package]
 name = "tether"
-version = "0.1.0"
+version = "0.2.0"
 description = "Your phone on the computer: notifications, messages, calls, files and clipboard."
 edition.workspace = true
 license.workspace = true

@@ -52,3 +52,5 @@ the quire-server protocol must stay compatible with the Python and Kotlin apps t
 
 - App icons: `tools/make_app_icons.py` -> `icons/apps/` (svg + android fg/bg); one template, plain colour, white Material Symbol; copy into each repo + Quay bundle.
 - Quay 0.7 (2026-11-15): filter chips, 2 card columns >= 1180 wide, buttons under text in cards < 560, one header button when narrow.
+- Kit runner `Options.close_hides` (2026-11-15): window X hides, app runs on unseen (250 ms tick); `ViewportCommand::Close` quits; `Visible(true)` reopens a window on the same gpu (textures kept).
+- Tether 0.2 (2026-11-15): desktop layout (sidebar | section; messages = list | bubbles; < 760 wide -> tabs), single instance via `$XDG_RUNTIME_DIR/tether.sock` (2nd launch -> show), autostart on first run (`tether --background`), drop files -> phone, Ctrl+1..4, `--demo --section N --thread ADDR`.
