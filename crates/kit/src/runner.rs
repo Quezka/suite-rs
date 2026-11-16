@@ -216,6 +216,19 @@ impl<A: App> Runner<A> {
                 }
             }
         }
+        #[cfg(target_os = "ios")]
+        if self.frame_count % 8 == 1 {
+            // ios: inner = safe area (notch, home bar), outer = whole screen -> margins like android insets
+            let (outer, inner) = (window.outer_size(), window.inner_size());
+            if let (Ok(o), Ok(i)) = (window.outer_position(), window.inner_position()) {
+                let k = window.scale_factor() as f32;
+                let (left, top) = ((i.x - o.x).max(0) as f32 / k, (i.y - o.y).max(0) as f32 / k);
+                let right = (outer.width as f32 - inner.width as f32) / k - left;
+                let bottom = (outer.height as f32 - inner.height as f32) / k - top;
+                let m = egui::Margin { left: left as i8, right: right.max(0.0) as i8, top: top as i8, bottom: bottom.max(0.0) as i8 };
+                self.ctx.data_mut(|d| d.insert_temp(egui::Id::NULL.with("quezka-safe-area"), m));
+            }
+        }
         let (mut output, th) = frame(&self.ctx, &mut self.app, raw);
         if !self.unseen_textures.is_empty() {
             let mut all = std::mem::take(&mut self.unseen_textures);

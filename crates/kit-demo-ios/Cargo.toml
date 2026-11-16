@@ -1,0 +1,15 @@
+[package]
+name = "kit-demo-ios"
+version = "0.1.0"
+description = "The kit demo on an iPhone: proves the Rust suite kit runs on iOS (sideload the unsigned .ipa)."
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[[bin]]
+name = "kitdemo"
+path = "src/main.rs"
+
+[dependencies]
+quezka-kit = { path = "../kit" }
+kit-demo-android = { path = "../kit-demo-android" }

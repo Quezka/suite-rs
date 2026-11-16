@@ -1761,6 +1761,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "kit-demo-ios"
+version = "0.1.0"
+dependencies = [
+ "kit-demo-android",
+ "quezka-kit",
+]
+
+[[package]]
 name = "kurbo"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

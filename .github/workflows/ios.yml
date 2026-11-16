@@ -1,0 +1,20 @@
+name: iOS kit demo
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["ios-v*"]
+
+jobs:
+  ipa:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rust for iOS
+        run: rustup target add aarch64-apple-ios
+      - name: Build unsigned .ipa
+        run: crates/kit-demo-ios/build_ipa.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KitDemo-ipa
+          path: target/ios/KitDemo.ipa
