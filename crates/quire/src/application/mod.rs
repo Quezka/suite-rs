@@ -14,3 +14,4 @@ pub mod sleep;
 pub mod tasks;
 pub mod timetable;
 pub mod water;
+pub mod work;

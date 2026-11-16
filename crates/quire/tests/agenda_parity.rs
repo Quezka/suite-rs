@@ -9,6 +9,7 @@ use quire::application::digest::DigestService;
 use quire::application::ideas::IdeaService;
 use quire::application::notes::{class_note_title, NoteService};
 use quire::application::tasks::TaskService;
+use quire::application::work::WorkService;
 use quire::application::planner::{ItemKind, PlannerService};
 use quire::application::ports::Clock;
 use quire::infrastructure::repositories::*;
@@ -74,6 +75,20 @@ fn day_agendas_match_python() {
         g.notebook.as_ref().map(|b| b.name.clone()), g.topic, g.notes.len()])).collect();
     assert_eq!(Value::from(groups), fixture["note_groups"]);
     assert_eq!(class_note_title("Biology", "2026-11-16".parse().unwrap()), fixture["class_note_title"].as_str().unwrap());
+    let work = WorkService { jobs: Rc::new(SqliteJobs(db.clone())), shifts: Rc::new(SqliteShifts(db.clone())), clock: clock.clone(),
+                             bus: Rc::new(ChangeBus::default()) };
+    for expected in fixture["work"].as_array().unwrap() {
+        let first: NaiveDate = expected["first"].as_str().unwrap().parse().unwrap();
+        let last: NaiveDate = expected["last"].as_str().unwrap().parse().unwrap();
+        let w = work.summary(first, last).unwrap();
+        assert_eq!(serde_json::json!([w.minutes, w.pay, w.net, w.shift_count]),
+                   serde_json::json!([expected["minutes"], expected["pay"], expected["net"], expected["shifts"]]), "work {first}");
+        let per: Vec<Value> = w.per_job.iter().map(|t| serde_json::json!([t.job.as_ref().map(|j| j.name.clone()), t.minutes, t.pay, t.net])).collect();
+        assert_eq!(Value::from(per), expected["per_job"]);
+        let items: Vec<Value> = work.shifts_between(first, last).unwrap().iter()
+            .map(|i| serde_json::json!([i.shift.day.to_string(), i.shift.start, i.shift.duration, i.pay, i.net])).collect();
+        assert_eq!(Value::from(items), expected["items"]);
+    }
     let digest = DigestService { planner: Rc::new(planner), tasks, ideas, settings, clock };
     for expected in fixture["digests"].as_array().unwrap() {
         let morning = expected["morning"].as_bool().unwrap();

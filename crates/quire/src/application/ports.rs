@@ -88,12 +88,22 @@ pub trait JournalRepository {
 
 pub trait JobRepository {
     fn list(&self) -> AppResult<Vec<Job>>;
+    fn add(&self, job: &Job) -> AppResult<i64>;
+    fn update(&self, job: &Job) -> AppResult;
+    /// With all of its shifts (the database cascades).
+    fn delete(&self, id: i64) -> AppResult;
 }
 
 pub trait ShiftRepository {
     fn starting_between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<Shift>>;
     /// Weekly-schedule occurrences the user skipped: (job id, day, start minute).
     fn skipped(&self, first: NaiveDate, last: NaiveDate) -> AppResult<HashSet<(i64, NaiveDate, i32)>>;
+    fn get(&self, id: i64) -> AppResult<Option<Shift>>;
+    fn add(&self, shift: &Shift) -> AppResult<i64>;
+    fn update(&self, shift: &Shift) -> AppResult;
+    fn delete(&self, id: i64) -> AppResult;
+    /// Take one occurrence of a weekly shift off the schedule.
+    fn skip(&self, job_id: i64, day: NaiveDate, start: i32) -> AppResult;
 }
 
 use crate::domain::model::{Note, NoteImage, Notebook};

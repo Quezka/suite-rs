@@ -154,9 +154,18 @@ def agenda_fixtures():
     groups = [[g.course.name if g.course else None, g.notebook.name if g.notebook else None, g.topic, len(g.notes)]
               for g in services.notes.grouped()]
     from quire.application.services.notes import class_note_title
+    work = []
+    for first, last in ((today - timedelta(days=today.weekday()), today - timedelta(days=today.weekday()) + timedelta(days=6)),
+                        (today.replace(day=1), today.replace(day=28))):
+        w = services.work.summary(first, last)
+        work.append({"first": first.isoformat(), "last": last.isoformat(), "minutes": w.minutes, "pay": w.pay, "net": w.net,
+                     "shifts": w.shifts,
+                     "per_job": [[t.job.name if t.job else None, t.minutes, t.pay, t.net] for t in w.per_job]})
+        for i in services.work.shifts_between(first, last):
+            work[-1].setdefault("items", []).append([i.shift.day.isoformat(), i.shift.start, i.shift.duration, i.pay, i.net])
     db.close()
     return {"today": today.isoformat(), "days": days, "digests": digests, "notes": notes, "note_groups": groups,
-            "class_note_title": class_note_title("Biology", date(2026, 11, 16))}
+            "class_note_title": class_note_title("Biology", date(2026, 11, 16)), "work": work}
 
 
 OUT.mkdir(parents=True, exist_ok=True)

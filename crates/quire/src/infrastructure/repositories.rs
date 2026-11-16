@@ -322,6 +322,52 @@ impl JobRepository for SqliteJobs {
         }
         Ok(jobs)
     }
+
+    fn add(&self, j: &Job) -> AppResult<i64> {
+        self.0.conn.execute("INSERT INTO jobs (name, color, hourly_rate, deductions, pay_mode, monthly_pay, mensilities, contract_start, \
+                             contract_end, tax_model, inps, addizionali, fixed_term, cuneo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            params![j.name, j.color, j.hourly_rate, j.deductions, j.pay_mode, j.monthly_pay, j.mensilities,
+                    j.contract_start.map(|d| d.to_string()), j.contract_end.map(|d| d.to_string()), j.tax_model, j.inps,
+                    j.addizionali, j.fixed_term as i64, j.cuneo as i64]).map_err(store)?;
+        let id = self.0.conn.last_insert_rowid();
+        self.write_schedule(id, j)?;
+        Ok(id)
+    }
+
+    fn update(&self, j: &Job) -> AppResult {
+        self.0.conn.execute("UPDATE jobs SET name = ?, color = ?, hourly_rate = ?, deductions = ?, pay_mode = ?, monthly_pay = ?, \
+                             mensilities = ?, contract_start = ?, contract_end = ?, tax_model = ?, inps = ?, addizionali = ?, \
+                             fixed_term = ?, cuneo = ? WHERE id = ?",
+            params![j.name, j.color, j.hourly_rate, j.deductions, j.pay_mode, j.monthly_pay, j.mensilities,
+                    j.contract_start.map(|d| d.to_string()), j.contract_end.map(|d| d.to_string()), j.tax_model, j.inps,
+                    j.addizionali, j.fixed_term as i64, j.cuneo as i64, j.id]).map_err(store)?;
+        self.write_schedule(j.id.unwrap_or_default(), j)
+    }
+
+    fn delete(&self, id: i64) -> AppResult {
+        self.0.conn.execute("DELETE FROM jobs WHERE id = ?", [id]).map(|_| ()).map_err(store)
+    }
+}
+
+impl SqliteJobs {
+    fn write_schedule(&self, id: i64, j: &Job) -> AppResult {
+        self.0.conn.execute("DELETE FROM shift_patterns WHERE job_id = ?", [id]).map_err(store)?;
+        for p in &j.schedule {
+            self.0.conn.execute("INSERT INTO shift_patterns (job_id, weekday, start_min, duration_min, break_min, since, until) \
+                                 VALUES (?, ?, ?, ?, ?, ?, ?)",
+                params![id, p.weekday, p.start, p.duration, p.break_minutes, p.since.map(|d| d.to_string()),
+                        p.until.map(|d| d.to_string())]).map_err(store)?;
+        }
+        Ok(())
+    }
+}
+
+fn shift(r: &Row) -> rusqlite::Result<Shift> {
+    Ok(Shift {
+        job_id: r.get("job_id")?, day: day(r.get("day")?).unwrap_or_default(), start: r.get("start_min")?,
+        duration: r.get("duration_min")?, break_minutes: r.get("break_min")?, notes: r.get("notes")?,
+        id: Some(r.get("id")?), recurring: false,
+    })
 }
 
 pub struct SqliteShifts(pub Rc<Database>);
@@ -342,6 +388,30 @@ impl ShiftRepository for SqliteShifts {
         let rows = stmt.query_map(params![first.to_string(), last.to_string()], |r| Ok((
             r.get::<_, i64>("job_id")?, day(r.get("day")?).unwrap_or(first), r.get::<_, i32>("start_min")?))).map_err(store)?;
         rows.collect::<Result<_, _>>().map_err(store)
+    }
+
+    fn get(&self, id: i64) -> AppResult<Option<Shift>> {
+        self.0.conn.query_row("SELECT * FROM shifts WHERE id = ?", [id], shift).optional().map_err(store)
+    }
+
+    fn add(&self, s: &Shift) -> AppResult<i64> {
+        self.0.conn.execute("INSERT INTO shifts (job_id, day, start_min, duration_min, break_min, notes) VALUES (?, ?, ?, ?, ?, ?)",
+            params![s.job_id, s.day.to_string(), s.start, s.duration, s.break_minutes, s.notes]).map_err(store)?;
+        Ok(self.0.conn.last_insert_rowid())
+    }
+
+    fn update(&self, s: &Shift) -> AppResult {
+        self.0.conn.execute("UPDATE shifts SET job_id = ?, day = ?, start_min = ?, duration_min = ?, break_min = ?, notes = ? WHERE id = ?",
+            params![s.job_id, s.day.to_string(), s.start, s.duration, s.break_minutes, s.notes, s.id]).map(|_| ()).map_err(store)
+    }
+
+    fn delete(&self, id: i64) -> AppResult {
+        self.0.conn.execute("DELETE FROM shifts WHERE id = ?", [id]).map(|_| ()).map_err(store)
+    }
+
+    fn skip(&self, job_id: i64, d: NaiveDate, start: i32) -> AppResult {
+        self.0.conn.execute("INSERT OR IGNORE INTO shift_skips (job_id, day, start_min) VALUES (?, ?, ?)",
+            params![job_id, d.to_string(), start]).map(|_| ()).map_err(store)
     }
 }
 
