@@ -2,6 +2,7 @@
 //! table and trigger for trigger, so either app can open it.
 
 pub mod cloud;
+pub mod credentials;
 pub mod firebase;
 pub mod http;
 pub mod quire_server;
