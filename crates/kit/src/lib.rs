@@ -6,9 +6,11 @@
 //! - `widgets`: the suite's controls (buttons, switch, segmented, cards, sidebar, settings rows).
 //! - `runner`: the window loop, and offscreen screenshots for checks.
 //! - `autostart`: starting an app at login (desktop entry, Run key).
+//! - `i18n`: translation tables + language pick (`translations!` macro).
 
 pub mod autostart;
 pub mod fonts;
+pub mod i18n;
 pub mod glass;
 pub mod icons;
 mod symbols;

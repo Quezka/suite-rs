@@ -280,32 +280,20 @@ impl Desktop for LinuxDesktop {
     fn notify(&self, title: &str, body: &str) { notify(title, body) }
     fn clipboard_text(&self) -> Option<String> { clipboard_text() }
     fn pick_file(&self) -> Option<PathBuf> { pick_file() }
-    fn autostart_enabled(&self) -> bool { autostart_file().exists() }
+    fn autostart_enabled(&self) -> bool { login_item().enabled() }
     fn set_autostart(&self, on: bool) -> Result<(), String> { set_autostart(on) }
 }
 
-const AUTOSTART: &str = "[Desktop Entry]\nType=Application\nName=Tether\nComment=Your phone on your computer\n\
-Exec=tether --background\nIcon=io.github.quezka.Tether\nTerminal=false\nX-GNOME-Autostart-enabled=true\n";
-
-fn autostart_file() -> PathBuf {
-    let base = std::env::var_os("XDG_CONFIG_HOME").map(PathBuf::from)
-        .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".config")))
-        .unwrap_or_else(|| PathBuf::from(".config"));
-    base.join("autostart").join("io.github.quezka.Tether.desktop")
+/// login entry (linux only: tether = unix socket app); rules @ `quezka_kit::autostart`
+fn login_item() -> quezka_kit::autostart::LoginItem {
+    quezka_kit::autostart::LoginItem {
+        app_id: "io.github.quezka.Tether".into(), name: "Tether".into(), comment: "Your phone on your computer".into(),
+        command: vec!["tether".into(), "--background".into()], config_dir: None,
+    }
 }
 
 pub fn set_autostart(on: bool) -> Result<(), String> {
-    let file = autostart_file();
-    let failed = |_| "Couldn't change starting with the computer.".to_string();
-    if on {
-        if let Some(dir) = file.parent() { std::fs::create_dir_all(dir).map_err(failed)?; }
-        std::fs::write(&file, AUTOSTART).map_err(failed)
-    } else {
-        match std::fs::remove_file(&file) {
-            Err(e) if e.kind() != std::io::ErrorKind::NotFound => Err(failed(e)),
-            _ => Ok(()),
-        }
-    }
+    login_item().set_enabled(on).map_err(|_| "Couldn't change starting with the computer.".to_string())
 }
 
 /// First start ever: switch starting at login on (the link only helps if it's always there). Once.
