@@ -41,6 +41,14 @@ pub struct AgendaItem {
 }
 
 impl AgendaItem {
+    pub fn is_all_day(&self) -> bool {
+        self.kind == ItemKind::Event && self.time.end - self.time.start == crate::domain::model::MINUTES_PER_DAY
+    }
+
+    pub fn is_milestone(&self) -> bool {
+        matches!(self.kind, ItemKind::Event | ItemKind::Routine) && self.time.end - self.time.start == crate::domain::model::MILESTONE_MINUTES
+    }
+
     fn new(kind: ItemKind, ref_id: Option<i64>, day: NaiveDate, time: TimeRange, title: &str, color: &str) -> Self {
         Self { kind, ref_id, day, time, title: title.into(), color: color.into(), room: String::new(),
                teacher: String::new(), details: String::new(), origin: None }

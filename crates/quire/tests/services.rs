@@ -237,3 +237,40 @@ fn focus_logs_sessions_and_a_block_becomes_an_event() {
     assert_eq!(week.len(), 1);
     assert_eq!((week[0].title.as_str(), week[0].time.start, week[0].time.end), ("Focus: History essay", 565, 625));
 }
+
+#[test]
+fn reminders_once_and_quiet_while_a_class_is_on() {
+    use std::cell::RefCell;
+    use quire::application::planner::{EventInput, PlannerService};
+    use quire::application::quiet::{QuietService, QuietSettings, QuietSwitch};
+    use quire::application::reminders::ReminderService;
+    use quire::infrastructure::repositories::*;
+    struct Switch(RefCell<Vec<bool>>);
+    impl QuietSwitch for Switch {
+        fn name(&self) -> String { "test".into() }
+        fn available(&self) -> bool { true }
+        fn set_quiet(&self, on: bool) -> Result<(), String> { self.0.borrow_mut().push(on); Ok(()) }
+    }
+    let db = Rc::new(Database::in_memory().unwrap());
+    let clock = Rc::new(Fixed(Cell::new(day("2026-09-23").and_hms_opt(11, 52, 0).unwrap())));
+    let planner = Rc::new(PlannerService {
+        courses: Rc::new(SqliteCourses(db.clone())), events: Rc::new(SqliteEvents(db.clone())), tasks: Rc::new(SqliteTasks(db.clone())),
+        journal: Rc::new(SqliteJournal(db.clone())), clock: clock.clone(), bus: Rc::new(ChangeBus::default()), jobs: Rc::new(SqliteJobs(db.clone())),
+        shifts: Rc::new(SqliteShifts(db.clone())), routines: Rc::new(SqliteRoutines(db.clone())),
+    });
+    planner.save_event(None, &EventInput { day: day("2026-09-23"), start: 720, end: 780, title: "Lab".into(), details: String::new(),
+        color: "#000000".into(), all_day: false, milestone: false }).unwrap();
+    let settings = Rc::new(SqliteSettings(db));
+    let reminders = ReminderService { planner: planner.clone(), settings: settings.clone(), clock: clock.clone(), sent: Default::default() };
+    let due = reminders.due().unwrap();
+    assert_eq!((due.len(), due[0].minutes_left), (1, 8));
+    assert!(reminders.due().unwrap().is_empty()); // once
+    let switch = Rc::new(Switch(RefCell::new(Vec::new())));
+    let quiet = QuietService { planner, settings, clock: clock.clone(), switch: switch.clone() };
+    assert!(!quiet.save_settings(QuietSettings { enabled: true, ..QuietSettings::default() }).unwrap());
+    clock.0.set(day("2026-09-23").and_hms_opt(12, 10, 0).unwrap());
+    assert!(quiet.tick().unwrap());
+    clock.0.set(day("2026-09-23").and_hms_opt(13, 0, 0).unwrap());
+    assert!(!quiet.tick().unwrap());
+    assert_eq!(*switch.0.borrow(), vec![true, false]);
+}

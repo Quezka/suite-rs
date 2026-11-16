@@ -10,6 +10,8 @@ pub mod medicine;
 pub mod notes;
 pub mod planner;
 pub mod ports;
+pub mod quiet;
+pub mod reminders;
 pub mod sleep;
 pub mod tasks;
 pub mod timetable;
