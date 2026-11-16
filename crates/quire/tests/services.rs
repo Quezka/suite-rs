@@ -154,3 +154,27 @@ fn water_goal_log_and_reminder() {
     water.undo_last(None).unwrap();
     assert_eq!(water.overview(None).unwrap().drunk, 250);
 }
+
+#[test]
+fn medicines_plan_mark_and_nudge_once() {
+    use quire::application::medicine::MedicineService;
+    use quire::domain::medicine::Medicine;
+    use quire::infrastructure::repositories::SqliteMedicines;
+    let db = Rc::new(Database::in_memory().unwrap());
+    let clock = Rc::new(Fixed(Cell::new(day("2026-09-23").and_hms_opt(9, 5, 0).unwrap())));
+    let meds = MedicineService { repo: Rc::new(SqliteMedicines(db)), clock, bus: Rc::new(ChangeBus::default()),
+                                 reminded: Default::default() };
+    let id = meds.save(None, &Medicine { name: " Vitamin D ".into(), dose: "1 tab".into(), times: vec![1200, 540],
+        weekdays: (0..7).collect(), active: true, notes: String::new(), id: None }).unwrap();
+    let pending = meds.pending().unwrap();
+    assert_eq!(pending.iter().map(|d| d.planned).collect::<Vec<_>>(), vec![540, 1200]);
+    assert_eq!(meds.due().unwrap().len(), 1);
+    assert!(meds.due().unwrap().is_empty()); // once
+    meds.mark(id, day("2026-09-23"), 540, true).unwrap();
+    meds.mark(id, day("2026-09-23"), 540, true).unwrap(); // again: changes, doesn't add
+    let today = meds.day(None).unwrap();
+    assert_eq!(today.iter().filter(|d| d.done).count(), 1);
+    assert_eq!(meds.medicine(id).unwrap().name, "Vitamin D");
+    let (planned, taken) = meds.week().unwrap();
+    assert!(taken == 1 && planned >= 1);
+}

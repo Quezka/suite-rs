@@ -139,3 +139,16 @@ pub trait WaterRepository {
     fn add(&self, log: &WaterLog) -> AppResult<i64>;
     fn delete(&self, id: i64) -> AppResult;
 }
+
+use crate::domain::medicine::{DoseLog, Medicine};
+
+pub trait MedicineRepository {
+    fn all(&self) -> AppResult<Vec<Medicine>>;
+    fn get(&self, id: i64) -> AppResult<Option<Medicine>>;
+    fn add(&self, m: &Medicine) -> AppResult<i64>;
+    fn update(&self, m: &Medicine) -> AppResult;
+    fn delete(&self, id: i64) -> AppResult;
+    fn logs_between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<DoseLog>>;
+    fn add_log(&self, log: &DoseLog) -> AppResult<i64>;
+    fn delete_log(&self, id: i64) -> AppResult;
+}

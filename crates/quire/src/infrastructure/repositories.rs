@@ -511,3 +511,65 @@ impl WaterRepository for SqliteWater {
         self.0.conn.execute("DELETE FROM water_logs WHERE id = ?", [id]).map(|_| ()).map_err(store)
     }
 }
+
+// ---- medicines -----------------------------------------------------------------------------------------------------
+
+use crate::application::ports::MedicineRepository;
+use crate::domain::medicine::{DoseLog, Medicine};
+
+fn numbers<T: std::str::FromStr>(text: &str) -> Vec<T> {
+    text.split(',').filter_map(|x| x.trim().parse().ok()).collect()
+}
+
+fn joined<T: ToString>(items: &[T]) -> String {
+    items.iter().map(T::to_string).collect::<Vec<_>>().join(",")
+}
+
+fn medicine(r: &Row) -> rusqlite::Result<Medicine> {
+    Ok(Medicine {
+        name: r.get("name")?, dose: r.get("dose")?, times: numbers(&r.get::<_, String>("times")?),
+        weekdays: numbers(&r.get::<_, String>("weekdays")?), active: r.get::<_, i64>("active")? != 0,
+        notes: r.get("notes")?, id: Some(r.get("id")?),
+    })
+}
+
+pub struct SqliteMedicines(pub Rc<Database>);
+
+impl MedicineRepository for SqliteMedicines {
+    fn all(&self) -> AppResult<Vec<Medicine>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM medicines ORDER BY name COLLATE NOCASE, id").map_err(store)?;
+        let rows = stmt.query_map([], medicine).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+    fn get(&self, id: i64) -> AppResult<Option<Medicine>> {
+        self.0.conn.query_row("SELECT * FROM medicines WHERE id = ?", [id], medicine).optional().map_err(store)
+    }
+    fn add(&self, m: &Medicine) -> AppResult<i64> {
+        self.0.conn.execute("INSERT INTO medicines (name, dose, times, weekdays, active, notes) VALUES (?, ?, ?, ?, ?, ?)",
+            params![m.name, m.dose, joined(&m.times), joined(&m.weekdays), m.active as i64, m.notes]).map_err(store)?;
+        Ok(self.0.conn.last_insert_rowid())
+    }
+    fn update(&self, m: &Medicine) -> AppResult {
+        self.0.conn.execute("UPDATE medicines SET name = ?, dose = ?, times = ?, weekdays = ?, active = ?, notes = ? WHERE id = ?",
+            params![m.name, m.dose, joined(&m.times), joined(&m.weekdays), m.active as i64, m.notes, m.id]).map(|_| ()).map_err(store)
+    }
+    fn delete(&self, id: i64) -> AppResult {
+        self.0.conn.execute("DELETE FROM medicines WHERE id = ?", [id]).map(|_| ()).map_err(store)
+    }
+    fn logs_between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<DoseLog>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM medicine_doses WHERE day BETWEEN ? AND ? ORDER BY day, id").map_err(store)?;
+        let rows = stmt.query_map(params![first.to_string(), last.to_string()], |r| Ok(DoseLog {
+            medicine_id: r.get("medicine_id")?, day: day(r.get("day")?).unwrap_or(first), planned: r.get("planned")?,
+            taken: r.get::<_, i64>("taken")? != 0, at: r.get("at_min")?, id: Some(r.get("id")?),
+        })).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+    fn add_log(&self, l: &DoseLog) -> AppResult<i64> {
+        self.0.conn.execute("INSERT INTO medicine_doses (medicine_id, day, planned, taken, at_min) VALUES (?, ?, ?, ?, ?)",
+            params![l.medicine_id, l.day.to_string(), l.planned, l.taken as i64, l.at]).map_err(store)?;
+        Ok(self.0.conn.last_insert_rowid())
+    }
+    fn delete_log(&self, id: i64) -> AppResult {
+        self.0.conn.execute("DELETE FROM medicine_doses WHERE id = ?", [id]).map(|_| ()).map_err(store)
+    }
+}
