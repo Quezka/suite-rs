@@ -8,6 +8,7 @@ authors.workspace = true
 
 [dependencies]
 egui.workspace = true
+chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
 egui-wgpu.workspace = true
 wgpu.workspace = true
 pollster.workspace = true

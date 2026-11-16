@@ -27,6 +27,17 @@ MAP = {
     # Quay, Tether (2026-11-15)
     "download": "download", "mail": "chat", "folder": "folder", "send": "send", "upload": "upload",
     "copy": "content_copy", "add": "add", "chevron-left": "chevron_left",
+    # Quire (2026-11-16): same names as suite-kit's make_symbols.py
+    "calendar": "calendar_month", "calendar-day": "event", "chevron-down": "keyboard_arrow_down",
+    "chevron-up": "keyboard_arrow_up", "coursework": "assignment", "critical": "local_fire_department",
+    "drop": "water_drop", "edit": "edit", "file-text": "description", "image": "image", "list": "format_list_bulleted",
+    "moon": "bedtime", "more": "more_horiz", "notes": "sticky_note_2", "pause": "pause", "pill": "medication",
+    "school": "school", "skip": "skip_next", "tag": "sell", "timer": "timer", "today": "today", "trash": "delete",
+    "undo": "undo", "week": "date_range", "briefcase": "work", "book-open": "menu_book", "link": "link",
+    "checklist": "checklist", "eye": "visibility", "save": "save", "bold": "format_bold", "italic": "format_italic",
+    "heading": "title", "quote": "format_quote", "code": "code", "idea": "lightbulb", "sync": "sync",
+    "clock": "schedule", "grade": "grade", "book": "book_2", "palette": "palette", "arrow-up": "arrow_upward",
+    "arrow-down": "arrow_downward", "menu": "menu", "event-busy": "event_busy",
 }
 
 

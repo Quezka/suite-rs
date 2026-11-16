@@ -7,9 +7,11 @@
 //! - `runner`: the window loop, and offscreen screenshots for checks.
 //! - `autostart`: starting an app at login (desktop entry, Run key).
 //! - `i18n`: translation tables + language pick (`translations!` macro).
+//! - `forms`: width classes, labelled fields, dialog, menu, date + time picker (desktop apps).
 
 pub mod autostart;
 pub mod fonts;
+pub mod forms;
 pub mod i18n;
 pub mod glass;
 pub mod icons;

@@ -30,7 +30,7 @@ pub fn move_cursor(ctx: &egui::Context, id: egui::Id, start: usize, end: usize) 
     }
 }
 
-fn record(ui: &egui::Ui, output: &egui::text_edit::TextEditOutput, text: &str) {
+pub(crate) fn record(ui: &egui::Ui, output: &egui::text_edit::TextEditOutput, text: &str) {
     let ctx = ui.ctx();
     if output.response.response.has_focus() {
         let cursor = output.cursor_range.map_or((0, 0), |r| {

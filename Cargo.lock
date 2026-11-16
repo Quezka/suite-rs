@@ -2746,6 +2746,7 @@ name = "quezka-kit"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
+ "chrono",
  "egui",
  "egui-wgpu",
  "egui-winit",
