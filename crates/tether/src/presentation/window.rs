@@ -131,7 +131,7 @@ impl TetherWindow {
         }
     }
 
-    fn status_line(&self) -> String {
+    pub fn status_line(&self) -> String {
         match (self.phone.connected, self.phone.battery) {
             (true, Some((level, charging))) => format!("{} · {}{}", t("Connected"), tf("Battery {n}%", &[("n", &level.to_string())]),
                 if charging { format!(" · {}", t("charging")) } else { String::new() }),

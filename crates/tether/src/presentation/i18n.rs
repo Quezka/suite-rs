@@ -36,6 +36,7 @@ const MESSAGES: &[(&str, &str, &str)] = &[
     ("Waiting for the phone…", "In attesa del telefono…", "Ждём телефон…"),
     ("Your phone", "Il tuo telefono", "Твой телефон"),
     ("Quit Tether", "Esci da Tether", "Выйти из Tether"),
+    ("Show Tether", "Mostra Tether", "Показать Tether"),
     ("Start with the computer", "Avvia con il computer", "Запускать вместе с компьютером"),
     ("Closing the window keeps Tether running.", "Chiudendo la finestra Tether resta attivo.", "Если закрыть окно, Tether продолжит работать."),
     ("OK", "OK", "ОК"),

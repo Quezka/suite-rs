@@ -8,10 +8,29 @@ use tether::presentation::window::TetherWindow;
 struct Shown {
     window: TetherWindow,
     dark: Option<bool>,
+    /// tray (0.3): click = show window, menu = show | quit; tooltip = link status
+    tray: Option<quezka_kit::tray::Tray>,
+    tray_status: String,
 }
 
 impl quezka_kit::App for Shown {
     fn ui(&mut self, ui: &mut egui::Ui, th: &quezka_kit::Tokens) {
+        if let Some(tray) = &self.tray {
+            for e in tray.events() {
+                match e {
+                    quezka_kit::tray::TrayEvent::Show => {
+                        ui.ctx().send_viewport_cmd(egui::ViewportCommand::Visible(true));
+                        ui.ctx().send_viewport_cmd(egui::ViewportCommand::Focus);
+                    }
+                    quezka_kit::tray::TrayEvent::Quit => ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close),
+                }
+            }
+            let status = self.window.status_line();
+            if status != self.tray_status {
+                tray.set_status(&status);
+                self.tray_status = status;
+            }
+        }
         self.window.ui(ui, th);
     }
     fn dark(&self) -> Option<bool> {
@@ -61,7 +80,7 @@ fn main() -> Result<(), String> {
     if let Some(section) = value("--section").and_then(|v| v.parse().ok()) {
         window = window.open(section, value("--thread"));
     }
-    let mut shown = Shown { window, dark: flag("--dark").map(|_| true) };
+    let mut shown = Shown { window, dark: flag("--dark").map(|_| true), tray: None, tray_status: String::new() };
     if let Some(path) = screenshot {
         if shown.dark.is_none() { shown.dark = Some(false); }
         let w: f32 = value("--width").and_then(|v| v.parse().ok()).unwrap_or(1100.0);
@@ -69,6 +88,8 @@ fn main() -> Result<(), String> {
         return quezka_kit::screenshot(&mut shown, [w, h], 1.0, 20, &path);
     }
     autostart_on_first_run();
+    shown.tray = quezka_kit::tray::spawn("io.github.quezka.Tether", "Tether", None,
+        &tether::presentation::i18n::t("Show Tether"), &tether::presentation::i18n::t("Quit Tether"));
     let options = quezka_kit::Options { title: "Tether".into(), app_id: "io.github.quezka.Tether".into(), icon: None,
         start_hidden: flag("--background").is_some(), close_hides: true };
     quezka_kit::run_with(options, shown)
