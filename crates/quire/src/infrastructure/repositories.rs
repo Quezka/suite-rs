@@ -162,3 +162,114 @@ impl IdeaRepository for SqliteIdeas {
         self.0.conn.execute("DELETE FROM ideas WHERE id = ?", [id]).map(|_| ()).map_err(store)
     }
 }
+
+// ---- the planner's sources ----------------------------------------------------------------------------------------
+
+use std::collections::HashSet;
+
+use crate::application::ports::{EventRepository, JobRepository, JournalRepository, RoutineRepository, ShiftRepository};
+use crate::domain::model::{Event, Job, Routine, Shift, ShiftPattern};
+
+pub struct SqliteEvents(pub Rc<Database>);
+
+impl EventRepository for SqliteEvents {
+    fn between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<Event>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM events WHERE day BETWEEN ? AND ? ORDER BY day, start_min").map_err(store)?;
+        let rows = stmt.query_map(params![first.to_string(), last.to_string()], |r| Ok(Event {
+            day: day(r.get("day")?).unwrap_or(first),
+            time: TimeRange { start: r.get("start_min")?, end: r.get("end_min")? },
+            title: r.get("title")?, details: r.get("details")?, color: r.get("color")?, id: Some(r.get("id")?),
+        })).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+}
+
+pub struct SqliteRoutines(pub Rc<Database>);
+
+impl RoutineRepository for SqliteRoutines {
+    fn list(&self) -> AppResult<Vec<Routine>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM routines ORDER BY start_min, title COLLATE NOCASE").map_err(store)?;
+        let rows = stmt.query_map([], |r| {
+            let days: String = r.get("weekdays")?;
+            let mut weekdays: Vec<u8> = days.split(',').filter_map(|d| d.trim().parse().ok()).collect();
+            weekdays.sort();
+            weekdays.dedup();
+            Ok(Routine { title: r.get("title")?, minute: r.get("start_min")?, weekdays, color: r.get("color")?, id: Some(r.get("id")?) })
+        }).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+}
+
+pub struct SqliteJournal(pub Rc<Database>);
+
+impl JournalRepository for SqliteJournal {
+    fn get(&self, d: NaiveDate) -> AppResult<String> {
+        Ok(self.0.conn.query_row("SELECT body FROM journal WHERE day = ?", [d.to_string()], |r| r.get(0))
+            .optional().map_err(store)?.unwrap_or_default())
+    }
+
+    fn put(&self, d: NaiveDate, body: &str) -> AppResult {
+        self.0.conn.execute("INSERT INTO journal (day, body) VALUES (?, ?) ON CONFLICT(day) DO UPDATE SET body = excluded.body",
+            params![d.to_string(), body]).map(|_| ()).map_err(store)
+    }
+}
+
+pub struct SqliteJobs(pub Rc<Database>);
+
+impl JobRepository for SqliteJobs {
+    fn list(&self) -> AppResult<Vec<Job>> {
+        let conn = &self.0.conn;
+        let mut stmt = conn.prepare("SELECT * FROM jobs ORDER BY name COLLATE NOCASE").map_err(store)?;
+        let mut jobs: Vec<Job> = stmt.query_map([], |r| {
+            let mut j = Job::named(&r.get::<_, String>("name")?);
+            j.color = r.get("color")?;
+            j.hourly_rate = r.get("hourly_rate")?;
+            j.id = Some(r.get("id")?);
+            j.deductions = r.get("deductions")?;
+            j.pay_mode = r.get("pay_mode")?;
+            j.monthly_pay = r.get("monthly_pay")?;
+            j.mensilities = r.get("mensilities")?;
+            j.contract_start = day(r.get("contract_start")?);
+            j.contract_end = day(r.get("contract_end")?);
+            j.tax_model = r.get("tax_model")?;
+            j.inps = r.get("inps")?;
+            j.addizionali = r.get("addizionali")?;
+            j.fixed_term = r.get::<_, i64>("fixed_term")? != 0;
+            j.cuneo = r.get::<_, i64>("cuneo")? != 0;
+            Ok(j)
+        }).map_err(store)?.collect::<Result<_, _>>().map_err(store)?;
+        let mut pats = conn.prepare("SELECT * FROM shift_patterns ORDER BY weekday, start_min").map_err(store)?;
+        let rows = pats.query_map([], |p| Ok((p.get::<_, i64>("job_id")?, ShiftPattern {
+            weekday: p.get("weekday")?, start: p.get("start_min")?, duration: p.get("duration_min")?,
+            break_minutes: p.get("break_min")?, since: day(p.get("since")?), until: day(p.get("until")?), id: Some(p.get("id")?),
+        }))).map_err(store)?;
+        for row in rows {
+            let (job, pattern) = row.map_err(store)?;
+            if let Some(j) = jobs.iter_mut().find(|j| j.id == Some(job)) {
+                j.schedule.push(pattern);
+            }
+        }
+        Ok(jobs)
+    }
+}
+
+pub struct SqliteShifts(pub Rc<Database>);
+
+impl ShiftRepository for SqliteShifts {
+    fn starting_between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<Shift>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM shifts WHERE day BETWEEN ? AND ? ORDER BY day, start_min").map_err(store)?;
+        let rows = stmt.query_map(params![first.to_string(), last.to_string()], |r| Ok(Shift {
+            job_id: r.get("job_id")?, day: day(r.get("day")?).unwrap_or(first), start: r.get("start_min")?,
+            duration: r.get("duration_min")?, break_minutes: r.get("break_min")?, notes: r.get("notes")?,
+            id: Some(r.get("id")?), recurring: false,
+        })).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+
+    fn skipped(&self, first: NaiveDate, last: NaiveDate) -> AppResult<HashSet<(i64, NaiveDate, i32)>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM shift_skips WHERE day BETWEEN ? AND ?").map_err(store)?;
+        let rows = stmt.query_map(params![first.to_string(), last.to_string()], |r| Ok((
+            r.get::<_, i64>("job_id")?, day(r.get("day")?).unwrap_or(first), r.get::<_, i32>("start_min")?))).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+}

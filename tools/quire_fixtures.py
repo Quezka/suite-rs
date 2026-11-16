@@ -116,8 +116,41 @@ def storage_fixtures():
     return {"outgoing": out, "schema": schema, "applied": tables, "records": records}
 
 
+def agenda_fixtures():
+    """Day agendas the Python planner makes from python.db (a copy), for days around the demo, with a fixed today."""
+    import shutil
+    import tempfile
+    from datetime import datetime, timedelta
+    from quire.bootstrap import build_services
+    from quire.infrastructure.credentials import MemoryCredentialStore
+    copy = Path(tempfile.mkdtemp()) / "agenda.db"
+    shutil.copy(OUT / "python.db", copy)
+    import sqlite3
+    first = sqlite3.connect(copy).execute("SELECT MIN(day) FROM events").fetchone()[0]
+    today = date.fromisoformat(first)
+
+    class Fixed:
+        def now(self):
+            return datetime.combine(today, datetime.min.time()).replace(hour=12)
+
+        def today(self):
+            return today
+
+    services, db = build_services(str(copy), clock=Fixed(), credentials=MemoryCredentialStore())
+    days = []
+    for n in range(-2, 9):
+        day = today + timedelta(days=n)
+        a = services.planner.day_agenda(day)
+        days.append({"day": day.isoformat(), "is_today": a.is_today,
+                     "items": [[i.kind.value, i.title, i.time.start, i.time.end, i.room, i.details] for i in a.items],
+                     "tasks": [[t.task.title, t.overdue] for t in a.tasks], "journal": a.journal})
+    db.close()
+    return {"today": today.isoformat(), "days": days}
+
+
 OUT.mkdir(parents=True, exist_ok=True)
 (OUT / "storage.json").write_text(json.dumps(storage_fixtures(), indent=1, ensure_ascii=False))
+(OUT / "agenda.json").write_text(json.dumps(agenda_fixtures(), indent=1, ensure_ascii=False))
 (OUT / "rules.json").write_text(json.dumps(rules_cases(), indent=1, ensure_ascii=False))
 (OUT / "payroll.json").write_text(json.dumps(payroll_cases(), indent=1))
 print("wrote", OUT)

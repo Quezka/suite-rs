@@ -2,8 +2,8 @@
  "outgoing": [
   {
    "kind": "course",
-   "uid": "cafbf9875cfa858ee709ab5be5c86372",
-   "modified": "2026-11-14T17:09:31.036Z",
+   "uid": "4a681e427d2e79ff81f40ccf912e2fa7",
+   "modified": "2026-11-16T02:07:54.132Z",
    "deleted": false,
    "data": {
     "name": "Mathematics",
@@ -35,8 +35,8 @@
   },
   {
    "kind": "course",
-   "uid": "6aa83b4c1576aa043ca9d418d25c57de",
-   "modified": "2026-11-14T17:09:33.921Z",
+   "uid": "fd99074b819b5ed1b2cf629dd4d1cc66",
+   "modified": "2026-11-16T02:07:54.699Z",
    "deleted": false,
    "data": {
     "name": "Biology",
@@ -62,8 +62,8 @@
   },
   {
    "kind": "course",
-   "uid": "28c0b9b58b0b75a39e29682672750cb0",
-   "modified": "2026-11-14T17:09:31.200Z",
+   "uid": "01503ca8de7f881cc4def315b001c26b",
+   "modified": "2026-11-16T02:07:54.165Z",
    "deleted": false,
    "data": {
     "name": "English Literature",
@@ -95,8 +95,8 @@
   },
   {
    "kind": "course",
-   "uid": "bb09a6bd69102b3fd3e5eb82c65cd2d0",
-   "modified": "2026-11-14T17:09:31.480Z",
+   "uid": "7058927e7621d7a0e2ccc314ddc83ece",
+   "modified": "2026-11-16T02:07:54.181Z",
    "deleted": false,
    "data": {
     "name": "History",
@@ -122,8 +122,8 @@
   },
   {
    "kind": "course",
-   "uid": "7f36bab5239a38f80e61a841f1afb3d1",
-   "modified": "2026-11-14T17:09:31.544Z",
+   "uid": "af6882a5b22b5d611f79cc0225bf67c2",
+   "modified": "2026-11-16T02:07:54.195Z",
    "deleted": false,
    "data": {
     "name": "Chemistry",
@@ -149,8 +149,8 @@
   },
   {
    "kind": "course",
-   "uid": "dc06fac00d1c621cc4fff5f1bf45c62d",
-   "modified": "2026-11-14T17:09:31.609Z",
+   "uid": "78c8d05f23ce47463fc3fc592db5f876",
+   "modified": "2026-11-16T02:07:54.210Z",
    "deleted": false,
    "data": {
     "name": "PE",
@@ -171,7 +171,7 @@
   {
    "kind": "course",
    "uid": "ext:classeviva:subject:1",
-   "modified": "2026-11-14T17:09:33.841Z",
+   "modified": "2026-11-16T02:07:54.683Z",
    "deleted": false,
    "data": {
     "name": "Matematica",
@@ -185,7 +185,7 @@
   {
    "kind": "course",
    "uid": "ext:classeviva:subject:3",
-   "modified": "2026-11-14T17:09:34.001Z",
+   "modified": "2026-11-16T02:07:54.714Z",
    "deleted": false,
    "data": {
     "name": "Storia",
@@ -199,7 +199,7 @@
   {
    "kind": "course",
    "uid": "ext:classeviva:subject:4",
-   "modified": "2026-11-14T17:09:34.081Z",
+   "modified": "2026-11-16T02:07:54.729Z",
    "deleted": false,
    "data": {
     "name": "Lingua straniera inglese",
@@ -212,8 +212,8 @@
   },
   {
    "kind": "job",
-   "uid": "98d151240e3bfacbb793f65ec9f55fb5",
-   "modified": "2026-11-14T17:09:33.129Z",
+   "uid": "b3cccc8b904b105d8a67979ea31fac67",
+   "modified": "2026-11-16T02:07:54.536Z",
    "deleted": false,
    "data": {
     "name": "Pizzeria Da Mario",
@@ -239,7 +239,7 @@
       1080,
       270,
       30,
-      "2026-11-09",
+      "2026-11-16",
       null
      ],
      [
@@ -247,7 +247,7 @@
       1140,
       360,
       30,
-      "2026-11-09",
+      "2026-11-16",
       null
      ]
     ],
@@ -256,8 +256,8 @@
   },
   {
    "kind": "job",
-   "uid": "9922fcc4e8302cf5aecadc7ff41d36d0",
-   "modified": "2026-11-14T17:09:33.204Z",
+   "uid": "44ff8f5252f26a8d2d9be7f458c5c70d",
+   "modified": "2026-11-16T02:07:54.552Z",
    "deleted": false,
    "data": {
     "name": "Maths tutoring",
@@ -283,11 +283,11 @@
   },
   {
    "kind": "event",
-   "uid": "d190b744a082b24c7cc5dd09f9d9fdac",
-   "modified": "2026-11-14T17:09:31.674Z",
+   "uid": "70d47414baa2ca27700aeb8df4d05149",
+   "modified": "2026-11-16T02:07:54.225Z",
    "deleted": false,
    "data": {
-    "day": "2026-11-14",
+    "day": "2026-11-16",
     "start": 720,
     "end": 765,
     "title": "Lunch with Sam",
@@ -297,11 +297,11 @@
   },
   {
    "kind": "event",
-   "uid": "b32bbf781e3e6ad9fad9dc890a640113",
-   "modified": "2026-11-14T17:09:31.738Z",
+   "uid": "0bada222792986f8a67aba54c906a2c7",
+   "modified": "2026-11-16T02:07:54.240Z",
    "deleted": false,
    "data": {
-    "day": "2026-11-14",
+    "day": "2026-11-16",
     "start": 960,
     "end": 1050,
     "title": "Study group",
@@ -311,11 +311,11 @@
   },
   {
    "kind": "event",
-   "uid": "4a4ba425cf86bd06c687d8817591b852",
-   "modified": "2026-11-14T17:09:31.806Z",
+   "uid": "e371fe3e5dfe65d5e96e5cab3e5a2dbe",
+   "modified": "2026-11-16T02:07:54.254Z",
    "deleted": false,
    "data": {
-    "day": "2026-11-13",
+    "day": "2026-11-20",
     "start": 1020,
     "end": 1140,
     "title": "Football practice",
@@ -325,28 +325,13 @@
   },
   {
    "kind": "task",
-   "uid": "a7f4f9df04b44308dac5b3e257fb3a34",
-   "modified": "2026-11-14T17:09:31.904Z",
+   "uid": "c4e79e80583d8418068c7316f2bcc438",
+   "modified": "2026-11-16T02:07:54.271Z",
    "deleted": false,
    "data": {
     "title": "Problem set 3 (q1–12)",
     "kind": "homework",
-    "course": "cafbf9875cfa858ee709ab5be5c86372",
-    "due": "2026-11-15",
-    "done": false,
-    "details": "",
-    "external_id": null
-   }
-  },
-  {
-   "kind": "task",
-   "uid": "32c02cb31c552bb37671db19989ae60d",
-   "modified": "2026-11-14T17:09:31.969Z",
-   "deleted": false,
-   "data": {
-    "title": "Read chapters 5–6 of Frankenstein",
-    "kind": "reading",
-    "course": "28c0b9b58b0b75a39e29682672750cb0",
+    "course": "4a681e427d2e79ff81f40ccf912e2fa7",
     "due": "2026-11-17",
     "done": false,
     "details": "",
@@ -355,14 +340,29 @@
   },
   {
    "kind": "task",
-   "uid": "7093adfe33d2e22e1343eb7f2c90fbd7",
-   "modified": "2026-11-14T17:09:32.037Z",
+   "uid": "fab4870e703321770f229893d240bab9",
+   "modified": "2026-11-16T02:07:54.287Z",
+   "deleted": false,
+   "data": {
+    "title": "Read chapters 5–6 of Frankenstein",
+    "kind": "reading",
+    "course": "01503ca8de7f881cc4def315b001c26b",
+    "due": "2026-11-19",
+    "done": false,
+    "details": "",
+    "external_id": null
+   }
+  },
+  {
+   "kind": "task",
+   "uid": "592d5498df2ba4069de371b9aa7e100a",
+   "modified": "2026-11-16T02:07:54.302Z",
    "deleted": false,
    "data": {
     "title": "Cell respiration lab report",
     "kind": "assignment",
-    "course": "6aa83b4c1576aa043ca9d418d25c57de",
-    "due": "2026-11-20",
+    "course": "fd99074b819b5ed1b2cf629dd4d1cc66",
+    "due": "2026-11-22",
     "done": false,
     "details": "",
     "external_id": null
@@ -370,14 +370,14 @@
   },
   {
    "kind": "task",
-   "uid": "b48590fcaf55125f9a71355b7137bad3",
-   "modified": "2026-11-14T17:09:32.110Z",
+   "uid": "d78257dfc4ff1a03df879a66d52af1fb",
+   "modified": "2026-11-16T02:07:54.316Z",
    "deleted": false,
    "data": {
     "title": "Unit test: Industrial Revolution",
     "kind": "exam",
-    "course": "bb09a6bd69102b3fd3e5eb82c65cd2d0",
-    "due": "2026-11-23",
+    "course": "7058927e7621d7a0e2ccc314ddc83ece",
+    "due": "2026-11-25",
     "done": false,
     "details": "",
     "external_id": null
@@ -385,14 +385,14 @@
   },
   {
    "kind": "task",
-   "uid": "51045c10d4b8c1e44b46f5b50b450b53",
-   "modified": "2026-11-14T17:09:32.182Z",
+   "uid": "11c908a4e7dddc8d7337abb1de10ec1b",
+   "modified": "2026-11-16T02:07:54.331Z",
    "deleted": false,
    "data": {
     "title": "Titration pre-lab questions",
     "kind": "homework",
-    "course": "7f36bab5239a38f80e61a841f1afb3d1",
-    "due": "2026-11-13",
+    "course": "af6882a5b22b5d611f79cc0225bf67c2",
+    "due": "2026-11-15",
     "done": false,
     "details": "",
     "external_id": null
@@ -400,14 +400,14 @@
   },
   {
    "kind": "task",
-   "uid": "7b6a2804963c6a116d97cd0628a93520",
-   "modified": "2026-11-14T17:09:32.254Z",
+   "uid": "e7411037fbdbb777fa0b6676ed158b1b",
+   "modified": "2026-11-16T02:07:54.345Z",
    "deleted": false,
    "data": {
     "title": "Buy a new graphing calculator",
     "kind": "task",
     "course": null,
-    "due": "2026-11-14",
+    "due": "2026-11-16",
     "done": false,
     "details": "",
     "external_id": null
@@ -415,8 +415,8 @@
   },
   {
    "kind": "task",
-   "uid": "fac9f27e45896ef7856e87056fcae20b",
-   "modified": "2026-11-14T17:09:32.326Z",
+   "uid": "76fa0bac9716be7ca808e8cc6caad26e",
+   "modified": "2026-11-16T02:07:54.360Z",
    "deleted": false,
    "data": {
     "title": "Return library books",
@@ -430,14 +430,14 @@
   },
   {
    "kind": "task",
-   "uid": "a4b516314627a730e4f55227bcc1c286",
-   "modified": "2026-11-14T17:09:32.398Z",
+   "uid": "cd9c58ffd54911c6f1f8d07bddf763ec",
+   "modified": "2026-11-16T02:07:54.376Z",
    "deleted": false,
    "data": {
     "title": "Vocabulary list 4",
     "kind": "homework",
-    "course": "28c0b9b58b0b75a39e29682672750cb0",
-    "due": "2026-11-12",
+    "course": "01503ca8de7f881cc4def315b001c26b",
+    "due": "2026-11-14",
     "done": true,
     "details": "",
     "external_id": null
@@ -446,7 +446,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:agenda:a1",
-   "modified": "2026-11-14T17:09:34.161Z",
+   "modified": "2026-11-16T02:07:54.744Z",
    "deleted": false,
    "data": {
     "title": "Pag. 112 es. 4-9",
@@ -461,7 +461,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:agenda:a2",
-   "modified": "2026-11-14T17:09:34.241Z",
+   "modified": "2026-11-16T02:07:54.760Z",
    "deleted": false,
    "data": {
     "title": "Verifica: Rivoluzione francese",
@@ -476,7 +476,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:homework:h1",
-   "modified": "2026-11-14T17:09:34.324Z",
+   "modified": "2026-11-16T02:07:54.778Z",
    "deleted": false,
    "data": {
     "title": "Workbook p. 18, exercises 1-4",
@@ -491,7 +491,7 @@
   {
    "kind": "task",
    "uid": "ext:classeviva:homework:h2",
-   "modified": "2026-11-14T17:09:34.409Z",
+   "modified": "2026-11-16T02:07:54.793Z",
    "deleted": false,
    "data": {
     "title": "Riassunto del capitolo 2",
@@ -505,8 +505,8 @@
   },
   {
    "kind": "notebook",
-   "uid": "7852b4064c5aaa98e99fb53c40835680",
-   "modified": "2026-11-14T17:09:32.903Z",
+   "uid": "990430cb07b45904d33bf4283129d6d8",
+   "modified": "2026-11-16T02:07:54.485Z",
    "deleted": false,
    "data": {
     "name": "Trips",
@@ -515,125 +515,111 @@
   },
   {
    "kind": "note",
-   "uid": "a10a0349b5448d380cd2213468ef70aa",
-   "modified": "2026-11-14T17:09:32.470Z",
+   "uid": "f8f6fd35943635606353d9f87bf59fd5",
+   "modified": "2026-11-16T02:07:54.394Z",
    "deleted": false,
    "data": {
     "title": "Biology: cellular respiration",
     "body": "# Biology: cellular respiration\n\n**Equation:** C6H12O6 + 6 O2 → 6 CO2 + 6 H2O + energy (ATP)\n\n## Stages\n1. Glycolysis: cytoplasm, 2 ATP\n2. Krebs cycle: mitochondrial matrix\n3. Electron transport chain: inner membrane, ~34 ATP\n\n- [x] Review diagram on p. 112\n- [ ] Ask about anaerobic pathways\n",
-    "course": "6aa83b4c1576aa043ca9d418d25c57de",
+    "course": "fd99074b819b5ed1b2cf629dd4d1cc66",
     "pinned": false,
-    "updated": "2026-11-14T18:09:32",
+    "updated": "2026-11-16T03:07:54",
     "topic": "Cell biology",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "0c3d0cb6c9e20dcd782e611d6d50a120",
-   "modified": "2026-11-14T17:09:32.543Z",
+   "uid": "2ddc148cf2b12773790c33d66b17a0d2",
+   "modified": "2026-11-16T02:07:54.409Z",
    "deleted": false,
    "data": {
     "title": "Mitochondria",
     "body": "# Mitochondria\n\nThe powerhouse of the cell: inner membrane folds (cristae) increase surface area for the electron transport chain.\n",
-    "course": "6aa83b4c1576aa043ca9d418d25c57de",
+    "course": "fd99074b819b5ed1b2cf629dd4d1cc66",
     "pinned": false,
-    "updated": "2026-11-14T18:09:32",
+    "updated": "2026-11-16T03:07:54",
     "topic": "Cell biology",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "f44330018af9174e289dc2f13872e841",
-   "modified": "2026-11-14T17:09:32.615Z",
+   "uid": "7b092d1447f58ea04d64029202582f60",
+   "modified": "2026-11-16T02:07:54.424Z",
    "deleted": false,
    "data": {
     "title": "Mendel's laws",
     "body": "# Mendel's laws\n\n1. Segregation\n2. Independent assortment\n",
-    "course": "6aa83b4c1576aa043ca9d418d25c57de",
+    "course": "fd99074b819b5ed1b2cf629dd4d1cc66",
     "pinned": false,
-    "updated": "2026-11-14T18:09:32",
+    "updated": "2026-11-16T03:07:54",
     "topic": "Genetics",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "85bfbae46715e7f0433d1989075e4c32",
-   "modified": "2026-11-14T17:09:32.687Z",
+   "uid": "d57ac65f442c35ba94f0508c03da687e",
+   "modified": "2026-11-16T02:07:54.439Z",
    "deleted": false,
    "data": {
     "title": "Frankenstein: themes",
     "body": "# Frankenstein: themes\n\n- Ambition and its costs\n- Isolation\n- *Nature vs. nurture*\n\n> \"Beware; for I am fearless, and therefore powerful.\"\n",
-    "course": "28c0b9b58b0b75a39e29682672750cb0",
+    "course": "01503ca8de7f881cc4def315b001c26b",
     "pinned": false,
-    "updated": "2026-11-14T18:09:32",
+    "updated": "2026-11-16T03:07:54",
     "topic": "Frankenstein",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "f5f4f7dfe7ee31744f87a34204071d11",
-   "modified": "2026-11-14T17:09:32.831Z",
+   "uid": "c290dcfa29139ef815b994aa3875a43d",
+   "modified": "2026-11-16T02:07:54.469Z",
    "deleted": false,
    "data": {
     "title": "Ideas",
     "body": "# Ideas\n\nThings I want to try this term:\n\n- Pomodoro for maths homework\n- Join the robotics club\n",
     "course": null,
     "pinned": true,
-    "updated": "2026-11-14T18:09:32",
+    "updated": "2026-11-16T03:07:54",
     "topic": "",
     "notebook": null
    }
   },
   {
    "kind": "note",
-   "uid": "55ddd0489ade295284175edf54be0e70",
-   "modified": "2026-11-14T17:09:32.976Z",
+   "uid": "3853f5b8c03c03549adb5c372908fa33",
+   "modified": "2026-11-16T02:07:54.502Z",
    "deleted": false,
    "data": {
     "title": "Museum trip",
     "body": "# Museum trip\n\n- Bring the permission slip\n- Meet at 8:15 at the gate\n",
     "course": null,
     "pinned": false,
-    "updated": "2026-11-14T18:09:32",
+    "updated": "2026-11-16T03:07:54",
     "topic": "School",
-    "notebook": "7852b4064c5aaa98e99fb53c40835680"
+    "notebook": "990430cb07b45904d33bf4283129d6d8"
    }
   },
   {
    "kind": "journal",
-   "uid": "day:2026-11-14",
-   "modified": "2026-11-14T17:09:33.052Z",
+   "uid": "day:2026-11-16",
+   "modified": "2026-11-16T02:07:54.518Z",
    "deleted": false,
    "data": {
-    "day": "2026-11-14",
+    "day": "2026-11-16",
     "body": "Remember to bring the permission slip for the museum trip."
    }
   },
   {
    "kind": "shift",
-   "uid": "0cdea0f7f0bd9483515dff140e676e5c",
-   "modified": "2026-11-14T17:09:33.281Z",
+   "uid": "4db8146490aac3aa6f2d715d503219e5",
+   "modified": "2026-11-16T02:07:54.570Z",
    "deleted": false,
    "data": {
-    "job": "9922fcc4e8302cf5aecadc7ff41d36d0",
-    "day": "2026-11-12",
-    "start": 960,
-    "duration": 90,
-    "break": 0,
-    "notes": ""
-   }
-  },
-  {
-   "kind": "shift",
-   "uid": "ddf03812634fe977a34321d99c280dd5",
-   "modified": "2026-11-14T17:09:33.361Z",
-   "deleted": false,
-   "data": {
-    "job": "9922fcc4e8302cf5aecadc7ff41d36d0",
+    "job": "44ff8f5252f26a8d2d9be7f458c5c70d",
     "day": "2026-11-19",
     "start": 960,
     "duration": 90,
@@ -643,11 +629,11 @@
   },
   {
    "kind": "shift",
-   "uid": "6f29d78df4a6a61eaa4fa4f060c2a5ac",
-   "modified": "2026-11-14T17:09:33.441Z",
+   "uid": "a2988e30ea7138b329973f868eed6f90",
+   "modified": "2026-11-16T02:07:54.585Z",
    "deleted": false,
    "data": {
-    "job": "9922fcc4e8302cf5aecadc7ff41d36d0",
+    "job": "44ff8f5252f26a8d2d9be7f458c5c70d",
     "day": "2026-11-26",
     "start": 960,
     "duration": 90,
@@ -657,12 +643,26 @@
   },
   {
    "kind": "shift",
-   "uid": "9b00ec7adaf78cc050ecb0d5b1d5c90e",
-   "modified": "2026-11-14T17:09:33.521Z",
+   "uid": "4abd749ee9b1ee8f6c424a0791c5b373",
+   "modified": "2026-11-16T02:07:54.601Z",
    "deleted": false,
    "data": {
-    "job": "9922fcc4e8302cf5aecadc7ff41d36d0",
+    "job": "44ff8f5252f26a8d2d9be7f458c5c70d",
     "day": "2026-12-03",
+    "start": 960,
+    "duration": 90,
+    "break": 0,
+    "notes": ""
+   }
+  },
+  {
+   "kind": "shift",
+   "uid": "8a90905c601a607c7dd92a9cce99aa57",
+   "modified": "2026-11-16T02:07:54.617Z",
+   "deleted": false,
+   "data": {
+    "job": "44ff8f5252f26a8d2d9be7f458c5c70d",
+    "day": "2026-12-10",
     "start": 960,
     "duration": 90,
     "break": 0,

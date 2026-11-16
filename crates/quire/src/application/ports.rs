@@ -58,3 +58,30 @@ pub trait IdeaRepository {
     fn update(&self, idea: &Idea) -> AppResult;
     fn delete(&self, id: i64) -> AppResult;
 }
+
+use std::collections::HashSet;
+
+use crate::domain::model::{Event, Job, Routine, Shift};
+
+pub trait EventRepository {
+    fn between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<Event>>;
+}
+
+pub trait RoutineRepository {
+    fn list(&self) -> AppResult<Vec<Routine>>;
+}
+
+pub trait JournalRepository {
+    fn get(&self, day: NaiveDate) -> AppResult<String>;
+    fn put(&self, day: NaiveDate, body: &str) -> AppResult;
+}
+
+pub trait JobRepository {
+    fn list(&self) -> AppResult<Vec<Job>>;
+}
+
+pub trait ShiftRepository {
+    fn starting_between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<Shift>>;
+    /// Weekly-schedule occurrences the user skipped: (job id, day, start minute).
+    fn skipped(&self, first: NaiveDate, last: NaiveDate) -> AppResult<HashSet<(i64, NaiveDate, i32)>>;
+}

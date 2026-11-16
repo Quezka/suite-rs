@@ -1,0 +1,369 @@
+{
+ "today": "2026-11-16",
+ "days": [
+  {
+   "day": "2026-11-14",
+   "is_today": false,
+   "items": [],
+   "tasks": [
+    [
+     "Verifica: Rivoluzione francese",
+     false
+    ],
+    [
+     "Vocabulary list 4",
+     false
+    ]
+   ],
+   "journal": ""
+  },
+  {
+   "day": "2026-11-15",
+   "is_today": false,
+   "items": [],
+   "tasks": [
+    [
+     "Titration pre-lab questions",
+     false
+    ]
+   ],
+   "journal": ""
+  },
+  {
+   "day": "2026-11-16",
+   "is_today": true,
+   "items": [
+    [
+     "class",
+     "Mathematics",
+     510,
+     560,
+     "B12",
+     ""
+    ],
+    [
+     "class",
+     "Biology",
+     570,
+     620,
+     "Lab 2",
+     ""
+    ],
+    [
+     "event",
+     "Lunch with Sam",
+     720,
+     765,
+     "",
+     ""
+    ],
+    [
+     "class",
+     "Chemistry",
+     780,
+     870,
+     "Lab 1",
+     ""
+    ],
+    [
+     "event",
+     "Study group",
+     960,
+     1050,
+     "",
+     "Library, 2nd floor"
+    ]
+   ],
+   "tasks": [
+    [
+     "Riassunto del capitolo 2",
+     true
+    ],
+    [
+     "Workbook p. 18, exercises 1-4",
+     true
+    ],
+    [
+     "Pag. 112 es. 4-9",
+     true
+    ],
+    [
+     "Verifica: Rivoluzione francese",
+     true
+    ],
+    [
+     "Titration pre-lab questions",
+     true
+    ],
+    [
+     "Buy a new graphing calculator",
+     false
+    ],
+    [
+     "Problem set 3 (q1–12)",
+     false
+    ],
+    [
+     "Read chapters 5–6 of Frankenstein",
+     false
+    ],
+    [
+     "Cell respiration lab report",
+     false
+    ],
+    [
+     "Unit test: Industrial Revolution",
+     false
+    ]
+   ],
+   "journal": "Remember to bring the permission slip for the museum trip."
+  },
+  {
+   "day": "2026-11-17",
+   "is_today": false,
+   "items": [
+    [
+     "class",
+     "English Literature",
+     510,
+     560,
+     "A04",
+     ""
+    ],
+    [
+     "class",
+     "History",
+     630,
+     680,
+     "C07",
+     ""
+    ],
+    [
+     "weekly_shift",
+     "Pizzeria Da Mario",
+     1080,
+     1350,
+     "",
+     ""
+    ]
+   ],
+   "tasks": [
+    [
+     "Problem set 3 (q1–12)",
+     false
+    ]
+   ],
+   "journal": ""
+  },
+  {
+   "day": "2026-11-18",
+   "is_today": false,
+   "items": [
+    [
+     "class",
+     "Mathematics",
+     510,
+     560,
+     "B12",
+     ""
+    ],
+    [
+     "class",
+     "Chemistry",
+     630,
+     680,
+     "Lab 1",
+     ""
+    ],
+    [
+     "class",
+     "PE",
+     840,
+     930,
+     "Gym",
+     ""
+    ]
+   ],
+   "tasks": [],
+   "journal": ""
+  },
+  {
+   "day": "2026-11-19",
+   "is_today": false,
+   "items": [
+    [
+     "class",
+     "English Literature",
+     510,
+     560,
+     "A04",
+     ""
+    ],
+    [
+     "class",
+     "Biology",
+     780,
+     870,
+     "Lab 2",
+     ""
+    ],
+    [
+     "shift",
+     "Maths tutoring",
+     960,
+     1050,
+     "",
+     ""
+    ]
+   ],
+   "tasks": [
+    [
+     "Read chapters 5–6 of Frankenstein",
+     false
+    ]
+   ],
+   "journal": ""
+  },
+  {
+   "day": "2026-11-20",
+   "is_today": false,
+   "items": [
+    [
+     "class",
+     "English Literature",
+     510,
+     560,
+     "A04",
+     ""
+    ],
+    [
+     "class",
+     "Mathematics",
+     630,
+     680,
+     "B12",
+     ""
+    ],
+    [
+     "class",
+     "History",
+     780,
+     830,
+     "C07",
+     ""
+    ],
+    [
+     "event",
+     "Football practice",
+     1020,
+     1140,
+     "",
+     ""
+    ]
+   ],
+   "tasks": [],
+   "journal": ""
+  },
+  {
+   "day": "2026-11-21",
+   "is_today": false,
+   "items": [
+    [
+     "weekly_shift",
+     "Pizzeria Da Mario",
+     1140,
+     1440,
+     "",
+     ""
+    ]
+   ],
+   "tasks": [],
+   "journal": ""
+  },
+  {
+   "day": "2026-11-22",
+   "is_today": false,
+   "items": [
+    [
+     "weekly_shift",
+     "Pizzeria Da Mario",
+     0,
+     60,
+     "",
+     ""
+    ]
+   ],
+   "tasks": [
+    [
+     "Cell respiration lab report",
+     false
+    ]
+   ],
+   "journal": ""
+  },
+  {
+   "day": "2026-11-23",
+   "is_today": false,
+   "items": [
+    [
+     "class",
+     "Mathematics",
+     510,
+     560,
+     "B12",
+     ""
+    ],
+    [
+     "class",
+     "Biology",
+     570,
+     620,
+     "Lab 2",
+     ""
+    ],
+    [
+     "class",
+     "Chemistry",
+     780,
+     870,
+     "Lab 1",
+     ""
+    ]
+   ],
+   "tasks": [],
+   "journal": ""
+  },
+  {
+   "day": "2026-11-24",
+   "is_today": false,
+   "items": [
+    [
+     "class",
+     "English Literature",
+     510,
+     560,
+     "A04",
+     ""
+    ],
+    [
+     "class",
+     "History",
+     630,
+     680,
+     "C07",
+     ""
+    ],
+    [
+     "weekly_shift",
+     "Pizzeria Da Mario",
+     1080,
+     1350,
+     "",
+     ""
+    ]
+   ],
+   "tasks": [],
+   "journal": ""
+  }
+ ]
+}
