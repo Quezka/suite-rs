@@ -5,6 +5,10 @@ use std::time::Duration;
 /// One request: (status, body). Err only when the server couldn't be reached.
 pub trait Http: Send + Sync {
     fn send(&self, method: &str, url: &str, headers: &[(&str, String)], body: Option<String>) -> Result<(u16, String), String>;
+    /// The same, for a file (attachments, documents): the body as bytes.
+    fn send_bytes(&self, method: &str, url: &str, headers: &[(&str, String)], body: Option<String>) -> Result<(u16, Vec<u8>), String> {
+        self.send(method, url, headers, body).map(|(s, t)| (s, t.into_bytes()))
+    }
 }
 
 pub struct UreqHttp {
@@ -32,6 +36,27 @@ impl Http for UreqHttp {
             Err(ureq::Error::Status(code, r)) => Ok((code, r.into_string().unwrap_or_default())),
             Err(e) => Err(e.to_string()),
         }
+    }
+
+    fn send_bytes(&self, method: &str, url: &str, headers: &[(&str, String)], body: Option<String>) -> Result<(u16, Vec<u8>), String> {
+        let mut req = self.agent.request(method, url);
+        for (k, v) in headers {
+            req = req.set(k, v);
+        }
+        let result = match body { Some(b) => req.send_string(&b), None => req.call() };
+        match result {
+            Ok(r) => Ok((r.status(), Self::bytes(r))),
+            Err(ureq::Error::Status(code, r)) => Ok((code, Self::bytes(r))),
+            Err(e) => Err(e.to_string()),
+        }
+    }
+}
+
+impl UreqHttp {
+    fn bytes(r: ureq::Response) -> Vec<u8> {
+        let mut out = Vec::new();
+        let _ = std::io::Read::read_to_end(&mut r.into_reader(), &mut out);
+        out
     }
 }
 
