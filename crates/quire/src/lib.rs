@@ -2,5 +2,6 @@
 //! and ports) ← `infrastructure` and `presentation`. `tests/architecture.rs` keeps the arrows pointing inwards.
 
 pub mod application;
+pub mod bootstrap;
 pub mod domain;
 pub mod infrastructure;
