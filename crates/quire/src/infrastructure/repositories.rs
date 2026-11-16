@@ -573,3 +573,62 @@ impl MedicineRepository for SqliteMedicines {
         self.0.conn.execute("DELETE FROM medicine_doses WHERE id = ?", [id]).map(|_| ()).map_err(store)
     }
 }
+
+// ---- sleep and focus log -------------------------------------------------------------------------------------------
+
+use crate::application::ports::{FocusLogRepository, SleepRepository};
+use crate::domain::focus::FocusSession;
+use crate::domain::sleep::SleepLog;
+
+fn sleep_log(r: &Row) -> rusqlite::Result<SleepLog> {
+    Ok(SleepLog { day: day(r.get("day")?).unwrap_or_default(), asleep: r.get("asleep")?, woke: r.get("woke")?,
+                  quality: r.get("quality")?, note: r.get("note")? })
+}
+
+pub struct SqliteSleep(pub Rc<Database>);
+
+impl SleepRepository for SqliteSleep {
+    fn get(&self, d: NaiveDate) -> AppResult<Option<SleepLog>> {
+        self.0.conn.query_row("SELECT * FROM sleep_logs WHERE day = ?", [d.to_string()], sleep_log).optional().map_err(store)
+    }
+    fn between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<SleepLog>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM sleep_logs WHERE day BETWEEN ? AND ? ORDER BY day").map_err(store)?;
+        let rows = stmt.query_map(params![first.to_string(), last.to_string()], sleep_log).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+    fn put(&self, l: &SleepLog) -> AppResult {
+        self.0.conn.execute("INSERT INTO sleep_logs (day, asleep, woke, quality, note) VALUES (?, ?, ?, ?, ?) ON CONFLICT(day) DO UPDATE SET \
+                             asleep = excluded.asleep, woke = excluded.woke, quality = excluded.quality, note = excluded.note",
+            params![l.day.to_string(), l.asleep, l.woke, l.quality, l.note]).map(|_| ()).map_err(store)
+    }
+    fn delete(&self, d: NaiveDate) -> AppResult {
+        self.0.conn.execute("DELETE FROM sleep_logs WHERE day = ?", [d.to_string()]).map(|_| ()).map_err(store)
+    }
+}
+
+pub struct SqliteFocusLog(pub Rc<Database>);
+
+impl FocusLogRepository for SqliteFocusLog {
+    fn add(&self, s: &FocusSession) -> AppResult {
+        self.0.conn.execute("INSERT INTO focus_sessions (started, minutes, task_id, label, complete) VALUES (?, ?, ?, ?, ?)",
+            params![stamp(&s.started), s.minutes, s.task_id, s.label, s.complete as i64]).map(|_| ()).map_err(store)
+    }
+    fn between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<FocusSession>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM focus_sessions WHERE started >= ? AND started < ? ORDER BY started").map_err(store)?;
+        let rows = stmt.query_map(params![first.to_string(), (last + chrono::Duration::days(1)).to_string()], |r| {
+            let started: String = r.get("started")?;
+            Ok(FocusSession {
+                started: NaiveDateTime::parse_from_str(&started, "%Y-%m-%dT%H:%M:%S").unwrap_or_default(),
+                minutes: r.get("minutes")?, task_id: r.get("task_id")?, label: r.get("label")?,
+                complete: r.get::<_, i64>("complete")? != 0,
+            })
+        }).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+    fn recent_labels(&self, limit: usize) -> AppResult<Vec<String>> {
+        let mut stmt = self.0.conn.prepare("SELECT label FROM focus_sessions WHERE task_id IS NULL AND label != '' \
+                                            GROUP BY label ORDER BY MAX(started) DESC LIMIT ?").map_err(store)?;
+        let rows = stmt.query_map([limit as i64], |r| r.get(0)).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+}

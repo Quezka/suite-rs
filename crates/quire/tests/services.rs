@@ -178,3 +178,29 @@ fn medicines_plan_mark_and_nudge_once() {
     let (planned, taken) = meds.week().unwrap();
     assert!(taken == 1 && planned >= 1);
 }
+
+#[test]
+fn sleep_one_tap_night_goal_and_overview() {
+    use quire::application::sleep::SleepService;
+    use quire::infrastructure::repositories::{SqliteFocusLog, SqliteSleep};
+    let db = Rc::new(Database::in_memory().unwrap());
+    let clock = Rc::new(Fixed(Cell::new(day("2026-09-22").and_hms_opt(23, 10, 0).unwrap())));
+    let sleep = SleepService { logs: Rc::new(SqliteSleep(db.clone())), settings: Rc::new(SqliteSettings(db.clone())), clock: clock.clone(),
+                               bus: Rc::new(ChangeBus::default()), focus: Some(Rc::new(SqliteFocusLog(db))), reminded_on: Cell::new(None) };
+    assert_eq!(sleep.goal(), (8.0, 360));
+    assert!(sleep.wake_up().is_err());
+    sleep.go_to_sleep().unwrap();
+    clock.0.set(day("2026-09-23").and_hms_opt(6, 40, 0).unwrap());
+    let night = sleep.wake_up().unwrap();
+    assert_eq!((night.asleep, night.woke, night.day), (23 * 60 + 10, 6 * 60 + 40, day("2026-09-23")));
+    sleep.rate(day("2026-09-23"), 4).unwrap();
+    let o = sleep.overview(14).unwrap();
+    assert_eq!(o.last_night.unwrap().quality, Some(4));
+    assert_eq!(o.days.len(), 14);
+    assert!(o.asleep_since.is_none());
+    sleep.save_goal(7.5, 7 * 60).unwrap();
+    assert_eq!(sleep.goal(), (7.5, 420));
+    clock.0.set(day("2026-09-23").and_hms_opt(23, 10, 0).unwrap()); // bedtime 23:30: wind down
+    assert_eq!(sleep.reminder(), Some(23 * 60 + 30));
+    assert_eq!(sleep.reminder(), None); // once a day
+}

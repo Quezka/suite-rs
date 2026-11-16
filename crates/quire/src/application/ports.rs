@@ -152,3 +152,23 @@ pub trait MedicineRepository {
     fn add_log(&self, log: &DoseLog) -> AppResult<i64>;
     fn delete_log(&self, id: i64) -> AppResult;
 }
+
+use crate::domain::focus::FocusSession;
+use crate::domain::sleep::SleepLog;
+
+pub trait SleepRepository {
+    fn get(&self, day: NaiveDate) -> AppResult<Option<SleepLog>>;
+    /// Oldest first.
+    fn between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<SleepLog>>;
+    /// One night per day: replaces that day's.
+    fn put(&self, log: &SleepLog) -> AppResult;
+    fn delete(&self, day: NaiveDate) -> AppResult;
+}
+
+pub trait FocusLogRepository {
+    fn add(&self, session: &FocusSession) -> AppResult;
+    /// Sessions started on days first..=last, oldest first.
+    fn between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<FocusSession>>;
+    /// Labels of sessions without a task, newest first, distinct.
+    fn recent_labels(&self, limit: usize) -> AppResult<Vec<String>>;
+}
