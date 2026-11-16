@@ -5,7 +5,9 @@
 //! - `fonts`, `style`: Manrope, and egui's own widgets in the suite's colours and sizes.
 //! - `widgets`: the suite's controls (buttons, switch, segmented, cards, sidebar, settings rows).
 //! - `runner`: the window loop, and offscreen screenshots for checks.
+//! - `autostart`: starting an app at login (desktop entry, Run key).
 
+pub mod autostart;
 pub mod fonts;
 pub mod glass;
 pub mod icons;

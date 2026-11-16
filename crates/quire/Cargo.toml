@@ -7,6 +7,7 @@ license.workspace = true
 authors.workspace = true
 
 [dependencies]
+quezka-kit = { path = "../kit" }
 chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
 fancy-regex = "0.14"
 rusqlite = { version = "0.32", features = ["bundled", "backup"] }

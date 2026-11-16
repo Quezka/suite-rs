@@ -6,6 +6,7 @@ pub mod cloud;
 pub mod credentials;
 pub mod firebase;
 pub mod http;
+pub mod login_item;
 pub mod quire_server;
 pub mod repositories;
 pub mod sqlite;

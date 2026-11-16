@@ -16,6 +16,7 @@ pub mod reminders;
 pub mod school;
 pub mod school_records;
 pub mod sleep;
+pub mod startup;
 pub mod sync;
 pub mod tasks;
 pub mod timetable;

@@ -422,3 +422,11 @@ pub trait UpdateInstaller: Send + Sync {
     /// true: installer took over -> app must quit now; false: installed -> restart to use
     fn install(&self, path: &std::path::Path) -> AppResult<bool>;
 }
+
+/// start app at login (autostart entry, Run key)
+pub trait LoginItem {
+    fn supported(&self) -> bool;
+    fn enabled(&self) -> bool;
+    /// err = system refused
+    fn set_enabled(&self, on: bool) -> Result<(), String>;
+}

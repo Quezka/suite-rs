@@ -22,12 +22,14 @@ pub enum AppError {
     Register(String),
     /// Checking, downloading or installing an update failed.
     Update(String),
+    /// The system refused to change starting at login.
+    Startup(String),
 }
 
 impl fmt::Display for AppError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::NotFound(m) | Self::Storage(m) | Self::SyncNotSetUp(m) | Self::CloudAuth(m) | Self::Sync(m) | Self::Register(m) | Self::Update(m) => f.write_str(m),
+            Self::NotFound(m) | Self::Storage(m) | Self::SyncNotSetUp(m) | Self::CloudAuth(m) | Self::Sync(m) | Self::Register(m) | Self::Update(m) | Self::Startup(m) => f.write_str(m),
             Self::Invalid(m) => f.write_str(m),
         }
     }

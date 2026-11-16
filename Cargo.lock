@@ -2780,6 +2780,7 @@ dependencies = [
  "chrono",
  "fancy-regex",
  "keyring",
+ "quezka-kit",
  "rusqlite",
  "serde_json",
  "sha2",
