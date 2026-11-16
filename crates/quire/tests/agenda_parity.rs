@@ -5,6 +5,9 @@ use std::rc::Rc;
 
 use chrono::{NaiveDate, NaiveDateTime};
 use quire::application::bus::ChangeBus;
+use quire::application::digest::DigestService;
+use quire::application::ideas::IdeaService;
+use quire::application::tasks::TaskService;
 use quire::application::planner::{ItemKind, PlannerService};
 use quire::application::ports::Clock;
 use quire::infrastructure::repositories::*;
@@ -37,11 +40,13 @@ fn day_agendas_match_python() {
     std::fs::copy(concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/python.db"), &path).unwrap();
     let db = Rc::new(Database::open(&path).unwrap());
     let today: NaiveDate = fixture["today"].as_str().unwrap().parse().unwrap();
+    let clock: Rc<dyn Clock> = Rc::new(Fixed(Cell::new(today.and_hms_opt(12, 0, 0).unwrap())));
+    let bus = Rc::new(ChangeBus::default());
     let planner = PlannerService {
         courses: Rc::new(SqliteCourses(db.clone())), events: Rc::new(SqliteEvents(db.clone())),
         tasks: Rc::new(SqliteTasks(db.clone())), journal: Rc::new(SqliteJournal(db.clone())),
-        clock: Rc::new(Fixed(Cell::new(today.and_hms_opt(12, 0, 0).unwrap()))), bus: Rc::new(ChangeBus::default()),
-        jobs: Rc::new(SqliteJobs(db.clone())), shifts: Rc::new(SqliteShifts(db.clone())), routines: Rc::new(SqliteRoutines(db)),
+        clock: clock.clone(), bus: bus.clone(),
+        jobs: Rc::new(SqliteJobs(db.clone())), shifts: Rc::new(SqliteShifts(db.clone())), routines: Rc::new(SqliteRoutines(db.clone())),
     };
     for expected in fixture["days"].as_array().unwrap() {
         let day: NaiveDate = expected["day"].as_str().unwrap().parse().unwrap();
@@ -52,5 +57,19 @@ fn day_agendas_match_python() {
         assert_eq!(Value::from(tasks), expected["tasks"], "tasks on {day}");
         assert_eq!(a.journal, expected["journal"].as_str().unwrap(), "journal on {day}");
         assert_eq!(a.is_today, expected["is_today"].as_bool().unwrap());
+    }
+    let tasks = Rc::new(TaskService::new(Rc::new(SqliteTasks(db.clone())), Rc::new(SqliteCourses(db.clone())), clock.clone(), bus.clone()));
+    let settings = Rc::new(SqliteSettings(db.clone()));
+    let ideas = Rc::new(IdeaService::new(Rc::new(SqliteIdeas(db.clone())), clock.clone(), bus, tasks.clone(), settings.clone()));
+    let digest = DigestService { planner: Rc::new(planner), tasks, ideas, settings, clock };
+    for expected in fixture["digests"].as_array().unwrap() {
+        let morning = expected["morning"].as_bool().unwrap();
+        let g = digest.build(morning, today, false).unwrap();
+        let items: Vec<Value> = g.items.iter().map(|(m, t)| serde_json::json!([m, t])).collect();
+        assert_eq!(Value::from(items), expected["items"], "digest items morning={morning}");
+        assert_eq!(serde_json::json!(g.due), expected["due"]);
+        assert_eq!(g.overdue as u64, expected["overdue"].as_u64().unwrap());
+        assert_eq!(serde_json::json!(g.ideas), expected["ideas"]);
+        assert_eq!(g.idea_back, expected["idea_back"].as_str().unwrap());
     }
 }

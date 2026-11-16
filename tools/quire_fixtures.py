@@ -144,8 +144,13 @@ def agenda_fixtures():
         days.append({"day": day.isoformat(), "is_today": a.is_today,
                      "items": [[i.kind.value, i.title, i.time.start, i.time.end, i.room, i.details] for i in a.items],
                      "tasks": [[t.task.title, t.overdue] for t in a.tasks], "journal": a.journal})
+    digests = []
+    for morning in (True, False):
+        g = services.digest.build(morning, today, mark=False)
+        digests.append({"morning": morning, "items": [list(i) for i in g.items], "due": list(g.due),
+                        "overdue": g.overdue, "ideas": list(g.ideas), "idea_back": g.idea_back})
     db.close()
-    return {"today": today.isoformat(), "days": days}
+    return {"today": today.isoformat(), "days": days, "digests": digests}
 
 
 OUT.mkdir(parents=True, exist_ok=True)

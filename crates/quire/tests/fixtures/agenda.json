@@ -365,5 +365,65 @@
    "tasks": [],
    "journal": ""
   }
+ ],
+ "digests": [
+  {
+   "morning": true,
+   "items": [
+    [
+     510,
+     "Mathematics"
+    ],
+    [
+     570,
+     "Biology"
+    ],
+    [
+     720,
+     "Lunch with Sam"
+    ],
+    [
+     780,
+     "Chemistry"
+    ],
+    [
+     960,
+     "Study group"
+    ]
+   ],
+   "due": [
+    "Riassunto del capitolo 2",
+    "Workbook p. 18, exercises 1-4",
+    "Pag. 112 es. 4-9",
+    "Verifica: Rivoluzione francese",
+    "Titration pre-lab questions"
+   ],
+   "overdue": 5,
+   "ideas": [],
+   "idea_back": ""
+  },
+  {
+   "morning": false,
+   "items": [
+    [
+     510,
+     "English Literature"
+    ],
+    [
+     630,
+     "History"
+    ],
+    [
+     1080,
+     "Pizzeria Da Mario"
+    ]
+   ],
+   "due": [
+    "Problem set 3 (q1–12)"
+   ],
+   "overdue": 5,
+   "ideas": [],
+   "idea_back": ""
+  }
  ]
 }
