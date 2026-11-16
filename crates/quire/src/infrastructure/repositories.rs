@@ -730,3 +730,210 @@ impl SyncStorePort for SqliteSync {
         SyncStore::new(&self.0.conn).mark_all_dirty().map_err(store)
     }
 }
+
+// ---- the school register's local mirror ----------------------------------------------------------------------------
+
+use crate::application::ports::{SchoolLinks, SchoolRecordRepository};
+use crate::domain::model::{Grade, Lesson, Subject};
+use crate::domain::register::{Absence, AbsenceKind, Book, DocumentKind, Notice, NoticeAttachment, SchoolDocument};
+use serde_json::{json, Value};
+
+pub struct SqliteSchool(pub Rc<Database>);
+
+impl SqliteSchool {
+    fn items(&self, kind: &str, order: &str) -> AppResult<Vec<Value>> {
+        let mut stmt = self.0.conn.prepare(&format!("SELECT data FROM register_items WHERE kind = ? ORDER BY {order}")).map_err(store)?;
+        let rows = stmt.query_map([kind], |r| r.get::<_, String>(0)).map_err(store)?;
+        Ok(rows.filter_map(|r| r.ok()).filter_map(|t| serde_json::from_str(&t).ok()).collect())
+    }
+
+    fn replace(&self, kind: &str, rows: Vec<(String, Option<String>, Value)>) -> AppResult {
+        let tx = self.0.conn.unchecked_transaction().map_err(store)?;
+        tx.execute("DELETE FROM register_items WHERE kind = ?", [kind]).map_err(store)?;
+        for (key, d, data) in rows {
+            tx.execute("INSERT OR REPLACE INTO register_items (kind, external_id, day, data) VALUES (?, ?, ?, ?)",
+                params![kind, key, d, data.to_string()]).map_err(store)?;
+        }
+        tx.commit().map_err(store)
+    }
+
+    fn notice_row(n: &Notice) -> (String, Option<String>, Value) {
+        (n.external_id.clone(), Some(n.published.to_string()), json!({
+            "id": n.external_id, "code": n.code, "pub_id": n.pub_id, "title": n.title, "category": n.category,
+            "published": n.published.to_string(), "valid_until": n.valid_until.map(|d| d.to_string()), "read": n.read,
+            "attachments": n.attachments.iter().map(|a| json!([a.number, a.file_name])).collect::<Vec<_>>(),
+        }))
+    }
+}
+
+fn s(v: &Value, k: &str) -> String {
+    v.get(k).and_then(Value::as_str).unwrap_or("").to_string()
+}
+
+fn d(v: &Value, k: &str) -> Option<NaiveDate> {
+    v.get(k).and_then(Value::as_str).and_then(|t| t.parse().ok())
+}
+
+impl SchoolRecordRepository for SqliteSchool {
+    fn grades(&self) -> AppResult<Vec<Grade>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM grades ORDER BY day DESC").map_err(store)?;
+        let rows = stmt.query_map([], |r| Ok(Grade {
+            external_id: r.get("external_id")?, subject: r.get("subject")?, day: day(r.get("day")?).unwrap_or_default(),
+            display: r.get("display")?, value: r.get("value")?, component: r.get("component")?, period: r.get("period")?,
+            notes: r.get("notes")?, cancelled: r.get::<_, i64>("cancelled")? != 0, course_id: r.get("course_id")?,
+        })).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+
+    fn replace_grades(&self, grades: &[Grade]) -> AppResult {
+        let tx = self.0.conn.unchecked_transaction().map_err(store)?;
+        tx.execute("DELETE FROM grades", []).map_err(store)?;
+        for g in grades {
+            tx.execute("INSERT OR REPLACE INTO grades (external_id, subject, day, display, value, component, period, notes, cancelled, course_id) \
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                params![g.external_id, g.subject, g.day.to_string(), g.display, g.value, g.component, g.period, g.notes,
+                        g.cancelled as i64, g.course_id]).map_err(store)?;
+        }
+        tx.commit().map_err(store)
+    }
+
+    fn lessons_between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<Lesson>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM lessons WHERE day BETWEEN ? AND ? ORDER BY day, hour").map_err(store)?;
+        let rows = stmt.query_map(params![first.to_string(), last.to_string()], |r| Ok(Lesson {
+            external_id: r.get("external_id")?, day: day(r.get("day")?).unwrap_or(first), subject: r.get("subject")?,
+            topic: r.get("topic")?, teacher: r.get("teacher")?, hour: r.get("hour")?, course_id: r.get("course_id")?,
+        })).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+
+    fn replace_lessons(&self, first: NaiveDate, last: NaiveDate, lessons: &[Lesson]) -> AppResult {
+        let tx = self.0.conn.unchecked_transaction().map_err(store)?;
+        tx.execute("DELETE FROM lessons WHERE day BETWEEN ? AND ?", params![first.to_string(), last.to_string()]).map_err(store)?;
+        for l in lessons {
+            tx.execute("INSERT OR REPLACE INTO lessons (external_id, day, subject, topic, teacher, hour, course_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                params![l.external_id, l.day.to_string(), l.subject, l.topic, l.teacher, l.hour, l.course_id]).map_err(store)?;
+        }
+        tx.commit().map_err(store)
+    }
+
+    fn subjects(&self) -> AppResult<Vec<Subject>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM register_subjects ORDER BY name COLLATE NOCASE").map_err(store)?;
+        let rows = stmt.query_map([], |r| Ok(Subject {
+            external_id: r.get("external_id")?, name: r.get("name")?,
+            teachers: r.get::<_, String>("teachers")?.split('\n').filter(|t| !t.is_empty()).map(str::to_string).collect(),
+        })).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+
+    fn replace_subjects(&self, subjects: &[Subject]) -> AppResult {
+        let tx = self.0.conn.unchecked_transaction().map_err(store)?;
+        tx.execute("DELETE FROM register_subjects", []).map_err(store)?;
+        for x in subjects {
+            tx.execute("INSERT OR REPLACE INTO register_subjects (external_id, name, teachers) VALUES (?, ?, ?)",
+                params![x.external_id, x.name, x.teachers.join("\n")]).map_err(store)?;
+        }
+        tx.commit().map_err(store)
+    }
+
+    fn absences(&self) -> AppResult<Vec<Absence>> {
+        Ok(self.items("absence", "day DESC")?.iter().filter_map(|v| Some(Absence {
+            external_id: s(v, "id"), day: d(v, "day")?, kind: AbsenceKind::from_code(&s(v, "kind"))?,
+            hour: v.get("hour").and_then(Value::as_i64).map(|h| h as i32), justified: v.get("justified").and_then(Value::as_bool).unwrap_or(false),
+            reason: s(v, "reason"), hours: v.get("hours").and_then(Value::as_i64).unwrap_or(0) as i32,
+            own_hour: v.get("own_hour").and_then(Value::as_i64).map(|h| h as i32),
+        })).collect())
+    }
+
+    fn replace_absences(&self, absences: &[Absence]) -> AppResult {
+        self.replace("absence", absences.iter().map(|a| (a.external_id.clone(), Some(a.day.to_string()), json!({
+            "id": a.external_id, "day": a.day.to_string(), "kind": a.kind.code(), "hour": a.hour, "justified": a.justified,
+            "reason": a.reason, "hours": a.hours, "own_hour": a.own_hour,
+        }))).collect())
+    }
+
+    fn notices(&self) -> AppResult<Vec<Notice>> {
+        Ok(self.items("notice", "day DESC, external_id DESC")?.iter().filter_map(|v| Some(Notice {
+            external_id: s(v, "id"), code: s(v, "code"), pub_id: s(v, "pub_id"), title: s(v, "title"), category: s(v, "category"),
+            published: d(v, "published")?, valid_until: d(v, "valid_until"), read: v.get("read").and_then(Value::as_bool).unwrap_or(false),
+            attachments: v.get("attachments").and_then(Value::as_array).map(|a| a.iter().filter_map(|p| Some(NoticeAttachment {
+                number: p.get(0)?.as_i64()? as i32, file_name: p.get(1)?.as_str()?.to_string(),
+            })).collect()).unwrap_or_default(),
+        })).collect())
+    }
+
+    fn replace_notices(&self, notices: &[Notice]) -> AppResult {
+        self.replace("notice", notices.iter().map(Self::notice_row).collect())
+    }
+
+    fn set_notice_read(&self, external_id: &str) -> AppResult {
+        if let Some(mut n) = self.notices()?.into_iter().find(|n| n.external_id == external_id) {
+            n.read = true;
+            let (key, _, data) = Self::notice_row(&n);
+            self.0.conn.execute("UPDATE register_items SET data = ? WHERE kind = 'notice' AND external_id = ?",
+                params![data.to_string(), key]).map_err(store)?;
+        }
+        Ok(())
+    }
+
+    fn books(&self) -> AppResult<Vec<Book>> {
+        Ok(self.items("book", "external_id")?.iter().map(|v| Book {
+            isbn: s(v, "isbn"), title: s(v, "title"), subject: s(v, "subject"), author: s(v, "author"), publisher: s(v, "publisher"),
+            volume: s(v, "volume"), price: v.get("price").and_then(Value::as_f64),
+            to_buy: v.get("to_buy").and_then(Value::as_bool).unwrap_or(false), owned: v.get("owned").and_then(Value::as_bool).unwrap_or(false),
+            new_adoption: v.get("new_adoption").and_then(Value::as_bool).unwrap_or(false),
+        }).collect())
+    }
+
+    fn replace_books(&self, books: &[Book]) -> AppResult {
+        self.replace("book", books.iter().map(|b| (format!("{}|{}|{}", b.subject, b.isbn, b.title), None, json!({
+            "isbn": b.isbn, "title": b.title, "subject": b.subject, "author": b.author, "publisher": b.publisher,
+            "volume": b.volume, "price": b.price, "to_buy": b.to_buy, "owned": b.owned, "new_adoption": b.new_adoption,
+        }))).collect())
+    }
+
+    fn documents(&self) -> AppResult<Vec<SchoolDocument>> {
+        Ok(self.items("document", "external_id")?.iter().map(|v| SchoolDocument {
+            external_id: s(v, "id"), title: s(v, "title"),
+            kind: if s(v, "kind") == "report" { DocumentKind::Report } else { DocumentKind::Document }, link: s(v, "link"),
+        }).collect())
+    }
+
+    fn replace_documents(&self, documents: &[SchoolDocument]) -> AppResult {
+        self.replace("document", documents.iter().map(|x| (x.external_id.clone(), None, json!({
+            "id": x.external_id, "title": x.title, "kind": if x.kind == DocumentKind::Report { "report" } else { "document" }, "link": x.link,
+        }))).collect())
+    }
+
+    fn school_days(&self) -> AppResult<Vec<NaiveDate>> {
+        let mut stmt = self.0.conn.prepare("SELECT day FROM school_days ORDER BY day").map_err(store)?;
+        let rows = stmt.query_map([], |r| r.get::<_, String>(0)).map_err(store)?;
+        Ok(rows.filter_map(|r| r.ok()).filter_map(|t| t.parse().ok()).collect())
+    }
+
+    fn replace_school_days(&self, days: &[NaiveDate]) -> AppResult {
+        let tx = self.0.conn.unchecked_transaction().map_err(store)?;
+        tx.execute("DELETE FROM school_days", []).map_err(store)?;
+        for x in days {
+            tx.execute("INSERT OR IGNORE INTO school_days (day) VALUES (?)", [x.to_string()]).map_err(store)?;
+        }
+        tx.commit().map_err(store)
+    }
+}
+
+impl SchoolLinks for SqliteSchool {
+    fn tasks_by_external_prefix(&self, prefix: &str) -> AppResult<Vec<Task>> {
+        let escaped = prefix.replace('\\', "\\\\").replace('%', "\\%").replace('_', "\\_");
+        let mut stmt = self.0.conn.prepare("SELECT * FROM tasks WHERE external_id LIKE ? ESCAPE '\\'").map_err(store)?;
+        let rows = stmt.query_map([format!("{escaped}%")], task).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+
+    fn merge_courses(&self, source: i64, target: i64) -> AppResult {
+        let tx = self.0.conn.unchecked_transaction().map_err(store)?;
+        for table in ["tasks", "notes", "grades", "lessons"] {
+            tx.execute(&format!("UPDATE {table} SET course_id = ? WHERE course_id = ?"), params![target, source]).map_err(store)?;
+        }
+        tx.execute("DELETE FROM courses WHERE id = ?", [source]).map_err(store)?;
+        tx.commit().map_err(store)
+    }
+}

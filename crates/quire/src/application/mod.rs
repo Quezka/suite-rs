@@ -12,6 +12,7 @@ pub mod planner;
 pub mod ports;
 pub mod quiet;
 pub mod reminders;
+pub mod school;
 pub mod sleep;
 pub mod sync;
 pub mod tasks;
