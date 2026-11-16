@@ -132,3 +132,25 @@ fn courses_events_and_routines_show_on_the_day() {
     timetable.delete_course(maths).unwrap();
     assert!(planner.day_agenda(day("2026-09-23")).unwrap().items.iter().all(|i| i.kind != ItemKind::Class));
 }
+
+#[test]
+fn water_goal_log_and_reminder() {
+    use quire::application::water::{WaterProfile, WaterService};
+    use quire::infrastructure::repositories::SqliteWater;
+    let db = Rc::new(Database::in_memory().unwrap());
+    let clock = Rc::new(Fixed(Cell::new(day("2026-09-23").and_hms_opt(15, 0, 0).unwrap())));
+    let water = WaterService { logs: Rc::new(SqliteWater(db.clone())), settings: Rc::new(SqliteSettings(db.clone())), clock,
+                               bus: Rc::new(ChangeBus::default()), last_reminder: Cell::new(None) };
+    let goal = water.save_profile(&WaterProfile { height_cm: Some(180.0), weight_kg: Some(75.0), glass_ml: 250, remind: true,
+                                                  start: 480, end: 1320, manual_goal: None }).unwrap();
+    water.add(250, None).unwrap();
+    water.add(250, None).unwrap();
+    assert!(water.add(250, Some(day("2026-09-24"))).is_err());
+    let o = water.overview(None).unwrap();
+    assert_eq!((o.goal, o.drunk, o.entries.len()), (Some(goal), 500, 2));
+    assert!(o.expected > 500);
+    assert_eq!(water.reminder().unwrap(), Some(format!("500/{goal}")));
+    assert_eq!(water.reminder().unwrap(), None); // not again so soon
+    water.undo_last(None).unwrap();
+    assert_eq!(water.overview(None).unwrap().drunk, 250);
+}

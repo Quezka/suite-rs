@@ -130,3 +130,12 @@ pub trait ImageRepository {
 pub trait CourseLookup {
     fn get(&self, id: i64) -> AppResult<Option<Course>>;
 }
+
+use crate::domain::water::WaterLog;
+
+pub trait WaterRepository {
+    /// Oldest first (day, minute, id).
+    fn between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<WaterLog>>;
+    fn add(&self, log: &WaterLog) -> AppResult<i64>;
+    fn delete(&self, id: i64) -> AppResult;
+}

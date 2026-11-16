@@ -487,3 +487,27 @@ impl ImageRepository for SqliteImages {
         self.0.conn.query_row("SELECT lower(hex(randomblob(16)))", [], |r| r.get(0)).unwrap_or_default()
     }
 }
+
+// ---- water ---------------------------------------------------------------------------------------------------------
+
+use crate::application::ports::WaterRepository;
+use crate::domain::water::WaterLog;
+
+pub struct SqliteWater(pub Rc<Database>);
+
+impl WaterRepository for SqliteWater {
+    fn between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<WaterLog>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM water_logs WHERE day BETWEEN ? AND ? ORDER BY day, at_min, id").map_err(store)?;
+        let rows = stmt.query_map(params![first.to_string(), last.to_string()], |r| Ok(WaterLog {
+            day: day(r.get("day")?).unwrap_or(first), at: r.get("at_min")?, ml: r.get("ml")?, id: Some(r.get("id")?),
+        })).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+    fn add(&self, l: &WaterLog) -> AppResult<i64> {
+        self.0.conn.execute("INSERT INTO water_logs (day, at_min, ml) VALUES (?, ?, ?)", params![l.day.to_string(), l.at, l.ml]).map_err(store)?;
+        Ok(self.0.conn.last_insert_rowid())
+    }
+    fn delete(&self, id: i64) -> AppResult {
+        self.0.conn.execute("DELETE FROM water_logs WHERE id = ?", [id]).map(|_| ()).map_err(store)
+    }
+}
