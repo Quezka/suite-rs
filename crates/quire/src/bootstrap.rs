@@ -26,6 +26,7 @@ use crate::application::sync::SyncService;
 use crate::application::tasks::TaskService;
 use crate::application::timetable::TimetableService;
 use crate::application::updates::UpdateService;
+use crate::application::services::Services;
 use crate::application::water::WaterService;
 use crate::application::work::WorkService;
 use crate::infrastructure::classeviva::ClassevivaRegister;
@@ -45,30 +46,6 @@ pub const REPO: &str = "Quezka/quire";
 /// name sent to quire-server w/ sign-in
 pub const DEVICE: &str = "Quire desktop";
 
-/// every use case, one db
-pub struct Services {
-    pub timetable: TimetableService,
-    pub planner: Rc<PlannerService>,
-    pub tasks: Rc<TaskService>,
-    pub notes: NoteService,
-    pub school: SchoolRecordsService,
-    pub school_sync: SchoolSyncService,
-    pub work: WorkService,
-    pub focus: FocusService,
-    pub sleep: SleepService,
-    pub water: WaterService,
-    pub medicine: MedicineService,
-    pub ideas: Rc<IdeaService>,
-    pub digest: DigestService,
-    pub calendar: CalendarService,
-    pub quiet: QuietService,
-    pub reminders: ReminderService,
-    pub sync: SyncService,
-    pub updates: UpdateService,
-    pub startup: StartupService,
-    pub storage: Rc<Database>,
-    pub bus: Rc<ChangeBus>,
-}
 
 /// swap outside world in tests | demo; none = real thing
 #[derive(Default)]
@@ -85,8 +62,10 @@ pub struct Overrides {
     pub calendar: Option<Rc<dyn SystemCalendar>>,
 }
 
-pub fn build_services(db_path: &Path, o: Overrides) -> rusqlite::Result<Services> {
-    Ok(wire(Rc::new(Database::open(db_path)?), o))
+/// services + db handle (db = backup, close)
+pub fn build_services(db_path: &Path, o: Overrides) -> rusqlite::Result<(Services, Rc<Database>)> {
+    let db = Rc::new(Database::open(db_path)?);
+    Ok((wire(db.clone(), o), db))
 }
 
 pub fn wire(db: Rc<Database>, o: Overrides) -> Services {
@@ -148,7 +127,6 @@ pub fn wire(db: Rc<Database>, o: Overrides) -> Services {
         planner,
         tasks: tasks_service,
         ideas,
-        storage: db,
         bus,
     }
 }

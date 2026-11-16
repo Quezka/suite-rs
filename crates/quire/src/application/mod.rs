@@ -15,6 +15,7 @@ pub mod quiet;
 pub mod reminders;
 pub mod school;
 pub mod school_records;
+pub mod services;
 pub mod sleep;
 pub mod startup;
 pub mod sync;

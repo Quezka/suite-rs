@@ -51,7 +51,7 @@ fn every_service_answers_on_the_python_database() {
     std::fs::copy(concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/python.db"), &path).unwrap();
     let today = NaiveDate::from_ymd_opt(2026, 11, 16).unwrap();
     let calendar = Rc::new(Calendar::default());
-    let s = build_services(&path, Overrides {
+    let (s, _db) = build_services(&path, Overrides {
         clock: Some(Rc::new(Fixed(Cell::new(today.and_hms_opt(12, 0, 0).unwrap())))),
         credentials: Some(Rc::new(Keyring::default())), sync_secrets: Some(Rc::new(Keyring::default())),
         calendar: Some(calendar.clone()), login_item: Some(Rc::new(Login::default())), quiet: Some(Rc::new(NoQuiet)),

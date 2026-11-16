@@ -109,6 +109,60 @@ pub fn check_messages(messages: Messages) -> Result<(), String> {
     Ok(())
 }
 
+/// plural rows: (en singular, it one, it other, ru one, ru few, ru many)
+pub type Plurals = &'static [(&'static str, &'static str, &'static str, &'static str, &'static str, &'static str)];
+
+/// russian form: 1 урок (0), 2-4 урока (1), 5+ уроков (2); 11-14 = 5+
+pub fn russian_form(n: i64) -> usize {
+    let n = n.unsigned_abs();
+    if n % 10 == 1 && n % 100 != 11 {
+        0
+    } else if (2..=4).contains(&(n % 10)) && !(12..=14).contains(&(n % 100)) {
+        1
+    } else {
+        2
+    }
+}
+
+/// `3 lessons` | `3 урока`; `many` = whole en plural | ending (shorter than word); none -> `+s`
+pub fn plural(plurals: Plurals, lang: Lang, n: i64, word: &str, many: Option<&str>) -> String {
+    if let Some(row) = plurals.iter().find(|r| r.0 == word).filter(|_| lang != Lang::En) {
+        let form = match lang {
+            Lang::It => if n == 1 { row.1 } else { row.2 },
+            _ => [row.3, row.4, row.5][russian_form(n)],
+        };
+        return format!("{n} {form}");
+    }
+    if n == 1 {
+        return format!("{n} {word}");
+    }
+    match many {
+        None => format!("{n} {word}s"),
+        Some(m) if m.len() >= word.len() => format!("{n} {m}"),
+        Some(m) => format!("{n} {word}{m}"),
+    }
+}
+
+/// day + month names in one language
+#[derive(Clone, Copy, Debug)]
+pub struct Names {
+    pub weekdays: [&'static str; 7],
+    pub weekdays_short: [&'static str; 7],
+    /// standalone: "September 2026"
+    pub months: [&'static str; 12],
+    /// after day number: "23 September" | "23 сентября"
+    pub months_genitive: [&'static str; 12],
+    pub months_short: [&'static str; 12],
+}
+
+pub const EN_NAMES: Names = Names {
+    weekdays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    weekdays_short: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    months_genitive: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    months_short: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+};
+
 /// app wrapper: `kit::translations!(MESSAGES);` -> `t(en)` + `tf(en, values)` in that module
 #[macro_export]
 macro_rules! translations {
@@ -139,5 +193,11 @@ mod tests {
         assert!(check_messages(&[("{n} left", "rimasti", "осталось {n}")]).is_err());
         assert_eq!(Lang::from_code("it_IT.UTF-8"), Some(Lang::It));
         assert_eq!(Lang::from_code("C"), None);
+        const P: Plurals = &[("lesson", "lezione", "lezioni", "урок", "урока", "уроков")];
+        assert_eq!(plural(P, Lang::Ru, 22, "lesson", None), "22 урока");
+        assert_eq!(plural(P, Lang::Ru, 12, "lesson", None), "12 уроков");
+        assert_eq!(plural(P, Lang::It, 1, "lesson", None), "1 lezione");
+        assert_eq!(plural(P, Lang::En, 2, "class", Some("es")), "2 classes");
+        assert_eq!(plural(P, Lang::En, 2, "entity", Some("entities")), "2 entities");
     }
 }

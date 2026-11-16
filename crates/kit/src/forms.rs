@@ -191,6 +191,34 @@ pub fn menu_item(ui: &mut Ui, th: &Tokens, glyph: Option<&'static str>, label: &
     clicked
 }
 
+/// square check box, `44` hit; true = tapped (caller flips)
+pub fn checkbox(ui: &mut Ui, th: &Tokens, on: bool) -> bool {
+    let (rect, response) = ui.allocate_exact_size(Vec2::splat(44.0), Sense::click());
+    let painter = ui.painter_at(rect);
+    if response.hovered() {
+        painter.circle_filled(rect.center(), 20.0, th.hover);
+    }
+    let square = Rect::from_center_size(rect.center(), Vec2::splat(22.0));
+    let round = CornerRadius::same(6);
+    if on {
+        painter.rect_filled(square, round, th.accent);
+        icon(&painter, square.shrink(2.0), "check", false, th.on_accent);
+    } else {
+        painter.rect_stroke(square, round, Stroke::new(2.0, th.muted), StrokeKind::Inside);
+    }
+    response.on_hover_cursor(egui::CursorIcon::PointingHand).clicked()
+}
+
+/// parse `#rrggbb` (course + event colours); bad -> none
+pub fn hex_color(text: &str) -> Option<Color32> {
+    let h = text.strip_prefix('#')?;
+    if h.len() != 6 {
+        return None;
+    }
+    let v = u32::from_str_radix(h, 16).ok()?;
+    Some(Color32::from_rgb((v >> 16) as u8, (v >> 8) as u8, v as u8))
+}
+
 fn first_of_month(d: NaiveDate) -> NaiveDate {
     d.with_day(1).unwrap_or(d)
 }
