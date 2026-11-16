@@ -182,3 +182,59 @@ pub trait FocusLogRepository {
     /// Labels of sessions without a task, newest first, distinct.
     fn recent_labels(&self, limit: usize) -> AppResult<Vec<String>>;
 }
+
+pub const FIREBASE: &str = "firebase";
+pub const SERVER: &str = "server";
+
+/// Where to sync. For Firebase, `project_id` and `api_key` are the project's; for a Quire server, `project_id` is the
+/// server's address and `api_key` is unused.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CloudConfig {
+    pub project_id: String,
+    pub api_key: String,
+    pub backend: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CloudSession {
+    pub user_id: String,
+    pub email: String,
+    /// Short-lived.
+    pub token: String,
+    /// Long-lived; kept in the keyring.
+    pub refresh_token: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Credentials {
+    pub username: String,
+    pub password: String,
+}
+
+/// Somewhere safe to keep a password (the OS keyring).
+pub trait CredentialStore {
+    fn load(&self) -> Option<Credentials>;
+    fn save(&self, c: &Credentials) -> AppResult;
+    fn clear(&self) -> AppResult;
+}
+
+/// This device's side of sync.
+pub trait SyncStorePort {
+    fn outgoing(&self) -> AppResult<Vec<SyncRecord>>;
+    /// Takes in records newer than ours; returns the (kind, uid) applied.
+    fn apply(&self, records: &[SyncRecord]) -> AppResult<HashSet<(String, String)>>;
+    fn mark_sent(&self, records: &[SyncRecord]) -> AppResult;
+    fn pending(&self) -> AppResult<i64>;
+    fn clear_all(&self) -> AppResult;
+    fn mark_all_dirty(&self) -> AppResult;
+}
+
+/// A cloud database with accounts (Firebase, or a Quire server). Network only: used on a worker thread.
+pub trait CloudBackend: Send + Sync {
+    fn sign_up(&self, config: &CloudConfig, email: &str, password: &str, invite: &str) -> AppResult<CloudSession>;
+    fn sign_in(&self, config: &CloudConfig, email: &str, password: &str) -> AppResult<CloudSession>;
+    fn refresh(&self, config: &CloudConfig, refresh_token: &str) -> AppResult<CloudSession>;
+    /// Records changed since `cursor`, and the new cursor.
+    fn pull(&self, config: &CloudConfig, session: &CloudSession, cursor: Option<&str>) -> AppResult<(Vec<SyncRecord>, Option<String>)>;
+    fn push(&self, config: &CloudConfig, session: &CloudSession, records: &[SyncRecord]) -> AppResult;
+}

@@ -702,3 +702,31 @@ impl FocusLogRepository for SqliteFocusLog {
         rows.collect::<Result<_, _>>().map_err(store)
     }
 }
+
+// ---- sync store as a port ------------------------------------------------------------------------------------------
+
+use crate::application::ports::{SyncRecord, SyncStorePort};
+use super::sync_store::SyncStore;
+
+pub struct SqliteSync(pub Rc<Database>);
+
+impl SyncStorePort for SqliteSync {
+    fn outgoing(&self) -> AppResult<Vec<SyncRecord>> {
+        SyncStore::new(&self.0.conn).outgoing().map_err(store)
+    }
+    fn apply(&self, records: &[SyncRecord]) -> AppResult<HashSet<(String, String)>> {
+        SyncStore::new(&self.0.conn).apply(records).map_err(store)
+    }
+    fn mark_sent(&self, records: &[SyncRecord]) -> AppResult {
+        SyncStore::new(&self.0.conn).mark_sent(records).map_err(store)
+    }
+    fn pending(&self) -> AppResult<i64> {
+        SyncStore::new(&self.0.conn).pending().map_err(store)
+    }
+    fn clear_all(&self) -> AppResult {
+        SyncStore::new(&self.0.conn).clear_all().map_err(store)
+    }
+    fn mark_all_dirty(&self) -> AppResult {
+        SyncStore::new(&self.0.conn).mark_all_dirty().map_err(store)
+    }
+}
