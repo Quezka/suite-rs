@@ -37,7 +37,7 @@ the quire-server protocol must stay compatible with the Python and Kotlin apps t
   into the user's own apps (a swipe once deleted notes).
 - Quire (`crates/quire`): Clean Architecture (`domain`, `application`, `infrastructure`; `tests/architecture.rs`).
   Done: every domain rule (model, payroll, water, medicine, sleep, focus, register, ical; money removed 2026-11-14); the SQLite
-  schema v18 + migrations, identical to the Python app's (either app can open the same file); the sync store
+  schema v20 + migrations, identical to the Python app's (either app can open the same file); the sync store
   (triggers, outgoing/apply/mark_sent/pending/mark_all_dirty/clear_all), byte-compatible records. Parity:
   `python3 tools/quire_fixtures.py` (needs ../quire and its venv) writes `crates/quire/tests/fixtures/*`, and
   `payroll_parity`, `rules_parity`, `storage_parity` check the Rust answers against the Python ones. Python's
@@ -54,3 +54,4 @@ the quire-server protocol must stay compatible with the Python and Kotlin apps t
 - Quay 0.7 (2026-11-15): filter chips, 2 card columns >= 1180 wide, buttons under text in cards < 560, one header button when narrow.
 - Kit runner `Options.close_hides` (2026-11-15): window X hides, app runs on unseen (250 ms tick); `ViewportCommand::Close` quits; `Visible(true)` reopens a window on the same gpu (textures kept).
 - Tether 0.2 (2026-11-15): desktop layout (sidebar | section; messages = list | bubbles; < 760 wide -> tabs), single instance via `$XDG_RUNTIME_DIR/tether.sock` (2nd launch -> show), autostart on first run (`tether --background`), drop files -> phone, Ctrl+1..4, `--demo --section N --thread ADDR`.
+- Quire port progress (2026-11-16): application layer started: `application/{errors,bus,ports,tasks,ideas}.rs`, repositories `infrastructure/repositories.rs` (Sqlite{Settings,Courses,Tasks,Ideas}, same SQL/order as Python), `domain/ideas.rs`; tests `tests/services.rs`. Services hold `Rc<dyn Port>` (single-threaded, UI thread). Next: planner (agenda), notes, focus/sleep/water/medicine services, digest, sync service + cloud.

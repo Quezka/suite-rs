@@ -10,5 +10,6 @@ pub mod sleep;
 pub mod focus;
 pub mod register;
 pub mod ical;
+pub mod ideas;
 
 pub use errors::ValidationError;
