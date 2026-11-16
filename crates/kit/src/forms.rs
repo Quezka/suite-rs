@@ -62,7 +62,7 @@ pub fn field(ui: &mut Ui, th: &Tokens, label: &str, value: &mut String, hint: &s
     let inner = field_frame(th, focused, Margin::symmetric(14, 2)).show(ui, |ui| {
         let output = egui::TextEdit::singleline(value).id(id.with("edit")).hint_text(hint).frame(egui::Frame::NONE).margin(Margin::ZERO)
             .font(FontId::new(16.0, Weight::Regular.family())).text_color(th.text).desired_width(f32::INFINITY)
-            .min_size(Vec2::new(0.0, FIELD_HEIGHT - 4.0)).vertical_align(Align::Center).show(ui);
+            .min_size(Vec2::new(0.0, FIELD_HEIGHT - 4.0)).align(egui::Align2::LEFT_CENTER).show(ui);
         crate::typing::record(ui, &output, value);
         output.response.response
     });

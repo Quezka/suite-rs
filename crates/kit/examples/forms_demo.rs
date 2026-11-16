@@ -44,13 +44,13 @@ impl quezka_kit::App for Demo {
                 w::card(&mut c[1], th, |ui| {
                     w::headline(ui, th, "Due");
                     let weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map(String::from);
-                    f::date_picker(ui, th, ui.id().with("due"), &mut self.day, NaiveDate::from_ymd_opt(2026, 11, 16).unwrap(),
+                    f::date_picker(ui, th, ui.scope_id().with("due"), &mut self.day, NaiveDate::from_ymd_opt(2026, 11, 16).unwrap(),
                         &|m| MONTHS[m as usize - 1].to_string(), &weekdays);
                 });
             });
         });
         if self.dialog {
-            let out = f::dialog(ui.ctx(), th, ui.id().with("confirm"), "Delete this task?", |ui| {
+            let out = f::dialog(ui.ctx(), th, ui.scope_id().with("confirm"), "Delete this task?", |ui| {
                 ui.label(w::text("It goes away on every device. You can undo for a few seconds.", 16.0, th.muted, quezka_kit::fonts::Weight::Regular));
                 if let Some(i) = f::dialog_buttons(ui, th, &[("Keep", Kind::Text), ("Delete", Kind::Danger)]) {
                     let _ = i;
