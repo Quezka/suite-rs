@@ -4,6 +4,7 @@
 pub mod bus;
 pub mod digest;
 pub mod errors;
+pub mod focus;
 pub mod ideas;
 pub mod medicine;
 pub mod notes;

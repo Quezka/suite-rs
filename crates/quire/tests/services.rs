@@ -204,3 +204,36 @@ fn sleep_one_tap_night_goal_and_overview() {
     assert_eq!(sleep.reminder(), Some(23 * 60 + 30));
     assert_eq!(sleep.reminder(), None); // once a day
 }
+
+#[test]
+fn focus_logs_sessions_and_a_block_becomes_an_event() {
+    use quire::application::focus::FocusService;
+    use quire::domain::focus::Phase;
+    use quire::infrastructure::repositories::{SqliteEvents, SqliteFocusLog};
+    let db = Rc::new(Database::in_memory().unwrap());
+    let clock = Rc::new(Fixed(Cell::new(day("2026-09-23").and_hms_opt(9, 0, 0).unwrap())));
+    let bus = Rc::new(ChangeBus::default());
+    let tasks = TaskService::new(Rc::new(SqliteTasks(db.clone())), Rc::new(SqliteCourses(db.clone())), clock.clone(), bus.clone());
+    let essay = tasks.save(None, &TaskInput::titled("History essay")).unwrap();
+    let focus = FocusService::new(Rc::new(SqliteFocusLog(db.clone())), Rc::new(SqliteSettings(db.clone())), Rc::new(SqliteTasks(db.clone())),
+                                  Rc::new(SqliteCourses(db.clone())), clock.clone(), bus, Some(Rc::new(SqliteEvents(db.clone()))));
+    focus.set_focus_task(Some(essay)).unwrap();
+    focus.toggle();
+    clock.0.set(clock.0.get() + chrono::Duration::minutes(25));
+    let ended = focus.tick().unwrap().unwrap();
+    assert_eq!((ended.phase, ended.next_phase), (Phase::Work, Phase::ShortBreak));
+    let stats = focus.stats().unwrap();
+    assert_eq!((stats.today_sessions, stats.today_minutes), (1, 25));
+    assert_eq!(stats.today_by_project, vec![("History essay".to_string(), 25)]);
+    focus.start_block(60).unwrap();
+    for _ in 0..61 {
+        clock.0.set(clock.0.get() + chrono::Duration::minutes(1));
+        focus.tick().unwrap();
+    }
+    assert!(focus.state().block_left_seconds.is_none());
+    let events = SqliteEvents(db);
+    use quire::application::ports::EventRepository;
+    let week = events.between(day("2026-09-23"), day("2026-09-23")).unwrap();
+    assert_eq!(week.len(), 1);
+    assert_eq!((week[0].title.as_str(), week[0].time.start, week[0].time.end), ("Focus: History essay", 565, 625));
+}

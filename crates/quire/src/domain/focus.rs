@@ -72,6 +72,34 @@ pub struct PhaseEnded {
     pub started: NaiveDateTime,
     pub minutes: i64,
     pub next_phase: Phase,
+    /// The focus block (see `PomodoroTimer::start_block`) is over.
+    pub block_done: bool,
+}
+
+pub const MAX_BLOCK_MINUTES: i64 = 12 * 60;
+
+/// How a focus block of `total_minutes` splits into focus and breaks: the usual rounds, the last focus cut to fit,
+/// never a break at the end (the block ends with focus).
+pub fn plan_block(total_minutes: i64, settings: &FocusSettings) -> Checked<Vec<(Phase, i64)>> {
+    if !(1..=MAX_BLOCK_MINUTES).contains(&total_minutes) {
+        return Err(ValidationError("A focus block lasts between 1 minute and 12 hours."));
+    }
+    let (mut plan, mut left, mut done) = (Vec::new(), total_minutes, 0u32);
+    while left > 0 {
+        let work = settings.work_minutes.min(left);
+        plan.push((Phase::Work, work));
+        left -= work;
+        done += 1;
+        let rest = if done % settings.rounds == 0 { Phase::LongBreak } else { Phase::ShortBreak };
+        if left <= settings.minutes(rest) {
+            // no room for a break and more focus after it: the last focus runs to the end instead
+            plan.last_mut().unwrap().1 = work + left;
+            break;
+        }
+        plan.push((rest, settings.minutes(rest)));
+        left -= settings.minutes(rest);
+    }
+    Ok(plan)
 }
 
 /// A focus session, for the stats. One cut short (skipped or reset) isn't `complete`: its minutes count towards your
@@ -100,12 +128,16 @@ pub struct PomodoroTimer {
     remaining: Duration,
     ends_at: Option<NaiveDateTime>,
     started_at: Option<NaiveDateTime>,
+    /// A focus block (start_block) is on.
+    pub block_started: Option<NaiveDateTime>,
+    pub block_ends: Option<NaiveDateTime>,
 }
 
 impl PomodoroTimer {
     pub fn new(settings: FocusSettings) -> Self {
         let length = Duration::minutes(settings.work_minutes);
-        Self { settings, phase: Phase::Work, completed: 0, length, remaining: length, ends_at: None, started_at: None }
+        Self { settings, phase: Phase::Work, completed: 0, length, remaining: length, ends_at: None, started_at: None,
+               block_started: None, block_ends: None }
     }
 
     pub fn running(&self) -> bool {
@@ -175,6 +207,8 @@ impl PomodoroTimer {
     pub fn reset(&mut self) {
         self.phase = Phase::Work;
         self.completed = 0;
+        self.block_started = None; // any focus block ends
+        self.block_ends = None;
         self.enter(Phase::Work, None);
     }
 
@@ -196,22 +230,52 @@ impl PomodoroTimer {
         Ok(())
     }
 
+    /// Focus for `total_minutes` in all, split into rounds and breaks (see plan_block): the phases run by
+    /// themselves, the last focus is cut to fit, and the block stops at its end.
+    pub fn start_block(&mut self, now: NaiveDateTime, total_minutes: i64) -> Checked {
+        plan_block(total_minutes, &self.settings)?; // checks the length
+        self.reset();
+        self.block_started = Some(now);
+        self.block_ends = Some(now + Duration::minutes(total_minutes));
+        self.enter(Phase::Work, Some(now));
+        Ok(())
+    }
+
+    pub fn in_block(&self) -> bool {
+        self.block_ends.is_some()
+    }
+
     /// Advance if the running phase has run out; report what ended.
     pub fn tick(&mut self, now: NaiveDateTime) -> Option<PhaseEnded> {
         let ended_at = self.ends_at?;
         if now < ended_at {
             return None;
         }
-        let event = PhaseEnded {
-            phase: self.phase,
-            started: self.started_at.unwrap_or(ended_at - self.length),
-            minutes: whole_minutes(self.length),
-            next_phase: self.next_phase(true, true),
-        };
-        let next = self.next_phase(true, false);
-        let from = self.settings.auto_continue.then_some(ended_at);
-        self.enter(next, from);
-        Some(event)
+        let started = self.started_at.unwrap_or(ended_at - self.length);
+        let minutes = whole_minutes(self.length);
+        let ended_phase = self.phase;
+        let mut next = self.next_phase(true, false);
+        if let Some(block_ends) = self.block_ends {
+            let left = block_ends - ended_at;
+            let room = Duration::minutes(self.settings.minutes(next));
+            if left <= Duration::zero() {
+                // the block is over
+                self.block_started = None;
+                self.block_ends = None;
+                self.phase = Phase::Work;
+                self.completed = 0;
+                self.enter(Phase::Work, None);
+                return Some(PhaseEnded { phase: ended_phase, started, minutes, next_phase: Phase::Work, block_done: true });
+            }
+            if next != Phase::Work && left <= room {
+                next = Phase::Work; // no room for a break and focus after it: focus to the end
+            }
+            self.enter(next, Some(ended_at)); // a block always carries on by itself
+        } else {
+            let from = self.settings.auto_continue.then_some(ended_at);
+            self.enter(next, from);
+        }
+        Some(PhaseEnded { phase: ended_phase, started, minutes, next_phase: next, block_done: false })
     }
 
     fn next_phase(&mut self, counting: bool, dry_run: bool) -> Phase {
@@ -231,6 +295,10 @@ impl PomodoroTimer {
     fn enter(&mut self, phase: Phase, running_from: Option<NaiveDateTime>) {
         self.phase = phase;
         self.length = Duration::minutes(self.settings.minutes(phase));
+        if let (Some(ends), Some(from)) = (self.block_ends, running_from) {
+            // the last focus of a block is cut to fit
+            self.length = Duration::minutes(1).max(self.length.min(ends - from));
+        }
         self.remaining = self.length;
         self.started_at = running_from;
         self.ends_at = running_from.map(|t| t + self.remaining);
@@ -244,6 +312,23 @@ mod tests {
 
     fn at(minute: i64) -> NaiveDateTime {
         NaiveDate::from_ymd_opt(2026, 3, 10).unwrap().and_hms_opt(9, 0, 0).unwrap() + Duration::minutes(minute)
+    }
+
+    #[test]
+    fn a_block_runs_by_itself_and_ends_with_focus() {
+        let s = FocusSettings::default(); // 25 / 5 / 15, 4 rounds
+        assert_eq!(plan_block(60, &s).unwrap(), vec![(Phase::Work, 25), (Phase::ShortBreak, 5), (Phase::Work, 30)]);
+        assert!(plan_block(0, &s).is_err());
+        let mut timer = PomodoroTimer::new(s);
+        timer.start_block(at(0), 60).unwrap();
+        assert!(timer.in_block() && timer.running());
+        assert_eq!(timer.tick(at(25)).unwrap().next_phase, Phase::ShortBreak);
+        assert_eq!(timer.tick(at(30)).unwrap().next_phase, Phase::Work);
+        // no room for a break before the end: focus again, cut to the block's end (as Python's timer)
+        assert_eq!(timer.tick(at(55)).unwrap().next_phase, Phase::Work);
+        let last = timer.tick(at(60)).unwrap();
+        assert!(last.block_done && !timer.in_block() && !timer.running());
+        assert_eq!(last.minutes, 5);
     }
 
     #[test]
