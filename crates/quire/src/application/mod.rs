@@ -19,5 +19,6 @@ pub mod sleep;
 pub mod sync;
 pub mod tasks;
 pub mod timetable;
+pub mod updates;
 pub mod water;
 pub mod work;

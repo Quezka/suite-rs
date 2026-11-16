@@ -2782,6 +2782,7 @@ dependencies = [
  "keyring",
  "rusqlite",
  "serde_json",
+ "sha2",
  "ureq",
 ]
 

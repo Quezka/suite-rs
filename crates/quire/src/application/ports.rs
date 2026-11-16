@@ -386,3 +386,39 @@ pub trait SystemCalendar {
     fn disconnect(&self) -> AppResult;
     fn open(&self) -> AppResult;
 }
+
+// ---- updates
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ReleaseAsset {
+    pub name: String,
+    pub url: String,
+    pub size: u64,
+    /// published checksum, if host has one
+    pub sha256: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ReleaseInfo {
+    /// e.g. `0.12.0`
+    pub version: String,
+    /// markdown
+    pub notes: String,
+    pub page_url: String,
+    pub assets: Vec<ReleaseAsset>,
+}
+
+/// where new versions are published (github releases); network only => worker thread
+pub trait ReleaseFeed: Send + Sync {
+    fn latest(&self) -> AppResult<Option<ReleaseInfo>>;
+    /// fetch + check size + checksum -> local path; `progress(done, total)` as it goes
+    fn download(&self, asset: &ReleaseAsset, progress: &mut dyn FnMut(u64, u64)) -> AppResult<std::path::PathBuf>;
+}
+
+pub trait UpdateInstaller: Send + Sync {
+    /// false: copy can't update itself (from source, portable)
+    fn supported(&self) -> bool;
+    fn pick(&self, assets: &[ReleaseAsset]) -> Option<ReleaseAsset>;
+    /// true: installer took over -> app must quit now; false: installed -> restart to use
+    fn install(&self, path: &std::path::Path) -> AppResult<bool>;
+}

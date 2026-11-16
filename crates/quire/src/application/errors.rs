@@ -20,12 +20,14 @@ pub enum AppError {
     Sync(String),
     /// The school register: not connected, wrong login, or nothing could be fetched.
     Register(String),
+    /// Checking, downloading or installing an update failed.
+    Update(String),
 }
 
 impl fmt::Display for AppError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::NotFound(m) | Self::Storage(m) | Self::SyncNotSetUp(m) | Self::CloudAuth(m) | Self::Sync(m) | Self::Register(m) => f.write_str(m),
+            Self::NotFound(m) | Self::Storage(m) | Self::SyncNotSetUp(m) | Self::CloudAuth(m) | Self::Sync(m) | Self::Register(m) | Self::Update(m) => f.write_str(m),
             Self::Invalid(m) => f.write_str(m),
         }
     }
