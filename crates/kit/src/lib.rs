@@ -11,6 +11,7 @@
 
 pub mod autostart;
 pub mod fonts;
+pub mod glide;
 pub mod forms;
 pub mod i18n;
 pub mod glass;

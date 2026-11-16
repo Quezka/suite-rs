@@ -184,6 +184,8 @@ struct Runner<A: App> {
     /// Events to add to the next frame's input (typing from a phone keyboard).
     pending: Vec<egui::Event>,
     frame_count: u64,
+    glide: crate::glide::Glide,
+    born: std::time::Instant,
 }
 
 impl<A: App> Runner<A> {
@@ -193,6 +195,16 @@ impl<A: App> Runner<A> {
         let Some(surface) = &gpu.surface else { return };
         let mut raw = state.take_egui_input(window);
         raw.events.append(&mut self.pending);
+        let now = self.born.elapsed().as_secs_f64() * 1000.0;
+        self.glide.feed(now, &raw.events);
+        raw.events.extend(self.glide.tick(now));
+        // density <- physical size / native scale (not zoom) => no feedback loop
+        let native = window.scale_factor() as f32;
+        let logical = [gpu.config.width as f32 / native, gpu.config.height as f32 / native];
+        let zoom = density(logical);
+        if (self.ctx.zoom_factor() - zoom).abs() > 0.001 {
+            self.ctx.set_zoom_factor(zoom);
+        }
         self.frame_count += 1;
         #[cfg(target_os = "android")]
         if let Some((app, _)) = &self.android {
@@ -245,7 +257,7 @@ impl<A: App> Runner<A> {
                 self.ctx.request_repaint_after(std::time::Duration::from_millis(50));
             }
         }
-        let animating = repaint.is_some_and(|d| d.is_zero());
+        let animating = repaint.is_some_and(|d| d.is_zero()) || self.glide.active();
         if animating {
             window.request_redraw();
         }
@@ -321,11 +333,26 @@ const HIDDEN_TICK: std::time::Duration = std::time::Duration::from_millis(250);
 
 /// The window's first size: the app's own, or less on a small screen (never filling it, so the
 /// window manager doesn't take it for a maximised window).
+/// Room the desktop keeps: top bar/dock + title bar (winit has no work area) <- 1366x768 laptop
+const CHROME_HEIGHT: f32 = 140.0;
+/// Min window: half of a 1366 screen minus borders -> split screen works
+pub const MIN_SIZE: [f32; 2] = [360.0, 360.0];
+
 pub fn first_size(screen: Option<[f32; 2]>) -> [f32; 2] {
-    match screen {
-        Some([w, h]) => [WIDTH.min((w * 0.9).floor()), HEIGHT.min((h * 0.85).floor())],
-        None => [WIDTH, HEIGHT],
+    // no screen (wayland may hide it) -> assume small laptop, never bigger
+    let [w, h] = screen.unwrap_or([1366.0, 768.0]);
+    [WIDTH.min((w * 0.85).floor()), HEIGHT.min((h - CHROME_HEIGHT).min(h * 0.8).floor())]
+}
+
+/// Text + widget zoom by window size (= python kit `density.STEPS`): small window -> a bit smaller
+pub fn density(size: [f32; 2]) -> f32 {
+    const STEPS: [(f32, f32, f32); 3] = [(1100.0, 760.0, 1.0), (900.0, 640.0, 0.92), (0.0, 0.0, 0.85)];
+    for (w, h, k) in STEPS {
+        if size[0] >= w && size[1] >= h {
+            return k;
+        }
     }
+    0.85
 }
 
 impl<A: App> Runner<A> {
@@ -339,7 +366,7 @@ impl<A: App> Runner<A> {
         let mut attributes = Window::default_attributes()
             .with_title(self.options.title.clone())
             .with_inner_size(winit::dpi::LogicalSize::new(w, h))
-            .with_min_inner_size(winit::dpi::LogicalSize::new(360.0_f32.min(w), 360.0_f32.min(h)));
+            .with_min_inner_size(winit::dpi::LogicalSize::new(MIN_SIZE[0].min(w), MIN_SIZE[1].min(h)));
         if let Some((rgba, side)) = &self.options.icon {
             attributes = attributes.with_window_icon(winit::window::Icon::from_rgba(rgba.clone(), *side, *side).ok());
         }
@@ -456,6 +483,8 @@ fn run_loop<A: App + 'static>(
         android: None,
         pending: Vec::new(),
         frame_count: 0,
+        glide: Default::default(),
+        born: std::time::Instant::now(),
     };
     #[cfg(target_os = "android")]
     {
@@ -490,9 +519,17 @@ mod tests {
 
     #[test]
     fn a_small_screen_gets_a_window_that_does_not_fill_it() {
-        assert_eq!(first_size(None), [1100.0, 720.0]);
+        assert_eq!(first_size(None), [1100.0, 614.0]); // unknown screen -> fits 1366x768
+        assert_eq!(first_size(Some([1366.0, 768.0]))[1], 614.0); // room for top bar + title bar
         assert_eq!(first_size(Some([1920.0, 1080.0])), [1100.0, 720.0]);
         let [w, h] = first_size(Some([1093.0, 614.0])); // 1366x768 at 125%
         assert!(w < 1093.0 && h < 614.0);
+    }
+
+    #[test]
+    fn small_window_gets_denser() {
+        assert_eq!(super::density([1366.0, 768.0]), 1.0);
+        assert_eq!(super::density([1000.0, 650.0]), 0.92);
+        assert_eq!(super::density([640.0, 700.0]), 0.85);
     }
 }
