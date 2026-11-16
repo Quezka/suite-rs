@@ -15,6 +15,7 @@ pub fn icon(key: &str) -> Option<&'static [u8]> {
         "quay" => include_bytes!("../../assets/apps/quay.svg"),
         "loupe" => include_bytes!("../../assets/apps/loupe.svg"),
         "tether" => include_bytes!("../../assets/apps/tether.svg"),
+        "tidings" => include_bytes!("../../assets/apps/tidings.svg"),
         _ => return None,
     })
 }

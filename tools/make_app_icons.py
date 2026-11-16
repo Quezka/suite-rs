@@ -28,6 +28,7 @@ APPS = {
     "cadence": ("fitness_center", "#B91C1C"),
     "vesper": ("bedtime", "#312E81"),
     "pillion": ("two_wheeler", "#A16207"),
+    "tidings": ("newspaper", "#9333EA"),
 }
 
 OUT = Path(__file__).resolve().parent.parent / "icons" / "apps"

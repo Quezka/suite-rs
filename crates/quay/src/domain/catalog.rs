@@ -27,7 +27,7 @@ const fn linux(key: &'static str, name: &'static str, tagline: &'static str, rep
     SuiteApp { key, name, tagline, repo, windows_guid: "", windows_exe: "", package, command, linux_only: true }
 }
 
-pub const CATALOG: [SuiteApp; 12] = [
+pub const CATALOG: [SuiteApp; 13] = [
     app("quire", "Quire", "Notes, day planner and school timetable", "Quezka/quire", "A8A67700-9677-45B8-8C82-78A07D4DFD71", "Quire.exe"),
     app("gantry", "Gantry", "Gantt charts that open and save GanttProject files", "Quezka/gantry", "76971ED7-094F-4440-AF21-DE3524CFAEB4", "Gantry.exe"),
     app("ligature", "Ligature", "ER and UML class diagrams, with SQL generation", "Quezka/ligature", "3C1E7B52-6A0D-4F2B-9E4A-8D5F21C7A9B6", "Ligature.exe"),
@@ -39,6 +39,7 @@ pub const CATALOG: [SuiteApp; 12] = [
     app("natter", "Natter", "WhatsApp Web in a light window of its own", "Quezka/natter", "8A41B7D0-13ED-40B1-A3DA-A5BCFA0C1DF7", "Natter.exe"),
     linux("loupe", "Loupe", "A laptop's camera elsewhere, and the laptop as a second screen", "Quezka/loupe", "loupe-quezka", "quezka-loupe"),
     linux("tether", "Tether", "Your phone on the computer: notifications, messages, calls, files", "Quezka/tether", "quezka-tether", "tether"),
+    linux("tidings", "Tidings", "Your own news reader: the same story from many sides, plus stock news", "Quezka/tidings", "quezka-tidings", "tidings"),
     app("quay", "Quay", "This launcher: installs and updates the suite", "Quezka/quay", "C2F81A6D-93B4-4D07-A5E1-7B3C0D94F2A8", "Quay.exe"),
 ];
 
