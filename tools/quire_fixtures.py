@@ -149,8 +149,14 @@ def agenda_fixtures():
         g = services.digest.build(morning, today, mark=False)
         digests.append({"morning": morning, "items": [list(i) for i in g.items], "due": list(g.due),
                         "overdue": g.overdue, "ideas": list(g.ideas), "idea_back": g.idea_back})
+    notes = [[n.title, n.pinned, n.topic, n.snippet, n.course.name if n.course else None,
+              n.notebook.name if n.notebook else None] for n in services.notes.search()]
+    groups = [[g.course.name if g.course else None, g.notebook.name if g.notebook else None, g.topic, len(g.notes)]
+              for g in services.notes.grouped()]
+    from quire.application.services.notes import class_note_title
     db.close()
-    return {"today": today.isoformat(), "days": days, "digests": digests}
+    return {"today": today.isoformat(), "days": days, "digests": digests, "notes": notes, "note_groups": groups,
+            "class_note_title": class_note_title("Biology", date(2026, 11, 16))}
 
 
 OUT.mkdir(parents=True, exist_ok=True)

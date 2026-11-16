@@ -7,6 +7,7 @@ use chrono::{NaiveDate, NaiveDateTime};
 use quire::application::bus::ChangeBus;
 use quire::application::digest::DigestService;
 use quire::application::ideas::IdeaService;
+use quire::application::notes::{class_note_title, NoteService};
 use quire::application::tasks::TaskService;
 use quire::application::planner::{ItemKind, PlannerService};
 use quire::application::ports::Clock;
@@ -61,6 +62,18 @@ fn day_agendas_match_python() {
     let tasks = Rc::new(TaskService::new(Rc::new(SqliteTasks(db.clone())), Rc::new(SqliteCourses(db.clone())), clock.clone(), bus.clone()));
     let settings = Rc::new(SqliteSettings(db.clone()));
     let ideas = Rc::new(IdeaService::new(Rc::new(SqliteIdeas(db.clone())), clock.clone(), bus, tasks.clone(), settings.clone()));
+    let notes = NoteService {
+        notes: Rc::new(SqliteNotes(db.clone())), courses: Rc::new(SqliteCourses(db.clone())), lookup: Rc::new(SqliteCourses(db.clone())),
+        clock: clock.clone(), bus: Rc::new(ChangeBus::default()), images: Rc::new(SqliteImages(db.clone())),
+        notebooks: Rc::new(SqliteNotebooks(db.clone())),
+    };
+    let found: Vec<Value> = notes.search("", None, None).unwrap().iter().map(|n| serde_json::json!([n.title, n.pinned, n.topic, n.snippet,
+        n.course.as_ref().map(|c| c.name.clone()), n.notebook.as_ref().map(|b| b.name.clone())])).collect();
+    assert_eq!(Value::from(found), fixture["notes"]);
+    let groups: Vec<Value> = notes.grouped("", None, None).unwrap().iter().map(|g| serde_json::json!([g.course.as_ref().map(|c| c.name.clone()),
+        g.notebook.as_ref().map(|b| b.name.clone()), g.topic, g.notes.len()])).collect();
+    assert_eq!(Value::from(groups), fixture["note_groups"]);
+    assert_eq!(class_note_title("Biology", "2026-11-16".parse().unwrap()), fixture["class_note_title"].as_str().unwrap());
     let digest = DigestService { planner: Rc::new(planner), tasks, ideas, settings, clock };
     for expected in fixture["digests"].as_array().unwrap() {
         let morning = expected["morning"].as_bool().unwrap();

@@ -85,3 +85,38 @@ pub trait ShiftRepository {
     /// Weekly-schedule occurrences the user skipped: (job id, day, start minute).
     fn skipped(&self, first: NaiveDate, last: NaiveDate) -> AppResult<HashSet<(i64, NaiveDate, i32)>>;
 }
+
+use crate::domain::model::{Note, NoteImage, Notebook};
+
+pub trait NoteRepository {
+    /// Pinned first, then most recently edited. `text` matches body or topic.
+    fn search(&self, text: &str, course_id: Option<i64>, notebook_id: Option<i64>) -> AppResult<Vec<Note>>;
+    fn find_by_title(&self, title: &str, course_id: Option<i64>) -> AppResult<Option<Note>>;
+    fn get(&self, id: i64) -> AppResult<Option<Note>>;
+    fn topics(&self, course_id: Option<i64>, notebook_id: Option<i64>) -> AppResult<Vec<String>>;
+    fn rename_topic(&self, course_id: Option<i64>, old: &str, new: &str, notebook_id: Option<i64>) -> AppResult<usize>;
+    fn add(&self, note: &Note) -> AppResult<i64>;
+    fn update(&self, note: &Note) -> AppResult;
+    fn delete(&self, id: i64) -> AppResult;
+}
+
+pub trait NotebookRepository {
+    fn list(&self) -> AppResult<Vec<Notebook>>;
+    fn get(&self, id: i64) -> AppResult<Option<Notebook>>;
+    fn add(&self, book: &Notebook) -> AppResult<i64>;
+    fn update(&self, book: &Notebook) -> AppResult;
+    fn delete(&self, id: i64) -> AppResult;
+    fn note_count(&self, id: i64) -> AppResult<usize>;
+}
+
+pub trait ImageRepository {
+    fn get(&self, uid: &str) -> AppResult<Option<NoteImage>>;
+    fn add(&self, image: &NoteImage) -> AppResult<i64>;
+    fn replace(&self, uid: &str, mime: &str, data: &[u8]) -> AppResult;
+    /// A new random id (32 hex digits, like Python's uuid4().hex).
+    fn new_uid(&self) -> String;
+}
+
+pub trait CourseLookup {
+    fn get(&self, id: i64) -> AppResult<Option<Course>>;
+}

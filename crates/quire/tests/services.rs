@@ -73,3 +73,30 @@ fn ideas_become_tasks_come_back_and_can_be_undone() {
     assert_eq!(ideas.resurfaced(true).unwrap().unwrap().text, "keep me #x");
     assert!(ideas.resurfaced(false).unwrap().is_none());
 }
+
+#[test]
+fn notes_file_in_a_class_or_a_notebook_and_keep_pictures() {
+    use quire::application::notes::NoteService;
+    use quire::infrastructure::repositories::{SqliteImages, SqliteNotebooks, SqliteNotes};
+    let db = Rc::new(Database::in_memory().unwrap());
+    let clock = Rc::new(Fixed(Cell::new(day("2026-09-23").and_hms_opt(12, 0, 0).unwrap())));
+    let notes = NoteService {
+        notes: Rc::new(SqliteNotes(db.clone())), courses: Rc::new(SqliteCourses(db.clone())), lookup: Rc::new(SqliteCourses(db.clone())),
+        clock, bus: Rc::new(ChangeBus::default()), images: Rc::new(SqliteImages(db.clone())), notebooks: Rc::new(SqliteNotebooks(db)),
+    };
+    let book = notes.create_notebook("Trips", "#ff0000").unwrap();
+    let n = notes.create("# Rome\n\nColosseum", None, "italy", book.id).unwrap();
+    assert!(notes.create("x", Some(1), "", book.id).is_err()); // not both
+    notes.create("# Florence", None, "Italy", book.id).unwrap();
+    assert_eq!(notes.topics(None, book.id).unwrap(), vec!["italy"]); // same spelling reused
+    assert_eq!(notes.rename_topic(None, "italy", "Italia", book.id).unwrap(), 2);
+    assert_eq!(notes.notebooks().unwrap()[0].1, 2);
+    let md = notes.add_image(&[137, 80, 78, 71], "image/png", "a [map]").unwrap();
+    assert!(md.starts_with("![a (map)](quire-image:"));
+    let updated = notes.update(n.id.unwrap(), &format!("# Rome\n\n{md}"), None, true, "Italia", book.id).unwrap();
+    assert_eq!(notes.images_in(&updated.body).unwrap().len(), 1);
+    assert_eq!(notes.search("colos", None, None).unwrap().len(), 0); // the edit replaced the body
+    assert_eq!(notes.search("rome", None, None).unwrap()[0].title, "Rome");
+    notes.delete_notebook(book.id.unwrap()).unwrap();
+    assert!(notes.search("", None, None).unwrap().iter().all(|s| s.notebook.is_none()));
+}

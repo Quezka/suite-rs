@@ -5,6 +5,7 @@ pub mod bus;
 pub mod digest;
 pub mod errors;
 pub mod ideas;
+pub mod notes;
 pub mod planner;
 pub mod ports;
 pub mod tasks;

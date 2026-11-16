@@ -425,5 +425,88 @@
    "ideas": [],
    "idea_back": ""
   }
- ]
+ ],
+ "notes": [
+  [
+   "Ideas",
+   true,
+   "",
+   "Things I want to try this term: Pomodoro for maths homework Join the robotics club",
+   null,
+   null
+  ],
+  [
+   "Museum trip",
+   false,
+   "School",
+   "Bring the permission slip Meet at 8:15 at the gate",
+   null,
+   "Trips"
+  ],
+  [
+   "Frankenstein: themes",
+   false,
+   "Frankenstein",
+   "Ambition and its costs Isolation Nature vs. nurture \"Beware; for I am fearless, and there…",
+   "English Literature",
+   null
+  ],
+  [
+   "Mendel's laws",
+   false,
+   "Genetics",
+   "1. Segregation 2. Independent assortment",
+   "Biology",
+   null
+  ],
+  [
+   "Mitochondria",
+   false,
+   "Cell biology",
+   "The powerhouse of the cell: inner membrane folds (cristae) increase surface area for the…",
+   "Biology",
+   null
+  ],
+  [
+   "Biology: cellular respiration",
+   false,
+   "Cell biology",
+   "Equation: C6H12O6 6 O2 → 6 CO2 6 H2O energy (ATP) Stages 1. Glycolysis: cytoplasm, 2 ATP…",
+   "Biology",
+   null
+  ]
+ ],
+ "note_groups": [
+  [
+   "Biology",
+   null,
+   "Cell biology",
+   2
+  ],
+  [
+   "Biology",
+   null,
+   "Genetics",
+   1
+  ],
+  [
+   "English Literature",
+   null,
+   "Frankenstein",
+   1
+  ],
+  [
+   null,
+   "Trips",
+   "School",
+   1
+  ],
+  [
+   null,
+   null,
+   "",
+   1
+  ]
+ ],
+ "class_note_title": "Biology: Monday 16 November 2026"
 }

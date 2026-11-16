@@ -273,3 +273,146 @@ impl ShiftRepository for SqliteShifts {
         rows.collect::<Result<_, _>>().map_err(store)
     }
 }
+
+// ---- notes ---------------------------------------------------------------------------------------------------------
+
+use crate::application::ports::{CourseLookup, ImageRepository, NoteRepository, NotebookRepository};
+use crate::domain::model::{Note, NoteImage, Notebook};
+
+impl CourseLookup for SqliteCourses {
+    fn get(&self, id: i64) -> AppResult<Option<Course>> {
+        Ok(self.list()?.into_iter().find(|c| c.id == Some(id)))
+    }
+}
+
+pub struct SqliteNotes(pub Rc<Database>);
+
+fn note(r: &Row) -> rusqlite::Result<Note> {
+    let updated: Option<String> = r.get("updated")?;
+    Ok(Note {
+        body: r.get("body")?, course_id: r.get("course_id")?, pinned: r.get::<_, i64>("pinned")? != 0,
+        updated: updated.and_then(|u| NaiveDateTime::parse_from_str(&u, "%Y-%m-%dT%H:%M:%S").ok()),
+        id: Some(r.get("id")?), topic: r.get("topic")?, notebook_id: r.get("notebook_id")?,
+    })
+}
+
+fn updated(n: &Note) -> String {
+    stamp(&n.updated.unwrap_or_else(|| chrono::Local::now().naive_local()))
+}
+
+fn like(text: &str) -> String {
+    format!("%{}%", text.replace('\\', "\\\\").replace('%', "\\%").replace('_', "\\_"))
+}
+
+impl NoteRepository for SqliteNotes {
+    fn search(&self, text: &str, course_id: Option<i64>, notebook_id: Option<i64>) -> AppResult<Vec<Note>> {
+        let mut wh: Vec<String> = Vec::new();
+        let mut args: Vec<rusqlite::types::Value> = Vec::new();
+        if !text.is_empty() {
+            wh.push("(body LIKE ? ESCAPE '\\' OR topic LIKE ? ESCAPE '\\')".into());
+            args.push(like(text).into());
+            args.push(like(text).into());
+        }
+        if let Some(c) = course_id {
+            wh.push("course_id = ?".into());
+            args.push(c.into());
+        }
+        if let Some(b) = notebook_id {
+            wh.push("notebook_id = ?".into());
+            args.push(b.into());
+        }
+        let sql = format!("SELECT * FROM notes{} ORDER BY pinned DESC, updated DESC, id DESC",
+                          if wh.is_empty() { String::new() } else { format!(" WHERE {}", wh.join(" AND ")) });
+        let mut stmt = self.0.conn.prepare(&sql).map_err(store)?;
+        let rows = stmt.query_map(rusqlite::params_from_iter(args), note).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+
+    fn find_by_title(&self, title: &str, course_id: Option<i64>) -> AppResult<Option<Note>> {
+        self.0.conn.query_row("SELECT * FROM notes WHERE title = ? AND course_id IS ? ORDER BY id LIMIT 1",
+            params![title, course_id], note).optional().map_err(store)
+    }
+
+    fn get(&self, id: i64) -> AppResult<Option<Note>> {
+        self.0.conn.query_row("SELECT * FROM notes WHERE id = ?", [id], note).optional().map_err(store)
+    }
+
+    fn topics(&self, course_id: Option<i64>, notebook_id: Option<i64>) -> AppResult<Vec<String>> {
+        let mut stmt = self.0.conn.prepare(
+            "SELECT DISTINCT topic FROM notes WHERE course_id IS ? AND notebook_id IS ? AND topic != ''").map_err(store)?;
+        let rows = stmt.query_map(params![course_id, notebook_id], |r| r.get(0)).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+
+    fn rename_topic(&self, course_id: Option<i64>, old: &str, new: &str, notebook_id: Option<i64>) -> AppResult<usize> {
+        // leaves `updated` alone: refiling isn't editing
+        self.0.conn.execute("UPDATE notes SET topic = ? WHERE course_id IS ? AND notebook_id IS ? AND topic = ?",
+            params![new, course_id, notebook_id, old]).map_err(store)
+    }
+
+    fn add(&self, n: &Note) -> AppResult<i64> {
+        self.0.conn.execute("INSERT INTO notes (title, body, course_id, pinned, updated, topic, notebook_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            params![n.title(), n.body, n.course_id, n.pinned as i64, updated(n), n.topic, n.notebook_id]).map_err(store)?;
+        Ok(self.0.conn.last_insert_rowid())
+    }
+
+    fn update(&self, n: &Note) -> AppResult {
+        self.0.conn.execute("UPDATE notes SET title = ?, body = ?, course_id = ?, pinned = ?, updated = ?, topic = ?, notebook_id = ? WHERE id = ?",
+            params![n.title(), n.body, n.course_id, n.pinned as i64, updated(n), n.topic, n.notebook_id, n.id]).map(|_| ()).map_err(store)
+    }
+
+    fn delete(&self, id: i64) -> AppResult {
+        self.0.conn.execute("DELETE FROM notes WHERE id = ?", [id]).map(|_| ()).map_err(store)
+    }
+}
+
+pub struct SqliteNotebooks(pub Rc<Database>);
+
+fn notebook(r: &Row) -> rusqlite::Result<Notebook> {
+    Ok(Notebook { name: r.get("name")?, color: r.get("color")?, id: Some(r.get("id")?) })
+}
+
+impl NotebookRepository for SqliteNotebooks {
+    fn list(&self) -> AppResult<Vec<Notebook>> {
+        let mut stmt = self.0.conn.prepare("SELECT * FROM notebooks ORDER BY name").map_err(store)?;
+        let rows = stmt.query_map([], notebook).map_err(store)?;
+        rows.collect::<Result<_, _>>().map_err(store)
+    }
+    fn get(&self, id: i64) -> AppResult<Option<Notebook>> {
+        self.0.conn.query_row("SELECT * FROM notebooks WHERE id = ?", [id], notebook).optional().map_err(store)
+    }
+    fn add(&self, b: &Notebook) -> AppResult<i64> {
+        self.0.conn.execute("INSERT INTO notebooks (name, color) VALUES (?, ?)", params![b.name, b.color]).map_err(store)?;
+        Ok(self.0.conn.last_insert_rowid())
+    }
+    fn update(&self, b: &Notebook) -> AppResult {
+        self.0.conn.execute("UPDATE notebooks SET name = ?, color = ? WHERE id = ?", params![b.name, b.color, b.id]).map(|_| ()).map_err(store)
+    }
+    fn delete(&self, id: i64) -> AppResult {
+        self.0.conn.execute("DELETE FROM notebooks WHERE id = ?", [id]).map(|_| ()).map_err(store) // its notes stay, unfiled
+    }
+    fn note_count(&self, id: i64) -> AppResult<usize> {
+        self.0.conn.query_row("SELECT COUNT(*) FROM notes WHERE notebook_id = ?", [id], |r| r.get::<_, i64>(0))
+            .map(|n| n as usize).map_err(store)
+    }
+}
+
+pub struct SqliteImages(pub Rc<Database>);
+
+impl ImageRepository for SqliteImages {
+    fn get(&self, uid: &str) -> AppResult<Option<NoteImage>> {
+        self.0.conn.query_row("SELECT * FROM note_images WHERE uid = ?", [uid], |r| Ok(NoteImage {
+            uid: r.get("uid")?, mime: r.get("mime")?, data: r.get("data")?, id: Some(r.get("id")?),
+        })).optional().map_err(store)
+    }
+    fn add(&self, i: &NoteImage) -> AppResult<i64> {
+        self.0.conn.execute("INSERT INTO note_images (uid, mime, data) VALUES (?, ?, ?)", params![i.uid, i.mime, i.data]).map_err(store)?;
+        Ok(self.0.conn.last_insert_rowid())
+    }
+    fn replace(&self, uid: &str, mime: &str, data: &[u8]) -> AppResult {
+        self.0.conn.execute("UPDATE note_images SET mime = ?, data = ? WHERE uid = ?", params![mime, data, uid]).map(|_| ()).map_err(store)
+    }
+    fn new_uid(&self) -> String {
+        self.0.conn.query_row("SELECT lower(hex(randomblob(16)))", [], |r| r.get(0)).unwrap_or_default()
+    }
+}
