@@ -13,6 +13,7 @@ pub mod ports;
 pub mod quiet;
 pub mod reminders;
 pub mod school;
+pub mod school_records;
 pub mod sleep;
 pub mod sync;
 pub mod tasks;

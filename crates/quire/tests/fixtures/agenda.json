@@ -426,6 +426,115 @@
    "idea_back": ""
   }
  ],
+ "school": {
+  "periods": [
+   "Trimestre",
+   "Pentamestre"
+  ],
+  "subjects": [
+   [
+    "Biology",
+    8.5,
+    2,
+    "Biology"
+   ],
+   [
+    "Matematica",
+    7.0,
+    4,
+    "Matematica"
+   ],
+   [
+    "Storia",
+    5.58,
+    3,
+    "Storia"
+   ]
+  ],
+  "average": 6.86,
+  "overview": [
+   6.86,
+   9,
+   null,
+   0,
+   null,
+   [
+    "Storia"
+   ]
+  ],
+  "agenda": [
+   [
+    "Riassunto del capitolo 2",
+    true
+   ],
+   [
+    "Workbook p. 18, exercises 1-4",
+    true
+   ],
+   [
+    "Pag. 112 es. 4-9",
+    true
+   ],
+   [
+    "Verifica: Rivoluzione francese",
+    true
+   ]
+  ],
+  "absences": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   640,
+   160
+  ],
+  "unread": 1,
+  "needed": [
+   "Biology",
+   5.5,
+   8.5,
+   2
+  ],
+  "trend": [
+   [
+    "2026-08-31",
+    6.0
+   ],
+   [
+    "2026-09-10",
+    6.0
+   ],
+   [
+    "2026-09-15",
+    6.17
+   ],
+   [
+    "2026-09-20",
+    6.62
+   ],
+   [
+    "2026-10-20",
+    6.3
+   ],
+   [
+    "2026-10-28",
+    6.5
+   ],
+   [
+    "2026-11-03",
+    6.39
+   ],
+   [
+    "2026-11-05",
+    6.59
+   ],
+   [
+    "2026-11-07",
+    6.86
+   ]
+  ]
+ },
  "notes": [
   [
    "Ideas",

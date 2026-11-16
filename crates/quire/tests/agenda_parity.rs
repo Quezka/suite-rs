@@ -101,3 +101,40 @@ fn day_agendas_match_python() {
         assert_eq!(g.idea_back, expected["idea_back"].as_str().unwrap());
     }
 }
+
+#[test]
+fn school_records_match_python() {
+    use quire::application::school_records::SchoolRecordsService;
+    let fixture: Value = serde_json::from_str(include_str!("fixtures/agenda.json")).unwrap();
+    let s = &fixture["school"];
+    let dir = std::env::temp_dir().join(format!("quire-school-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).unwrap();
+    let path = dir.join("python.db");
+    std::fs::copy(concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/python.db"), &path).unwrap();
+    let db = Rc::new(Database::open(&path).unwrap());
+    let today: NaiveDate = fixture["today"].as_str().unwrap().parse().unwrap();
+    let clock: Rc<dyn Clock> = Rc::new(Fixed(Cell::new(today.and_hms_opt(12, 0, 0).unwrap())));
+    let school = Rc::new(SqliteSchool(db.clone()));
+    let r = SchoolRecordsService {
+        courses: Rc::new(SqliteCourses(db.clone())), links: school.clone(), records: school,
+        clock, source: "classeviva".into(),
+    };
+    assert_eq!(Value::from(r.periods().unwrap()), s["periods"]);
+    let subjects: Vec<Value> = r.grades_by_subject(None).unwrap().iter()
+        .map(|x| serde_json::json!([x.subject, x.average, x.grades.len(), x.course.as_ref().map(|c| c.name.clone())])).collect();
+    assert_eq!(Value::from(subjects), s["subjects"]);
+    assert_eq!(serde_json::json!(r.overall_average(None).unwrap()), s["average"]);
+    let o = r.overview(None).unwrap();
+    let below: Vec<String> = o.below_pass.iter().map(|x| x.subject.clone()).collect();
+    assert_eq!(serde_json::json!([o.average, o.grade_count, o.next_test.map(|t| t.task.title), o.homework_due_this_week,
+        o.next_homework.map(|t| t.task.title), below]), s["overview"]);
+    let agenda: Vec<Value> = r.agenda(true, 60, 14).unwrap().iter().map(|i| serde_json::json!([i.task.title, i.overdue])).collect();
+    assert_eq!(Value::from(agenda), s["agenda"]);
+    let a = r.absence_summary().unwrap();
+    assert_eq!(serde_json::json!([a.absent_days, a.late_entries, a.early_exits, a.unjustified, a.hours_missed, a.school_hours, a.limit_hours]), s["absences"]);
+    assert_eq!(serde_json::json!(r.unread_notices().unwrap()), s["unread"]);
+    let n = r.needed("Biology", 7.0, 2, None).unwrap();
+    assert_eq!(serde_json::json!([n.subject, n.mark, n.average, n.grade_count]), s["needed"]);
+    let trend: Vec<Value> = r.trend(None, None).unwrap().iter().map(|(d, v)| serde_json::json!([d.to_string(), v])).collect();
+    assert_eq!(Value::from(trend), s["trend"]);
+}

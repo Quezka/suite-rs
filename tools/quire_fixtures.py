@@ -163,8 +163,26 @@ def agenda_fixtures():
                      "per_job": [[t.job.name if t.job else None, t.minutes, t.pay, t.net] for t in w.per_job]})
         for i in services.work.shifts_between(first, last):
             work[-1].setdefault("items", []).append([i.shift.day.isoformat(), i.shift.start, i.shift.duration, i.pay, i.net])
+    r = services.school
+    o = r.overview()
+    a = r.absence_summary()
+    school = {
+        "periods": r.periods(),
+        "subjects": [[x.subject, x.average, len(x.grades), x.course.name if x.course else None] for x in r.grades_by_subject()],
+        "average": r.overall_average(),
+        "overview": [o.average, o.grade_count, o.next_test.task.title if o.next_test else None, o.homework_due_this_week,
+                     o.next_homework.task.title if o.next_homework else None, [x.subject for x in o.below_pass]],
+        "agenda": [[i.task.title, i.overdue] for i in r.agenda(include_done=True)],
+        "absences": [a.absent_days, a.late_entries, a.early_exits, a.unjustified, a.hours_missed, a.school_hours, a.limit_hours],
+        "unread": r.unread_notices(),
+    }
+    subjects = r.grades_by_subject()
+    if subjects:
+        n = r.needed(subjects[0].subject, 7.0, 2)
+        school["needed"] = [n.subject, n.mark, n.average, n.grade_count]
+        school["trend"] = [[d.isoformat(), v] for d, v in r.trend()]
     db.close()
-    return {"today": today.isoformat(), "days": days, "digests": digests, "notes": notes, "note_groups": groups,
+    return {"today": today.isoformat(), "days": days, "digests": digests, "school": school, "notes": notes, "note_groups": groups,
             "class_note_title": class_note_title("Biology", date(2026, 11, 16)), "work": work}
 
 
