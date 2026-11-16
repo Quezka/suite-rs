@@ -8,6 +8,7 @@ authors.workspace = true
 
 [dependencies]
 quezka-kit = { path = "../kit" }
+egui.workspace = true
 chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
 fancy-regex = "0.14"
 rusqlite = { version = "0.32", features = ["bundled", "backup"] }
@@ -18,3 +19,7 @@ ureq = "2.12"
 keyring = { version = "3.6", features = ["async-secret-service", "async-io", "crypto-rust", "windows-native"] }
 
 [dev-dependencies]
+
+[[bin]]
+name = "quire-rs"
+path = "src/main.rs"

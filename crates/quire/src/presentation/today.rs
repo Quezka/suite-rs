@@ -20,7 +20,7 @@ pub fn now_next(items: &[AgendaItem], minute: i32) -> (Option<&AgendaItem>, Opti
     let mut timed: Vec<&AgendaItem> = items.iter().filter(|i| i.time.end > i.time.start).collect();
     timed.sort_by_key(|i| i.time.start);
     let now = timed.iter().rev().find(|i| i.time.start <= minute && minute < i.time.end).copied();
-    let later = timed.iter().find(|i| i.time.start > minute && now.is_none_or(|n| !std::ptr::eq(*i, n))).copied();
+    let later = timed.iter().find(|i| i.time.start > minute && now.is_none_or(|n| !std::ptr::eq(**i, n))).copied();
     (now, later)
 }
 
@@ -132,8 +132,6 @@ impl TodayPage {
                 if self.day != today && f::inline_button(ui, th, &t("Today"), Kind::Tonal) {
                     self.go(s, today);
                 }
-                let pick = ui.add(egui::Button::new("").frame(false).min_size(Vec2::ZERO));
-                let _ = pick;
                 if w::icon_button(ui, th, "calendar-day", th.text) {
                     self.picking = true;
                 }
