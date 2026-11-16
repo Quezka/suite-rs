@@ -4,6 +4,9 @@ use sha2::{Digest, Sha256};
 
 pub const BEACON_PORT: u16 = 47820;
 pub const LINK_PORT: u16 = 47821;
+/// Relay (away from Wi-Fi): both sides dial out to it, it pipes bytes; it never sees a key.
+pub const RELAY_PORT: u16 = 47822;
+pub const RELAY_MAGIC: &str = "TETHERRELAY1";
 const MAGIC: &str = "TETHER1";
 /// The largest frame accepted (a file is sent in pieces below this).
 pub const MAX_FRAME: usize = 4 * 1024 * 1024;
@@ -32,6 +35,41 @@ pub fn session_key(secret: &[u8], phone_nonce: &[u8], desktop_nonce: &[u8]) -> [
     h.update(phone_nonce);
     h.update(desktop_nonce);
     h.finalize().into()
+}
+
+/// Meeting point at the relay for one pairing: from the long-term key, one-way -> relay learns nothing.
+pub fn relay_room(key: &[u8]) -> String {
+    let mut h = Sha256::new();
+    h.update(b"tether relay");
+    h.update(key);
+    h.finalize().iter().take(16).map(|b| format!("{b:02x}")).collect()
+}
+
+/// First line a side sends the relay: `TETHERRELAY1 pc|phone <room>`.
+pub fn relay_hello(role: &str, room: &str) -> String {
+    format!("{RELAY_MAGIC} {role} {room}\n")
+}
+
+/// (role, room) from a hello line; None if it isn't one.
+pub fn parse_relay_hello(line: &str) -> Option<(String, String)> {
+    let mut p = line.trim().split(' ');
+    if p.next()? != RELAY_MAGIC { return None; }
+    let role = p.next()?;
+    let room = p.next()?;
+    if !matches!(role, "pc" | "phone") || room.len() != 32 || !room.bytes().all(|b| b.is_ascii_hexdigit()) || p.next().is_some() {
+        return None;
+    }
+    Some((role.into(), room.into()))
+}
+
+/// "host" or "host:port" -> (host, port), default port RELAY_PORT.
+pub fn relay_address(text: &str) -> Option<(String, u16)> {
+    let t = text.trim();
+    if t.is_empty() { return None; }
+    match t.rsplit_once(':') {
+        Some((h, p)) if !h.is_empty() && p.parse::<u16>().is_ok() => Some((h.into(), p.parse().ok()?)),
+        _ => Some((t.into(), RELAY_PORT)),
+    }
 }
 
 /// The pairing code shown on the computer: 8 characters without look-alikes (about 40 bits).
@@ -92,5 +130,29 @@ mod tests {
         assert_eq!(safe_name("../../etc/passwd"), "passwd");
         assert_eq!(safe_name(".hidden"), "hidden");
         assert_eq!(safe_name(""), "file");
+    }
+}
+
+#[cfg(test)]
+mod relay_tests {
+    use super::*;
+
+    #[test]
+    fn room_is_stable_hex_and_hello_round_trips() {
+        let room = relay_room(&[7u8; 32]);
+        assert_eq!(room.len(), 32);
+        assert_eq!(room, relay_room(&[7u8; 32]));
+        assert_ne!(room, relay_room(&[8u8; 32]));
+        assert_eq!(parse_relay_hello(&relay_hello("phone", &room)), Some(("phone".into(), room.clone())));
+        assert_eq!(parse_relay_hello("TETHERRELAY1 admin abc"), None);
+        assert_eq!(relay_address("home.example:9000"), Some(("home.example".into(), 9000)));
+        assert_eq!(relay_address("home.example"), Some(("home.example".into(), RELAY_PORT)));
+        assert_eq!(relay_address(" "), None);
+    }
+
+    #[test]
+    fn room_matches_the_phone() {
+        // = ProtocolTest.relayRoom (kotlin)
+        assert_eq!(relay_room(&[1u8; 32]), "11f9c4d690fca1e143bcde677dac9fde");
     }
 }

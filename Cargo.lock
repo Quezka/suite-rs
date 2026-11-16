@@ -3543,7 +3543,7 @@ dependencies = [
 
 [[package]]
 name = "tether"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "aes-gcm",
  "base64",
@@ -3551,6 +3551,13 @@ dependencies = [
  "quezka-kit",
  "serde_json",
  "sha2",
+]
+
+[[package]]
+name = "tether-relay"
+version = "0.1.0"
+dependencies = [
+ "tether",
 ]
 
 [[package]]

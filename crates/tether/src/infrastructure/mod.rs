@@ -44,6 +44,8 @@ pub struct Pairings {
     pub phones: HashMap<String, (String, Vec<u8>)>,
     pub code: Option<String>,
     pub computer_id: String,
+    /// relay "host[:port]" for away from wi-fi; None = off
+    pub relay: Option<String>,
 }
 
 impl Pairings {
@@ -62,7 +64,8 @@ impl Pairings {
         }
         let computer_id = v.get("id").and_then(Value::as_str).map(str::to_string)
             .unwrap_or_else(|| random(8).iter().map(|b| format!("{b:02x}")).collect());
-        let p = Self { phones, code: None, computer_id };
+        let relay = v.get("relay").and_then(Value::as_str).map(str::to_string).filter(|r| !r.trim().is_empty());
+        let p = Self { phones, code: None, computer_id, relay };
         p.save();
         p
     }
@@ -73,7 +76,7 @@ impl Pairings {
         let phones: serde_json::Map<String, Value> = self.phones.iter()
             .map(|(id, (name, key))| (id.clone(), json!({"name": name, "key": B64.encode(key)}))).collect();
         let path = dir.join("paired.json");
-        let _ = std::fs::write(&path, json!({"id": self.computer_id, "phones": phones}).to_string());
+        let _ = std::fs::write(&path, json!({"id": self.computer_id, "phones": phones, "relay": self.relay}).to_string());
         #[cfg(unix)]
         {
             use std::os::unix::fs::PermissionsExt;
@@ -130,20 +133,70 @@ impl Link {
                 std::thread::sleep(Duration::from_secs(2));
             }
         });
-        let (p, o) = (pairings.clone(), outgoing.clone());
+        let (p, o, ev) = (pairings.clone(), outgoing.clone(), events.clone());
         std::thread::spawn(move || {
             let Ok(listener) = TcpListener::bind(("0.0.0.0", LINK_PORT)) else { return };
             for stream in listener.incoming().flatten() {
-                let (p, o, ev) = (p.clone(), o.clone(), events.clone());
+                let (p, o, ev) = (p.clone(), o.clone(), ev.clone());
                 std::thread::spawn(move || serve(stream, p, o, ev));
             }
         });
+        // relay: one waiting connection per paired phone (phone dials the same room when off our wi-fi)
+        let (p, o) = (pairings.clone(), outgoing.clone());
+        std::thread::spawn(move || relay_supervisor(p, o, events));
         Self { pairings, outgoing }
     }
 
 }
 
+fn relay_supervisor(pairings: Arc<Mutex<Pairings>>, outgoing: Arc<Mutex<Option<Sender<Value>>>>, events: Sender<LinkEvent>) {
+    let active: Arc<Mutex<std::collections::HashSet<String>>> = Arc::default();
+    loop {
+        let (relay, phones) = {
+            let p = pairings.lock().unwrap();
+            (p.relay.clone(), p.phones.iter().map(|(id, (_, k))| (id.clone(), k.clone())).collect::<Vec<_>>())
+        };
+        if let Some((host, port)) = relay.as_deref().and_then(domain::relay_address) {
+            for (id, key) in phones {
+                if !active.lock().unwrap().insert(id.clone()) { continue; }
+                let (p, o, ev, a, host) = (pairings.clone(), outgoing.clone(), events.clone(), active.clone(), host.clone());
+                std::thread::spawn(move || {
+                    if let Some(stream) = relay_wait(&host, port, &domain::relay_room(&key)) {
+                        serve(stream, p, o, ev);
+                    } else {
+                        std::thread::sleep(Duration::from_secs(10)); // relay down -> no busy loop
+                    }
+                    a.lock().unwrap().remove(&id);
+                });
+            }
+        }
+        std::thread::sleep(Duration::from_secs(5));
+    }
+}
+
+/// Dial the relay, wait (up to ~19 min) for the phone to join our room; the stream then = a link like any other.
+fn relay_wait(host: &str, port: u16, room: &str) -> Option<TcpStream> {
+    use std::net::ToSocketAddrs;
+    let addr = (host, port).to_socket_addrs().ok()?.next()?;
+    let mut s = TcpStream::connect_timeout(&addr, Duration::from_secs(10)).ok()?;
+    s.write_all(domain::relay_hello("pc", room).as_bytes()).ok()?;
+    let _ = s.set_read_timeout(Some(Duration::from_secs(19 * 60)));
+    let mut ok = [0u8; 3];
+    s.read_exact(&mut ok).ok()?;
+    (&ok == b"ok\n").then_some(s)
+}
+
 impl PhoneLink for Link {
+    fn relay(&self) -> Option<String> {
+        self.pairings.lock().unwrap().relay.clone()
+    }
+
+    fn set_relay(&self, address: Option<String>) {
+        let mut p = self.pairings.lock().unwrap();
+        p.relay = address.map(|a| a.trim().to_string()).filter(|a| !a.is_empty());
+        p.save();
+    }
+
     fn send(&self, message: Value) -> bool {
         self.outgoing.lock().unwrap().as_ref().is_some_and(|tx| tx.send(message).is_ok())
     }

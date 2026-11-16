@@ -21,6 +21,9 @@ pub trait PhoneLink {
     /// (id, name) of the paired phones.
     fn paired(&self) -> Vec<(String, String)>;
     fn send_file(&self, path: &Path) -> Result<(), String>;
+    /// relay "host[:port]" used away from wi-fi (None = off)
+    fn relay(&self) -> Option<String> { None }
+    fn set_relay(&self, _address: Option<String>) {}
 }
 
 /// The computer's own side: notifications, clipboard, the file picker.

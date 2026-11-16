@@ -46,6 +46,8 @@ pub struct TetherWindow {
     thread: Option<String>,
     draft: String,
     message: String,
+    /// relay address being typed (None = not loaded yet)
+    relay: Option<String>,
 }
 
 /// A kit button `width` points wide (kit buttons fill whatever width they get).
@@ -64,7 +66,7 @@ fn who(thread: &Thread) -> String {
 impl TetherWindow {
     pub fn new(link: Box<dyn PhoneLink>, desktop: Box<dyn Desktop>, events: Receiver<LinkEvent>) -> Self {
         Self { link, desktop, events, show_requests: None, phone: Phone::default(), section: Section::Notifications, code: None,
-            replies: Default::default(), thread: None, draft: String::new(), message: String::new() }
+            replies: Default::default(), thread: None, draft: String::new(), message: String::new(), relay: None }
     }
 
     /// Open on a section (screenshots): 0 notifications, 1 messages, 2 files, 3 phone; and a conversation.
@@ -302,6 +304,21 @@ impl TetherWindow {
         });
         if new_code { self.code = Some(self.link.new_code()); }
         if let Some(id) = forget { self.link.forget(&id); }
+        ui.add_space(GAP);
+        // away from wi-fi: both sides dial a relay (`tether-relay` on your server); ends stay encrypted
+        let saved = self.link.relay().unwrap_or_default();
+        let mut relay = self.relay.take().unwrap_or_else(|| saved.clone());
+        let mut save = false;
+        w::settings_card(ui, th, Some(&t("Away from Wi-Fi")), |ui| {
+            w::small(ui, th, &t("A relay on your own server joins the phone and this computer over the internet. Messages stay encrypted end to end."));
+            quezka_kit::forms::field(ui, th, &t("Relay address"), &mut relay, "relay.example.org");
+            if relay.trim() != saved && w::button(ui, th, &t("Save"), None, Kind::Tonal, 40.0) { save = true; }
+        });
+        if save {
+            self.link.set_relay(Some(relay.clone()));
+            self.message = t("Saved. Put the same address in Tether on the phone.");
+        }
+        self.relay = Some(relay);
     }
 
     fn notifications(&mut self, ui: &mut egui::Ui, th: &Tokens) {

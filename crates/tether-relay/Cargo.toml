@@ -1,0 +1,10 @@
+[package]
+name = "tether-relay"
+version = "0.1.0"
+description = "Tether's relay: phone and computer both dial out to it when they aren't on the same Wi-Fi; it pipes encrypted bytes."
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[dependencies]
+tether = { path = "../tether" }
