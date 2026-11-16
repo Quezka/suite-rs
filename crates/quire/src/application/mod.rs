@@ -2,6 +2,7 @@
 //! network or screens: those are behind the traits in `ports`.
 
 pub mod bus;
+pub mod calendar;
 pub mod digest;
 pub mod errors;
 pub mod focus;

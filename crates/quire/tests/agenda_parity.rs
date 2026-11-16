@@ -138,3 +138,37 @@ fn school_records_match_python() {
     let trend: Vec<Value> = r.trend(None, None).unwrap().iter().map(|(d, v)| serde_json::json!([d.to_string(), v])).collect();
     assert_eq!(Value::from(trend), s["trend"]);
 }
+
+#[test]
+fn calendar_file_matches_python() {
+    use quire::application::calendar::CalendarService;
+    use quire::application::ports::SystemCalendar;
+    use quire::domain::ical::to_ics;
+    struct Nowhere;
+    impl SystemCalendar for Nowhere {
+        fn can_subscribe(&self) -> bool { true }
+        fn publish(&self, _: &str) -> quire::application::errors::AppResult { Ok(()) }
+        fn connect(&self) -> quire::application::errors::AppResult { Ok(()) }
+        fn disconnect(&self) -> quire::application::errors::AppResult { Ok(()) }
+        fn open(&self) -> quire::application::errors::AppResult { Ok(()) }
+    }
+    let fixture: Value = serde_json::from_str(include_str!("fixtures/agenda.json")).unwrap();
+    let dir = std::env::temp_dir().join(format!("quire-ics-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).unwrap();
+    let path = dir.join("python.db");
+    std::fs::copy(concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/python.db"), &path).unwrap();
+    let db = Rc::new(Database::open(&path).unwrap());
+    let today: NaiveDate = fixture["today"].as_str().unwrap().parse().unwrap();
+    let clock: Rc<dyn Clock> = Rc::new(Fixed(Cell::new(today.and_hms_opt(12, 0, 0).unwrap())));
+    let bus = Rc::new(ChangeBus::default());
+    let planner = Rc::new(PlannerService {
+        courses: Rc::new(SqliteCourses(db.clone())), events: Rc::new(SqliteEvents(db.clone())),
+        tasks: Rc::new(SqliteTasks(db.clone())), journal: Rc::new(SqliteJournal(db.clone())),
+        clock: clock.clone(), bus: bus.clone(),
+        jobs: Rc::new(SqliteJobs(db.clone())), shifts: Rc::new(SqliteShifts(db.clone())), routines: Rc::new(SqliteRoutines(db.clone())),
+    });
+    let tasks = Rc::new(TaskService::new(Rc::new(SqliteTasks(db.clone())), Rc::new(SqliteCourses(db.clone())), clock.clone(), bus));
+    let cal = CalendarService { planner, tasks, system: Rc::new(Nowhere), settings: Rc::new(SqliteSettings(db.clone())), clock: clock.clone() };
+    let ics = to_ics(&cal.entries().unwrap(), "Quire", clock.now());
+    assert_eq!(ics, fixture["ics"].as_str().unwrap());
+}

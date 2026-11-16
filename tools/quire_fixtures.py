@@ -181,8 +181,10 @@ def agenda_fixtures():
         n = r.needed(subjects[0].subject, 7.0, 2)
         school["needed"] = [n.subject, n.mark, n.average, n.grade_count]
         school["trend"] = [[d.isoformat(), v] for d, v in r.trend()]
+    from quire.domain.ical import to_ics
+    ics = to_ics(services.calendar._entries(), "Quire", Fixed().now())
     db.close()
-    return {"today": today.isoformat(), "days": days, "digests": digests, "school": school, "notes": notes, "note_groups": groups,
+    return {"today": today.isoformat(), "days": days, "digests": digests, "school": school, "ics": ics, "notes": notes, "note_groups": groups,
             "class_note_title": class_note_title("Biology", date(2026, 11, 16)), "work": work}
 
 

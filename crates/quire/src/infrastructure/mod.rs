@@ -9,4 +9,5 @@ pub mod http;
 pub mod quire_server;
 pub mod repositories;
 pub mod sqlite;
+pub mod system_calendar;
 pub mod sync_store;

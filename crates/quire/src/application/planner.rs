@@ -25,6 +25,19 @@ pub enum ItemKind {
     WeeklyShift,
 }
 
+impl ItemKind {
+    /// Python's `ItemKind.value`: kept in calendar uids, so they stay the same across apps.
+    pub fn name(self) -> &'static str {
+        match self {
+            ItemKind::Class => "class",
+            ItemKind::Event => "event",
+            ItemKind::Routine => "routine",
+            ItemKind::Shift => "shift",
+            ItemKind::WeeklyShift => "weekly_shift",
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct AgendaItem {
     pub kind: ItemKind,

@@ -376,3 +376,13 @@ pub trait SchoolLinks {
     /// Fold one course into another: its tasks, notes, grades and lessons move over; the source is deleted.
     fn merge_courses(&self, source: i64, target: i64) -> AppResult;
 }
+
+/// The computer's own calendar app.
+pub trait SystemCalendar {
+    /// Whether the system keeps following the file, rather than importing it once.
+    fn can_subscribe(&self) -> bool;
+    fn publish(&self, text: &str) -> AppResult;
+    fn connect(&self) -> AppResult;
+    fn disconnect(&self) -> AppResult;
+    fn open(&self) -> AppResult;
+}
