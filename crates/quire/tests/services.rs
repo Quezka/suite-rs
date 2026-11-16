@@ -100,3 +100,35 @@ fn notes_file_in_a_class_or_a_notebook_and_keep_pictures() {
     notes.delete_notebook(book.id.unwrap()).unwrap();
     assert!(notes.search("", None, None).unwrap().iter().all(|s| s.notebook.is_none()));
 }
+
+#[test]
+fn courses_events_and_routines_show_on_the_day() {
+    use quire::application::planner::{EventInput, ItemKind, PlannerService, RoutineInput};
+    use quire::application::timetable::{CourseInput, SlotInput, TimetableService};
+    use quire::infrastructure::repositories::*;
+    let db = Rc::new(Database::in_memory().unwrap());
+    let bus = Rc::new(ChangeBus::default());
+    let clock = Rc::new(Fixed(Cell::new(day("2026-09-23").and_hms_opt(12, 0, 0).unwrap())));
+    let timetable = TimetableService { courses: Rc::new(SqliteCourses(db.clone())), bus: bus.clone() };
+    let planner = PlannerService {
+        courses: Rc::new(SqliteCourses(db.clone())), events: Rc::new(SqliteEvents(db.clone())), tasks: Rc::new(SqliteTasks(db.clone())),
+        journal: Rc::new(SqliteJournal(db.clone())), clock, bus, jobs: Rc::new(SqliteJobs(db.clone())),
+        shifts: Rc::new(SqliteShifts(db.clone())), routines: Rc::new(SqliteRoutines(db)),
+    };
+    // 2026-09-23 is a Wednesday (weekday 2)
+    let maths = timetable.save_course(None, &CourseInput { name: " Maths ".into(), teacher: "Okafor".into(), room: "B12".into(),
+        color: "#4f7cff".into(), slots: vec![SlotInput { weekday: 2, start: 510, end: 560, room: String::new() }] }).unwrap();
+    planner.save_event(None, &EventInput { day: day("2026-09-23"), start: 720, end: 765, title: "Lunch".into(), details: String::new(),
+        color: "#8a8f98".into(), all_day: false, milestone: false }).unwrap();
+    planner.save_routine(None, &RoutineInput { title: "Wake up".into(), minute: 420, weekdays: vec![2, 2, 0], color: "#f5a524".into() }).unwrap();
+    planner.save_journal(day("2026-09-23"), "bring the slip").unwrap();
+    let a = planner.day_agenda(day("2026-09-23")).unwrap();
+    let kinds: Vec<(ItemKind, &str)> = a.items.iter().map(|i| (i.kind, i.title.as_str())).collect();
+    assert_eq!(kinds, vec![(ItemKind::Routine, "Wake up"), (ItemKind::Class, "Maths"), (ItemKind::Event, "Lunch")]);
+    assert_eq!(a.items[1].room, "B12");
+    assert_eq!(a.journal, "bring the slip");
+    assert_eq!(planner.routines().unwrap()[0].weekdays, vec![0, 2]);
+    assert_eq!(timetable.next_meeting(maths, day("2026-09-23")).unwrap(), Some(day("2026-09-30")));
+    timetable.delete_course(maths).unwrap();
+    assert!(planner.day_agenda(day("2026-09-23")).unwrap().items.iter().all(|i| i.kind != ItemKind::Class));
+}

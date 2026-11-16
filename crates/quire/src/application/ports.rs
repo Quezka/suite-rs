@@ -41,6 +41,9 @@ pub trait KeyValueStore {
 
 pub trait CourseRepository {
     fn list(&self) -> AppResult<Vec<Course>>;
+    fn add(&self, course: &Course) -> AppResult<i64>;
+    fn update(&self, course: &Course) -> AppResult;
+    fn delete(&self, id: i64) -> AppResult;
 }
 
 pub trait TaskRepository {
@@ -65,10 +68,17 @@ use crate::domain::model::{Event, Job, Routine, Shift};
 
 pub trait EventRepository {
     fn between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<Event>>;
+    fn get(&self, id: i64) -> AppResult<Option<Event>>;
+    fn add(&self, event: &Event) -> AppResult<i64>;
+    fn update(&self, event: &Event) -> AppResult;
+    fn delete(&self, id: i64) -> AppResult;
 }
 
 pub trait RoutineRepository {
     fn list(&self) -> AppResult<Vec<Routine>>;
+    fn add(&self, routine: &Routine) -> AppResult<i64>;
+    fn update(&self, routine: &Routine) -> AppResult;
+    fn delete(&self, id: i64) -> AppResult;
 }
 
 pub trait JournalRepository {

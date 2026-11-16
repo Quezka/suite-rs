@@ -9,3 +9,4 @@ pub mod notes;
 pub mod planner;
 pub mod ports;
 pub mod tasks;
+pub mod timetable;

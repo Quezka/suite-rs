@@ -171,3 +171,97 @@ impl PlannerService {
         Ok(())
     }
 }
+
+// ---- events and routines --------------------------------------------------------------------------------------------
+
+use crate::domain::model::all_day_time;
+
+#[derive(Clone, Debug)]
+pub struct EventInput {
+    pub day: NaiveDate,
+    pub start: i32,
+    pub end: i32,
+    pub title: String,
+    pub details: String,
+    pub color: String,
+    pub all_day: bool,
+    pub milestone: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct RoutineInput {
+    pub title: String,
+    pub minute: i32,
+    pub weekdays: Vec<u8>,
+    pub color: String,
+}
+
+impl PlannerService {
+    pub fn event(&self, id: i64) -> AppResult<Event> {
+        self.events.get(id)?.ok_or_else(|| super::errors::AppError::NotFound(format!("Event {id} does not exist.")))
+    }
+
+    pub fn save_event(&self, id: Option<i64>, data: &EventInput) -> AppResult<i64> {
+        let time = if data.all_day { all_day_time() } else if data.milestone { milestone_time(data.start) } else { TimeRange::new(data.start, data.end)? };
+        let mut event = match id {
+            None => Event::new(data.day, time, ""),
+            Some(id) => self.event(id)?,
+        };
+        event.day = data.day;
+        event.time = time;
+        event.title = data.title.trim().into();
+        event.details = data.details.clone();
+        event.color = data.color.clone();
+        event.validate()?;
+        let id = match event.id {
+            None => self.events.add(&event)?,
+            Some(id) => {
+                self.events.update(&event)?;
+                id
+            }
+        };
+        self.bus.publish(Topic::Events);
+        Ok(id)
+    }
+
+    pub fn delete_event(&self, id: i64) -> AppResult {
+        self.events.delete(id)?;
+        self.bus.publish(Topic::Events);
+        Ok(())
+    }
+
+    pub fn routines(&self) -> AppResult<Vec<Routine>> {
+        self.routines.list()
+    }
+
+    pub fn save_routine(&self, id: Option<i64>, data: &RoutineInput) -> AppResult<i64> {
+        let mut days = data.weekdays.clone();
+        days.sort();
+        days.dedup();
+        let mut routine = Routine { title: data.title.trim().into(), minute: data.minute, weekdays: days, color: data.color.clone(), id };
+        routine.validate()?;
+        let id = match id {
+            None => self.routines.add(&routine)?,
+            Some(id) => {
+                if !self.routines.list()?.iter().any(|r| r.id == Some(id)) {
+                    return Err(super::errors::AppError::NotFound(format!("Routine {id} does not exist.")));
+                }
+                self.routines.update(&routine)?;
+                id
+            }
+        };
+        routine.id = Some(id);
+        self.bus.publish(Topic::Events);
+        Ok(id)
+    }
+
+    pub fn delete_routine(&self, id: i64) -> AppResult {
+        self.routines.delete(id)?;
+        self.bus.publish(Topic::Events);
+        Ok(())
+    }
+
+    pub fn journal_of(&self, day: NaiveDate) -> AppResult<String> {
+        self.journal.get(day)
+    }
+}

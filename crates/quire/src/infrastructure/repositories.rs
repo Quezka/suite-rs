@@ -58,6 +58,35 @@ impl CourseRepository for SqliteCourses {
         }
         Ok(courses)
     }
+
+    fn add(&self, c: &Course) -> AppResult<i64> {
+        self.0.conn.execute("INSERT INTO courses (name, teacher, room, color, external_id) VALUES (?, ?, ?, ?, ?)",
+            params![c.name, c.teacher, c.room, c.color, c.external_id]).map_err(store)?;
+        let id = self.0.conn.last_insert_rowid();
+        self.write_slots(id, c)?;
+        Ok(id)
+    }
+
+    fn update(&self, c: &Course) -> AppResult {
+        self.0.conn.execute("UPDATE courses SET name = ?, teacher = ?, room = ?, color = ?, external_id = ? WHERE id = ?",
+            params![c.name, c.teacher, c.room, c.color, c.external_id, c.id]).map_err(store)?;
+        self.write_slots(c.id.unwrap_or_default(), c)
+    }
+
+    fn delete(&self, id: i64) -> AppResult {
+        self.0.conn.execute("DELETE FROM courses WHERE id = ?", [id]).map(|_| ()).map_err(store)
+    }
+}
+
+impl SqliteCourses {
+    fn write_slots(&self, id: i64, c: &Course) -> AppResult {
+        self.0.conn.execute("DELETE FROM class_slots WHERE course_id = ?", [id]).map_err(store)?;
+        for s in &c.slots {
+            self.0.conn.execute("INSERT INTO class_slots (course_id, weekday, start_min, end_min, room) VALUES (?, ?, ?, ?, ?)",
+                params![id, s.weekday, s.time.start, s.time.end, s.room]).map_err(store)?;
+        }
+        Ok(())
+    }
 }
 
 pub struct SqliteTasks(pub Rc<Database>);
@@ -172,15 +201,38 @@ use crate::domain::model::{Event, Job, Routine, Shift, ShiftPattern};
 
 pub struct SqliteEvents(pub Rc<Database>);
 
+fn event(r: &Row) -> rusqlite::Result<Event> {
+    Ok(Event {
+        day: day(r.get("day")?).unwrap_or_default(),
+        time: TimeRange { start: r.get("start_min")?, end: r.get("end_min")? },
+        title: r.get("title")?, details: r.get("details")?, color: r.get("color")?, id: Some(r.get("id")?),
+    })
+}
+
 impl EventRepository for SqliteEvents {
     fn between(&self, first: NaiveDate, last: NaiveDate) -> AppResult<Vec<Event>> {
         let mut stmt = self.0.conn.prepare("SELECT * FROM events WHERE day BETWEEN ? AND ? ORDER BY day, start_min").map_err(store)?;
-        let rows = stmt.query_map(params![first.to_string(), last.to_string()], |r| Ok(Event {
-            day: day(r.get("day")?).unwrap_or(first),
-            time: TimeRange { start: r.get("start_min")?, end: r.get("end_min")? },
-            title: r.get("title")?, details: r.get("details")?, color: r.get("color")?, id: Some(r.get("id")?),
-        })).map_err(store)?;
+        let rows = stmt.query_map(params![first.to_string(), last.to_string()], event).map_err(store)?;
         rows.collect::<Result<_, _>>().map_err(store)
+    }
+
+    fn get(&self, id: i64) -> AppResult<Option<Event>> {
+        self.0.conn.query_row("SELECT * FROM events WHERE id = ?", [id], event).optional().map_err(store)
+    }
+
+    fn add(&self, e: &Event) -> AppResult<i64> {
+        self.0.conn.execute("INSERT INTO events (day, start_min, end_min, title, details, color) VALUES (?, ?, ?, ?, ?, ?)",
+            params![e.day.to_string(), e.time.start, e.time.end, e.title, e.details, e.color]).map_err(store)?;
+        Ok(self.0.conn.last_insert_rowid())
+    }
+
+    fn update(&self, e: &Event) -> AppResult {
+        self.0.conn.execute("UPDATE events SET day = ?, start_min = ?, end_min = ?, title = ?, details = ?, color = ? WHERE id = ?",
+            params![e.day.to_string(), e.time.start, e.time.end, e.title, e.details, e.color, e.id]).map(|_| ()).map_err(store)
+    }
+
+    fn delete(&self, id: i64) -> AppResult {
+        self.0.conn.execute("DELETE FROM events WHERE id = ?", [id]).map(|_| ()).map_err(store)
     }
 }
 
@@ -198,6 +250,25 @@ impl RoutineRepository for SqliteRoutines {
         }).map_err(store)?;
         rows.collect::<Result<_, _>>().map_err(store)
     }
+
+    fn add(&self, r: &Routine) -> AppResult<i64> {
+        self.0.conn.execute("INSERT INTO routines (title, start_min, weekdays, color) VALUES (?, ?, ?, ?)",
+            params![r.title, r.minute, weekdays(&r.weekdays), r.color]).map_err(store)?;
+        Ok(self.0.conn.last_insert_rowid())
+    }
+
+    fn update(&self, r: &Routine) -> AppResult {
+        self.0.conn.execute("UPDATE routines SET title = ?, start_min = ?, weekdays = ?, color = ? WHERE id = ?",
+            params![r.title, r.minute, weekdays(&r.weekdays), r.color, r.id]).map(|_| ()).map_err(store)
+    }
+
+    fn delete(&self, id: i64) -> AppResult {
+        self.0.conn.execute("DELETE FROM routines WHERE id = ?", [id]).map(|_| ()).map_err(store)
+    }
+}
+
+fn weekdays(days: &[u8]) -> String {
+    days.iter().map(|d| d.to_string()).collect::<Vec<_>>().join(",")
 }
 
 pub struct SqliteJournal(pub Rc<Database>);
