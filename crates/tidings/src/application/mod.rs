@@ -154,6 +154,11 @@ impl News {
     pub fn now(&self) -> i64 {
         self.store.now()
     }
+
+    /// Newest article's time (0 = none): a cheap "how fresh are we" for auto-refresh.
+    pub fn newest(&self) -> i64 {
+        self.articles.iter().map(|a| a.published).max().unwrap_or(0)
+    }
 }
 
 /// Articles from a stock's own feed carry this as their source.

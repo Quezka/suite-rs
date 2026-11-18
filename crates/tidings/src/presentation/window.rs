@@ -11,6 +11,9 @@ use quezka_kit::Tokens;
 
 use super::i18n::{t, tf};
 use crate::application::{ticker_source, News, Report};
+
+/// Pull the feeds again when the newest we have is older than this (also on open).
+const REFRESH_EVERY: i64 = 30 * 60;
 use crate::domain::{ago, Lean, Side, Story, Ticker};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -92,10 +95,11 @@ impl TidingsWindow {
     fn pump(&mut self, ctx: &egui::Context) {
         if self.first {
             self.first = false;
-            if self.news.articles.is_empty() {
-                self.refresh();
-            }
+            self.refresh(); // on open: fill an empty list, or freshen a stale one
+        } else if !self.refreshing && self.news.now() - self.news.newest() > REFRESH_EVERY {
+            self.refresh(); // every half hour while it's open
         }
+        ctx.request_repaint_after(std::time::Duration::from_secs(60));
         while let Ok(Event::Fetched(fresh, report)) = self.events.try_recv() {
             self.news.merge(fresh);
             self.refreshing = false;
