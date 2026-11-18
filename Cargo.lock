@@ -3548,6 +3548,7 @@ dependencies = [
  "aes-gcm",
  "base64",
  "egui",
+ "libc",
  "quezka-kit",
  "serde_json",
  "sha2",
@@ -3602,7 +3603,7 @@ dependencies = [
 
 [[package]]
 name = "tidings"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "egui",
  "quezka-kit",

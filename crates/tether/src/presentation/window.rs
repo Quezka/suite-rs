@@ -309,11 +309,21 @@ impl TetherWindow {
         let saved = self.link.relay().unwrap_or_default();
         let mut relay = self.relay.take().unwrap_or_else(|| saved.clone());
         let mut save = false;
+        let bt_on = self.link.bluetooth();
+        let mut toggle_bt = false;
         w::settings_card(ui, th, Some(&t("Away from Wi-Fi")), |ui| {
+            // Bluetooth: works nearby with no wi-fi at all; the phone must already be paired with this computer in the OS
+            if w::switch_row(ui, th, &t("Also connect over Bluetooth"), bt_on) { toggle_bt = true; }
+            w::small(ui, th, &t("Bluetooth works close by without any wi-fi. Pair the phone with this computer in your system's Bluetooth settings first. Takes effect next time Tether opens."));
+            ui.add_space(GAP);
             w::small(ui, th, &t("A relay on your own server joins the phone and this computer over the internet. Messages stay encrypted end to end."));
             quezka_kit::forms::field(ui, th, &t("Relay address"), &mut relay, "relay.example.org");
             if relay.trim() != saved && w::button(ui, th, &t("Save"), None, Kind::Tonal, 40.0) { save = true; }
         });
+        if toggle_bt {
+            self.link.set_bluetooth(!bt_on);
+            self.message = t("Saved. Reopen Tether for Bluetooth to start.");
+        }
         if save {
             self.link.set_relay(Some(relay.clone()));
             self.message = t("Saved. Put the same address in Tether on the phone.");

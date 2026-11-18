@@ -24,6 +24,9 @@ pub trait PhoneLink {
     /// relay "host[:port]" used away from wi-fi (None = off)
     fn relay(&self) -> Option<String> { None }
     fn set_relay(&self, _address: Option<String>) {}
+    /// also accept the phone over Bluetooth (no shared wi-fi needed)
+    fn bluetooth(&self) -> bool { false }
+    fn set_bluetooth(&self, _on: bool) {}
 }
 
 /// The computer's own side: notifications, clipboard, the file picker.

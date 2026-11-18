@@ -6,6 +6,8 @@ pub const BEACON_PORT: u16 = 47820;
 pub const LINK_PORT: u16 = 47821;
 /// Relay (away from Wi-Fi): both sides dial out to it, it pipes bytes; it never sees a key.
 pub const RELAY_PORT: u16 = 47822;
+/// RFCOMM channel for the Bluetooth link (both sides use it; no SDP lookup)
+pub const RFCOMM_CHANNEL: u8 = 11;
 pub const RELAY_MAGIC: &str = "TETHERRELAY1";
 const MAGIC: &str = "TETHER1";
 /// The largest frame accepted (a file is sent in pieces below this).

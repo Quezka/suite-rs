@@ -17,6 +17,8 @@ use base64::Engine;
 use serde_json::{json, Value};
 
 use crate::application::{Desktop, LinkEvent, PhoneLink};
+
+pub mod bluetooth;
 use crate::domain::{self, BEACON_PORT, FILE_PIECE, LINK_PORT};
 
 pub fn random(n: usize) -> Vec<u8> {
@@ -46,6 +48,8 @@ pub struct Pairings {
     pub computer_id: String,
     /// relay "host[:port]" for away from wi-fi; None = off
     pub relay: Option<String>,
+    /// also listen over Bluetooth (RFCOMM), for when there is no shared wi-fi
+    pub bluetooth: bool,
 }
 
 impl Pairings {
@@ -65,7 +69,8 @@ impl Pairings {
         let computer_id = v.get("id").and_then(Value::as_str).map(str::to_string)
             .unwrap_or_else(|| random(8).iter().map(|b| format!("{b:02x}")).collect());
         let relay = v.get("relay").and_then(Value::as_str).map(str::to_string).filter(|r| !r.trim().is_empty());
-        let p = Self { phones, code: None, computer_id, relay };
+        let bluetooth = v.get("bluetooth").and_then(Value::as_bool).unwrap_or(false);
+        let p = Self { phones, code: None, computer_id, relay, bluetooth };
         p.save();
         p
     }
@@ -76,7 +81,7 @@ impl Pairings {
         let phones: serde_json::Map<String, Value> = self.phones.iter()
             .map(|(id, (name, key))| (id.clone(), json!({"name": name, "key": B64.encode(key)}))).collect();
         let path = dir.join("paired.json");
-        let _ = std::fs::write(&path, json!({"id": self.computer_id, "phones": phones, "relay": self.relay}).to_string());
+        let _ = std::fs::write(&path, json!({"id": self.computer_id, "phones": phones, "relay": self.relay, "bluetooth": self.bluetooth}).to_string());
         #[cfg(unix)]
         {
             use std::os::unix::fs::PermissionsExt;
@@ -103,7 +108,7 @@ impl Crypto {
     }
 }
 
-fn read_frame(s: &mut TcpStream) -> Option<Vec<u8>> {
+fn read_frame<R: Read>(s: &mut R) -> Option<Vec<u8>> {
     let mut header = [0u8; 4];
     s.read_exact(&mut header).ok()?;
     let n = domain::frame_len(header)?;
@@ -142,8 +147,13 @@ impl Link {
             }
         });
         // relay: one waiting connection per paired phone (phone dials the same room when off our wi-fi)
-        let (p, o) = (pairings.clone(), outgoing.clone());
-        std::thread::spawn(move || relay_supervisor(p, o, events));
+        let (p, o, ev) = (pairings.clone(), outgoing.clone(), events.clone());
+        std::thread::spawn(move || relay_supervisor(p, o, ev));
+        // Bluetooth: listen on RFCOMM when the user turned it on (no shared wi-fi needed)
+        if pairings.lock().unwrap().bluetooth {
+            let (p, o) = (pairings.clone(), outgoing.clone());
+            std::thread::spawn(move || bluetooth::listen(p, o, events));
+        }
         Self { pairings, outgoing }
     }
 
@@ -197,6 +207,17 @@ impl PhoneLink for Link {
         p.save();
     }
 
+    fn bluetooth(&self) -> bool {
+        self.pairings.lock().unwrap().bluetooth
+    }
+
+    fn set_bluetooth(&self, on: bool) {
+        let mut p = self.pairings.lock().unwrap();
+        p.bluetooth = on;
+        p.save();
+        // the RFCOMM listener starts at launch; a toggle takes effect next time Tether opens
+    }
+
     fn send(&self, message: Value) -> bool {
         self.outgoing.lock().unwrap().as_ref().is_some_and(|tx| tx.send(message).is_ok())
     }
@@ -231,8 +252,20 @@ impl PhoneLink for Link {
     }
 }
 
-fn serve(mut stream: TcpStream, pairings: Arc<Mutex<Pairings>>, outgoing: Arc<Mutex<Option<Sender<Value>>>>, events: Sender<LinkEvent>) {
-    let _ = stream.set_read_timeout(Some(Duration::from_secs(30)));
+/// The wifi link: a TCP stream with timeouts, handed to the shared `serve_stream` with a cloned write handle.
+fn serve(stream: TcpStream, pairings: Arc<Mutex<Pairings>>, outgoing: Arc<Mutex<Option<Sender<Value>>>>, events: Sender<LinkEvent>) {
+    let _ = stream.set_read_timeout(Some(Duration::from_secs(90)));
+    let Ok(writer) = stream.try_clone() else { return };
+    serve_stream(stream, writer, pairings, outgoing, events);
+}
+
+/// The link over any stream: TCP on wifi, an RFCOMM socket on Bluetooth. `stream` reads and writes the
+/// handshake; `writer_half` is a second handle (a cloned socket, or a dup'd fd) for the background sender.
+fn serve_stream<S, W>(mut stream: S, mut writer_half: W, pairings: Arc<Mutex<Pairings>>, outgoing: Arc<Mutex<Option<Sender<Value>>>>, events: Sender<LinkEvent>)
+where
+    S: Read + Write,
+    W: Write + Send + 'static,
+{
     let Some(hello) = read_frame(&mut stream).and_then(|b| serde_json::from_slice::<Value>(&b).ok()) else { return };
     let get = |k: &str| hello.get(k).and_then(Value::as_str).unwrap_or_default().to_string();
     let (phone_id, phone_name) = (get("id"), get("name"));
@@ -274,17 +307,15 @@ fn serve(mut stream: TcpStream, pairings: Arc<Mutex<Pairings>>, outgoing: Arc<Mu
     }
     *outgoing.lock().unwrap() = Some(tx);
     let _ = events.send(LinkEvent::Connected(phone_name));
-    // writer
-    let mut writer = match stream.try_clone() { Ok(s) => s, Err(_) => return };
+    // writer: the background sender uses the second handle (wifi: a cloned socket; BT: a dup'd fd)
     let wc = crypto.clone();
     std::thread::spawn(move || {
         for m in rx {
-            if writer.write_all(&domain::frame(&wc.seal(m.to_string().as_bytes()))).is_err() {
+            if writer_half.write_all(&domain::frame(&wc.seal(m.to_string().as_bytes()))).is_err() {
                 break;
             }
         }
     });
-    let _ = stream.set_read_timeout(Some(Duration::from_secs(90)));
     let mut files: HashMap<String, (String, Vec<u8>)> = HashMap::new();
     while let Some(sealed) = read_frame(&mut stream) {
         let Some(plain) = crypto.open(&sealed) else { break };
