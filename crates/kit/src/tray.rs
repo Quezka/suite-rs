@@ -36,7 +36,7 @@ impl Tray {
 
 /// `icon`: RGBA pixels + side. Labels already translated. None = no tray here (or no D-Bus).
 pub fn spawn(id: &str, title: &str, icon: Option<(Vec<u8>, u32)>, show: &str, quit: &str) -> Option<Tray> {
-    let (tx, rx) = channel();
+    let (tx, rx) = channel::<TrayEvent>();
     #[cfg(target_os = "linux")]
     {
         use ksni::blocking::TrayMethods;
