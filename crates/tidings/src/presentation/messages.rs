@@ -39,4 +39,5 @@ pub const MESSAGES: &[(&str, &str, &str)] = &[
     ("Couldn't reach: {names}", "Non raggiungibili: {names}", "Не удалось получить: {names}"),
     ("Added the latest news.", "Aggiunte le ultime notizie.", "Добавлены свежие новости."),
     ("sources", "fonti", "источников"),
+    ("Tap the headline to see and open the sources.", "Tocca il titolo per vedere e aprire le fonti.", "Нажмите на заголовок, чтобы увидеть и открыть источники."),
 ];

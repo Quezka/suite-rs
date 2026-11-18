@@ -49,6 +49,8 @@ pub struct TidingsWindow {
     events: Receiver<Event>,
     first: bool,
     demo: bool,
+    /// story titles the reader has opened to see the articles
+    open_stories: std::collections::HashSet<String>,
 }
 
 impl TidingsWindow {
@@ -57,7 +59,7 @@ impl TidingsWindow {
         Self {
             news, tab: Tab::Stories, language: None, refreshing: false, message: String::new(),
             add_symbol: String::new(), add_name: String::new(), src_name: String::new(), src_feed: String::new(),
-            sender, events, first: true, demo,
+            sender, events, first: true, demo, open_stories: std::collections::HashSet::new(),
         }
     }
 
@@ -190,26 +192,59 @@ impl TidingsWindow {
             return;
         }
         let now = self.news.now();
-        for story in &stories {
-            self.story_card(ui, th, story, now);
+        // gather each story's articles up front (name, title, link, time), so the card can list and open them
+        let rows: Vec<Vec<(String, String, String, i64)>> = stories.iter().map(|story| {
+            let mut r: Vec<_> = story.articles.iter().filter_map(|&i| self.news.articles.get(i)).map(|a| {
+                (self.source_name(&a.source), a.title.clone(), a.link.clone(), a.published)
+            }).collect();
+            r.sort_by_key(|x| -x.3);
+            r
+        }).collect();
+        for (story, articles) in stories.iter().zip(rows) {
+            self.story_card(ui, th, story, now, &articles);
             ui.add_space(10.0);
         }
     }
 
-    fn story_card(&self, ui: &mut egui::Ui, th: &Tokens, story: &Story, now: i64) {
+    fn story_card(&mut self, ui: &mut egui::Ui, th: &Tokens, story: &Story, now: i64, articles: &[(String, String, String, i64)]) {
+        let open = self.open_stories.contains(&story.title);
+        let mut toggle = false;
         w::card(ui, th, |ui| {
-            ui.label(w::text(&story.title, 18.0, th.text, Weight::SemiBold));
+            // the title is a button: tap to see (and open) the sources covering it
+            let title = ui.add(egui::Label::new(w::text(&story.title, 18.0, th.text, Weight::SemiBold)).sense(egui::Sense::click()));
+            if title.hovered() { ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand); }
+            if title.clicked() { toggle = true; }
             ui.add_space(6.0);
             coverage_bar(ui, th, story);
             ui.add_space(6.0);
             let (u, unit) = ago(now, story.newest);
-            w::small(ui, th, &tf("{n} · {u} {unit} ago", &[("n", &tf("{n} sources", &[("n", &story.sources.to_string())])), ("u", &u.to_string()), ("unit", &t(unit))]));
+            let count = tf("{n} sources", &[("n", &story.sources.to_string())]);
+            w::small(ui, th, &tf("{n} · {u} {unit} ago", &[("n", &count), ("u", &u.to_string()), ("unit", &t(unit))]));
             if let Some(side) = story.blindspot() {
                 ui.add_space(4.0);
                 let text = if side == Side::Right { t("The right isn't covering this") } else { t("The left isn't covering this") };
                 w::status_chip(ui, &text, th.warning, ui.available_width());
             }
+            if open {
+                ui.add_space(8.0);
+                for (name, headline, link, at) in articles {
+                    let (au, aunit) = ago(now, *at);
+                    let row = ui.add(egui::Label::new(w::text(format!("{name} · {au} {} ago", t(aunit)), 12.5, th.muted, Weight::Bold)).sense(egui::Sense::click()));
+                    let line = ui.add(egui::Label::new(w::text(headline, 14.5, th.accent, Weight::Medium)).sense(egui::Sense::click()).wrap());
+                    if row.hovered() || line.hovered() { ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand); }
+                    if (row.clicked() || line.clicked()) && !link.is_empty() {
+                        ui.ctx().open_url(egui::OpenUrl::new_tab(link));
+                    }
+                    ui.add_space(6.0);
+                }
+            } else {
+                ui.add_space(2.0);
+                w::small(ui, th, &t("Tap the headline to see and open the sources."));
+            }
         });
+        if toggle {
+            if open { self.open_stories.remove(&story.title); } else { self.open_stories.insert(story.title.clone()); }
+        }
     }
 
     fn markets(&mut self, ui: &mut egui::Ui, th: &Tokens) {
